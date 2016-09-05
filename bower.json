@@ -1,0 +1,7 @@
+{
+  "name": "Khitwa",
+  "private": "false",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.3.1"
+  }
+}
