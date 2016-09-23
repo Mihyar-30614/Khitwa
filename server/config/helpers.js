@@ -6,8 +6,10 @@ module.exports = {
     console.error(error.stack);
     next(error);
   },
-  errorHandler: function (error, req, res, next) {
-    res.send(500, {error: error.message});
+  errorHandler: function (error, req, res) {
+    // send error message to client
+    // message for gracefull error handling on app
+    res.status(500).send(error);
   },
 
   decode: function (req, res, next) {
@@ -27,5 +29,6 @@ module.exports = {
     } catch (error) {
       return next(error);
     }
+
   }
 };
