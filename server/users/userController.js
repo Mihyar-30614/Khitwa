@@ -26,5 +26,49 @@ module.exports = {
 				helpers.errorHandler('User does not exist', req, res);
 			}
 		});
+	},
+
+	signup : function (req, res) {
+		var username = req.body.username;
+		var password = req.body.password;
+		var firstName = req.body.firstName;
+		var lastName = req.body.lastName;
+		var email = req.body.email;
+		var dateOfBirth = req.body.dateOfBirth;
+		var gender = req.body.gender;
+		var phoneNumber = req.body.phoneNumber;
+		var skills = req.body.skills;
+		var causes = req.body.causes;
+		var picture = req.body.picture;
+
+		User.findOne({ username : username})
+		.exec(function(error, user){
+			if (error) {
+				helpers.errorHandler(error, req,res);
+			}else if (user) {
+				helpers.errorHandler('Account Already exists');
+			}else{
+				var newUser = new User({
+					username : username,
+					password: password,
+					firstName : firstName,
+					lastName : lastName,
+					email : email,
+					dateOfBirth : dateOfBirth,
+					gender : gender,
+					phoneNumber : phoneNumber,
+					skills : [skills],
+					causes : [causes],
+					picture : picture
+				});
+				newUser.save(function (error, newUser) {
+					if (error) {
+						helpers.errorHandler(error, req, res);
+					} else{
+						res.status(201).send('User Created');
+					}
+				});
+			}
+		});
 	}
 }
