@@ -1,4 +1,5 @@
 var helpers = require('./helpers.js');
+var userController = require('../users/userController.js');
 
 module.exports = function(app, express){
 	// User routes goes here
