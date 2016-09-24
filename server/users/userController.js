@@ -77,7 +77,13 @@ module.exports = {
 	},
 
 	getUser : function (req, res, next){
-
+		User.findOne({ username: req.params.username}, function(error, user){
+			if (error) {
+				helpers.errorHandler(error, req, res);
+			}else{
+				res.status(200).send(user);
+			}
+		});
 	},
 
 	getAll : function (req, res, next){
