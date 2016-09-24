@@ -6,4 +6,5 @@ module.exports = function(app, express){
 	app.post('/api/user/signin', userController.signin);
 	app.post('/api/user/signup', userController.signup);
 	app.get('/api/user/getall', userController.getAll);
+	app.get('/api/user/:username', userController.getUser)
 };
