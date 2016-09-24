@@ -21,7 +21,7 @@ require('./config/routes.js')(app, express);
 // start listening to requests on port 8000
 
 app.listen(port, function () {
-  console.log(' app listening on port ' + port);
+  console.log('app listening on port ' + port);
 });
 
 //Kills server connection if it crashes or killed
