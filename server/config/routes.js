@@ -5,4 +5,5 @@ module.exports = function(app, express){
 	// User routes goes here
 	app.post('/api/user/signin', userController.signin);
 	app.post('/api/user/signup', userController.signup);
+	app.get('/api/user/getall', userController.getAll);
 };
