@@ -70,5 +70,23 @@ module.exports = {
 				});
 			}
 		});
+	},
+
+	checkAuth : function (req, res, next){
+
+	},
+
+	getUser : function (req, res, next){
+
+	},
+
+	getAll : function (req, res, next){
+		User.find({}, function(error, users){
+			if (error) {
+				helpers.errorHandler(error, req, res);
+			} else{
+				res.status(200).send(users);
+			}
+		});
 	}
 }
