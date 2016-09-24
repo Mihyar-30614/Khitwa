@@ -1,6 +1,7 @@
 var User = require('./userModel.js');
 var jwt = require('jwt-simple');
-var helpers = require('../config/helpers.js')
+var helpers = require('../config/helpers.js');
+var Q = require('q');
 
 module.exports = {
 
@@ -73,10 +74,30 @@ module.exports = {
 	},
 
 	checkAuth : function (req, res, next){
-
+		// checking to see if the user is authenticated
+		// grab the token from the header if any
+		// then decode the token, which we end up beingthe user object
+		// check to see if that user exists in the database
+		var token = req.headers['x-access-token'];
+		if (token) {
+			var user = jwt.decode(token, 'secret');
+			findOne({ username: user.username} )
+			.then(function(foundUser){
+				if (foundUser) {
+					res.send(200);
+				} else {
+					res.send(401);
+				}
+			})
+			.fail(function(error) {
+				next(error);
+			});
+		}else{
+			helpers.errorHandler('No Token', req, res);
+		}
 	},
 
-	getUser : function (req, res, next){
+	getUser : function (req, res){
 		User.findOne({ username: req.params.username}, function(error, user){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -86,7 +107,7 @@ module.exports = {
 		});
 	},
 
-	getAll : function (req, res, next){
+	getAll : function (req, res){
 		User.find({}, function(error, users){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -94,5 +115,10 @@ module.exports = {
 				res.status(200).send(users);
 			}
 		});
+	},
+
+	// a function that allows for the user to edit their basic infor
+	editUser : function (req, res) {
+		
 	}
 }
