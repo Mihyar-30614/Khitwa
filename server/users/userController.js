@@ -73,28 +73,29 @@ module.exports = {
 		});
 	},
 
-	checkAuth : function (req, res, next){
-		// checking to see if the user is authenticated
-		// grab the token from the header if any
-		// then decode the token, which we end up beingthe user object
-		// check to see if that user exists in the database
-		var token = req.headers['x-access-token'];
-		if (token) {
-			var user = jwt.decode(token, 'secret');
-			findOne({ username: user.username} )
-			.then(function(foundUser){
-				if (foundUser) {
-					res.send(200);
-				} else {
-					res.send(401);
-				}
-			})
-			.fail(function(error) {
-				next(error);
-			});
-		}else{
-			helpers.errorHandler('No Token', req, res);
-		}
+	checkAuth : function (req, res, next) {
+		console.log('this is checking')
+	    // checking to see if the user is authenticated
+	    // grab the token in the header is any
+	    // then decode the token, which we end up being the user object
+	    // check to see if that user exists in the database
+	    var token = req.headers['x-access-token'];
+	    if (!token) {
+	      next(new Error('No token'));
+	    } else {
+	      var user = jwt.decode(token, 'secret');
+	      findUser({userName: user.userName})
+	        .then(function (foundUser) {
+	          if (foundUser) {
+	            res.send(200);
+	          } else {
+	            res.send(401);
+	          }
+	        })
+	        .fail(function (error) {
+	          next(error);
+	        });
+	    }
 	},
 
 	getUser : function (req, res){
@@ -119,6 +120,10 @@ module.exports = {
 
 	// a function that allows for the user to edit their basic infor
 	editUser : function (req, res) {
-		
+
+	},
+
+	requestNewPass : function (req, res){
+
 	}
-}
+};
