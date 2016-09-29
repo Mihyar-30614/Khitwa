@@ -18,7 +18,7 @@ module.exports = {
 					if (found) {
 						var token = jwt.encode(user, 'secret');
 						res.setHeader('x-access-token', token);
-						res.json({token : token});
+						res.json({token : token, userId: user._id});
 					}else{
 						helpers.errorHandler('Incorrect Password');
 					}
@@ -74,7 +74,6 @@ module.exports = {
 	},
 
 	checkAuth : function (req, res, next) {
-		console.log('this is checking')
 	    // checking to see if the user is authenticated
 	    // grab the token in the header is any
 	    // then decode the token, which we end up being the user object
@@ -84,7 +83,7 @@ module.exports = {
 	      next(new Error('No token'));
 	    } else {
 	      var user = jwt.decode(token, 'secret');
-	      findUser({userName: user.userName})
+	      findUser({username: user.username})
 	        .then(function (foundUser) {
 	          if (foundUser) {
 	            res.send(200);
