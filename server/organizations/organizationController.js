@@ -1,4 +1,4 @@
-var organization = require('./organizationModel.js');
+var Organization = require('./organizationModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
@@ -6,7 +6,7 @@ var helpers = require('../config/helpers.js');
 module.exports = {
 
 	createOrganization : function (req, res) {
-		var newOrg ={
+		var newOrg = Organization({
 		 EIN : req.body.EIN,
 		 name : req.body.name,
 		 causes_area : req.body.causes_area,
@@ -18,7 +18,7 @@ module.exports = {
 		 currentOpportunities : req.body.currentOpportunities,
 		 pastOpportunities : req.body.pastOpportunities,
 		 owners : req.body.owners
-		};
+		});
 
 		newOrg.save( function (error, saved){
 			if (saved) {
