@@ -119,10 +119,33 @@ module.exports = {
 
 	// a function that allows for the user to edit their basic infor
 	editUser : function (req, res) {
+		User.find({ username : req.params.username})
+		.exec(function (error, user){
+			if (error) {
+				helpers.errorHandler(error, req, res);
+			}else if (user) {
+				user.firstName = req.body.firstName || user.firstName;
+				user.lastName = req.body.lastName || user.lastName;
+				user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+				user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+				user.skills = req.body.skills || user.skills;
+				user.causes = req.body.causes || user.causes;
+				user.picture = req.body.picture || user.picture;
 
+				user.save(function (error, savedUser){
+					if (error) {
+						helpers.errorHandler(error, req, res);
+					}else{
+						res.status(201).send(JSON.stringify(savedUser));
+					}
+				});
+			}else{
+				helpers.errorHandler('User not Found', req, res);
+			}
+		});
 	},
 
 	requestNewPass : function (req, res){
-
+		// to work on later
 	}
 };
