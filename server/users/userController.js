@@ -119,7 +119,7 @@ module.exports = {
 
 	// a function that allows for the user to edit their basic infor
 	editUser : function (req, res) {
-		User.find({ username : req.params.username})
+		User.findOne({ username : req.params.username})
 		.exec(function (error, user){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -131,6 +131,7 @@ module.exports = {
 				user.skills = req.body.skills || user.skills;
 				user.causes = req.body.causes || user.causes;
 				user.picture = req.body.picture || user.picture;
+				console.log(user);
 
 				user.save(function (error, savedUser){
 					if (error) {
