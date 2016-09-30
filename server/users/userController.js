@@ -131,7 +131,14 @@ module.exports = {
 				user.skills = req.body.skills || user.skills;
 				user.causes = req.body.causes || user.causes;
 				user.picture = req.body.picture || user.picture;
-				console.log(user);
+				if(req.body.oldPassword){
+						User.comparePassword(req.body.oldPassword , user.password , res , function(){
+								user.password = req.body.password;
+								user.save(function(err, savedUser){
+									res.status(201).send('Updated \n' + savedUser);
+								});
+						});
+					}
 
 				user.save(function (error, savedUser){
 					if (error) {
