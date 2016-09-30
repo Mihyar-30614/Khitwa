@@ -1,5 +1,6 @@
 var helpers = require('./helpers.js');
 var userController = require('../users/userController.js');
+var organizationController = require('../organizations/organizationController.js');
 
 module.exports = function(app, express){
 	
@@ -10,4 +11,7 @@ module.exports = function(app, express){
 	app.get('/api/users/x/:username', userController.getUser);
 	app.get('/api/users/signedin', userController.checkAuth);
 	app.post('/api/user/edit/:username', userController.editUser);
+
+	// Organization routes goes here
+	app.post('/api/organization/signup', organizationController.createOrganization);
 };
