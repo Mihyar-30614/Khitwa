@@ -9,4 +9,5 @@ module.exports = function(app, express){
 	app.get('/api/users/getall', userController.getAll);
 	app.get('/api/users/x/:username', userController.getUser);
 	app.get('/api/users/signedin', userController.checkAuth);
+	app.post('/api/user/edit/:username', userController.editUser);
 };
