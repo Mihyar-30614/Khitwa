@@ -27,5 +27,16 @@ module.exports = {
 				helpers.errorHandler(error, req, res);
 			}
 		});
+	},
+
+	getOne : function (req, res) {
+		Organization.findOne({ _id: req.params.id.toString()})
+		.exec(function (error, organization) {
+			if (organization) {
+				res.status(200).send(organization);
+			}else{
+				helpers.errorHandler('Organization Not Found', req, res);
+			}
+		});
 	}
 }
