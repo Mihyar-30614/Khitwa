@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var OrganizationSchema = new mongoose.Schema({
 	EIN: String,
-  name: String,
+  name: {type: String, required: true, unique: true},
   causes_area: [String],
   locations: [String],
   missionStatement: String,
