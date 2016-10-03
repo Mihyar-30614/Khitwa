@@ -14,4 +14,6 @@ module.exports = function(app, express){
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.createOrganization);
+	app.get('/api/organization/x/:id', organizationController.getOne);
+	
 };
