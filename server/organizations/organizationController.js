@@ -38,5 +38,18 @@ module.exports = {
 				helpers.errorHandler('Organization Not Found', req, res);
 			}
 		});
+	},
+
+	getAll : function (req, res) {
+		Organization.find({})
+		.exec( function (error, organization){
+			if (organization) {
+				res.status(200).send(organization);
+			}else if (error) {
+				helpers.errorHandler(error, req, res);
+			}else{
+				helpers.errorHandler('Organization Not Found');
+			}
+		});
 	}
 }
