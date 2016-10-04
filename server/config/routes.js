@@ -18,4 +18,8 @@ module.exports = function(app, express){
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit/:id', organizationController.editProfile);
 	app.post('/api/organization/delete/:id', organizationController.deleteOrganization);
+	app.post('/api/organization/add/:id', organizationController.addOpportunity);
+	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
+
+	
 };
