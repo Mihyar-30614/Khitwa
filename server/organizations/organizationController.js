@@ -103,5 +103,13 @@ module.exports = {
 				helpers.errorHandler(error, req, res);
 			}
 		});
+	},
+
+	addOpportunity : function (req, res) {
+		//TODO
+	},
+
+	closeOpportunity : function (req, res) {
+		//TODO
 	}
 }
