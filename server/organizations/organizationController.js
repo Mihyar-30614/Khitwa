@@ -1,4 +1,5 @@
 var Organization = require('./organizationModel.js');
+var Opportunity = require('../opportunities/opportunityModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
@@ -106,7 +107,25 @@ module.exports = {
 	},
 
 	addOpportunity : function (req, res) {
-		//TODO
+		var tempOpportunity = Opportunity({
+	      title : req.body.title,
+	      _organizer : req.params.id,
+	      startDate : req.body.startDate,
+	      endDate : req.body.endDate,
+	      location : req.body.location,
+	      causesArea : req.body.causesArea,
+	      description : req.body.description,
+	      skillsRequired: req.body.skillsRequired,
+	      poster : req.body.poster
+	      });
+
+		tempOpportunity.save(function(error, saved){
+			if (error) {
+				helpers.errorHandler(error, req, res);
+			} else {
+				res.status(201).send(saved);
+			}
+		});
 	},
 
 	closeOpportunity : function (req, res) {
