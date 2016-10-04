@@ -63,7 +63,7 @@ module.exports = {
 	},
 
 	editProfile :  function (req, res) {
-		Organization.findOne({ _id: req.params.is.toString()})
+		Organization.findOne({ _id: req.params.id.toString()})
 		.exec( function (error, organization){
 			if (error) {
 				helpers.errorHandler(error, req, res);
