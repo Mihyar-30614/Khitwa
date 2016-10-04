@@ -17,5 +17,5 @@ module.exports = function(app, express){
 	app.get('/api/organization/x/:id', organizationController.getOne);
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit/:id', organizationController.editProfile);
-
+	app.post('/api/organization/delete/:id', organizationController.deleteOrganization);
 };
