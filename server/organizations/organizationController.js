@@ -146,6 +146,29 @@ module.exports = {
 	},
 
 	closeOpportunity : function (req, res) {
-		//TODO
-	}
-}
+		Organization.update({ _id : req.params.id.toString()},
+			{$pull: { currentOpportunities : req.body.opportunityId} },
+			function (error){
+				if (error) {
+					helpers.errorHandler("Opportunity Not Found", req, res);
+				}
+		});
+		Organization.update({ _id : req.params.id.toString()},
+			{ $pull: { pastOpportunities : req.body.opportunityId } },
+			function (error){
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				}
+		});
+		Organization.findOneAndUpdate({ _id: req.params.id.toString()},
+			{$pull : { pastOpportunities: req.body.opportunityId } },
+			{new : true},
+			function (error, saved){
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else {
+					res.status(201).send(JSON.stringify(saved));
+				}
+			});
+		}
+};
