@@ -138,7 +138,7 @@ module.exports = {
 						if (error) {
 							helpers.errorHandler(error, req, res);
 						} else {
-							res.statu(201).send(JSON.stringify(saved));
+							res.status(201).send(JSON.stringify(saved));
 						}
 				});
 			}
