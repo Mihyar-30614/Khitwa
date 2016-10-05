@@ -119,11 +119,28 @@ module.exports = {
 	      poster : req.body.poster
 	      });
 
-		tempOpportunity.save(function(error, saved){
+		tempOpportunity.save(function(error, created){
 			if (error) {
 				helpers.errorHandler(error, req, res);
 			} else {
-				res.status(201).send(saved);
+				// res.status(201).send(created);
+				Organization.update({ _id: req.params.id.toString()}, 
+					{ $pull: { currentOpportunities : created._id } },
+					function (error){
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						}
+					});
+				Organization.findOneAndUpdate({ _id: req.params.id.toString()},
+					{$push: { currentOpportunities : created._id } },
+					{new : true},
+					function( error, saved){
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						} else {
+							res.statu(201).send(JSON.stringify(saved));
+						}
+				});
 			}
 		});
 	},
