@@ -1,6 +1,7 @@
 var helpers = require('./helpers.js');
 var userController = require('../users/userController.js');
 var organizationController = require('../organizations/organizationController.js');
+var opportunityController = require('../opportunities/opportunityController.js');
 
 module.exports = function(app, express){
 	
@@ -21,5 +22,6 @@ module.exports = function(app, express){
 	app.post('/api/organization/add/:id', organizationController.addOpportunity);
 	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
 
-	
+	// opportunities routes goes here
+	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
 };
