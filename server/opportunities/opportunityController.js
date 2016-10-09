@@ -90,4 +90,24 @@ module.exports = {
   			})
   		}
   	},
+  	getCurrOpenings: function (req,res,next) {
+		var id = (req.params.id).toString();
+		findOpportunity({'_id':id})
+		.then(function(opportunity){
+			return opportunity.currOpenings
+		})
+		.then(function(current){
+			console.log(current)
+			findAllOpenings({'_id': { $in: current}})
+	        .then(function(cOpenings){
+	          	res.json(cOpenings);
+	        })
+			.fail(function(err){
+				res.send(204);
+			})
+		})
+		.fail(function (err) {
+	        next(err);
+	 	})
+	},
 }
