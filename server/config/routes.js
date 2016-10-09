@@ -26,6 +26,7 @@ module.exports = function(app, express){
 	// opportunities routes goes here
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunities/addOpening/:id', opportunityController.addOpening);
+	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);
 
 	// openings routes goes here
 	app.get('/api/opening/getall',openingController.allOpenings );
