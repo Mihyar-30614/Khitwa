@@ -24,7 +24,7 @@ module.exports = {
 	addOpening: function (req, res, next) {
   		var opportunityId = req.params.id.toString();
   		var token = req.headers['x-access-token'];
-  		if (token){
+  		if (!token){
   			next(new Error('No token'))
   		} else {
 	  		var currOpening = {
@@ -65,4 +65,29 @@ module.exports = {
 		 	})
 		}
 	},
+	editOpportunity : function (req,res,next) {
+  		var opId = req.params.id;
+  		var token = req.headers['x-access-token'];
+  		if (!token){
+  			next(new Error('No token'))
+  		} else {
+  			findOpportunity({_id:opId})
+  			.then(function (opportunity) {
+  				if(!opportunity) {
+  					next(new Error('Opportunity does not exist'));
+  				} else {
+  					opportunity.title = req.body.title || opportunity.title;
+  					opportunity.startDate = req.body.startDate || opportunity.startDate;
+  					opportunity.endDate = req.body.endDate || opportunity.endDate;
+  					opportunity.location = req.body.location || opportunity.location;
+  					opportunity.causesArea = req.body.causesArea || opportunity.causesArea;
+  					opportunity.description = req.body.description || opportunity.description;
+  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
+  					opportunity.poster = req.body.poster || opportunity.poster;
+  					opportunity.save();
+  					res.json(opportunity);
+  				}
+  			})
+  		}
+  	},
 }
