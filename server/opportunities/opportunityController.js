@@ -97,7 +97,6 @@ module.exports = {
 			return opportunity.currOpenings
 		})
 		.then(function(current){
-			console.log(current)
 			findAllOpenings({'_id': { $in: current}})
 	        .then(function(cOpenings){
 	          	res.json(cOpenings);
@@ -135,6 +134,17 @@ module.exports = {
 		.exec(function (error, opportunity) {
 			if (opportunity) {
 				res.status(200).send(opportunity)
+			} else {
+				helpers.errorHandler(error, req, res);
+			}
+		});
+	},
+	getOpportunityByOrgId : function (req, res) {
+		var id = req.params.id.toString();
+		Opportunity.find({_organizer : id})
+		.exec(function (error, opportunity) {
+			if (opportunity) {
+				res.status(200).send(opportunity);
 			} else {
 				helpers.errorHandler(error, req, res);
 			}
