@@ -2,6 +2,7 @@ var helpers = require('./helpers.js');
 var userController = require('../users/userController.js');
 var organizationController = require('../organizations/organizationController.js');
 var opportunityController = require('../opportunities/opportunityController.js');
+var openingController = require('../openings/openingController.js')
 
 module.exports = function(app, express){
 	
@@ -24,4 +25,7 @@ module.exports = function(app, express){
 
 	// opportunities routes goes here
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
+
+	// openings routes goes here
+	app.get('/api/opening/getall',openingController.allOpenings );
 };
