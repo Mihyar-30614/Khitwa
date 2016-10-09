@@ -23,7 +23,7 @@ module.exports = function(app, express){
 	app.post('/api/organization/add/:id', organizationController.addOpportunity);
 	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
 
-	// opportunities routes goes here
+	// Opportunities routes goes here
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunities/addOpening/:id', opportunityController.addOpening);
 	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);
@@ -33,6 +33,6 @@ module.exports = function(app, express){
 	app.get('/api/opportunities/organization/:id', opportunityController.getOpportunityByOrgId);
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
 
-	// openings routes goes here
+	// Openings routes goes here
 	app.get('/api/opening/getall',openingController.allOpenings );
 };
