@@ -129,4 +129,15 @@ module.exports = {
 	        next(err);
 	 	})
 	},
+	getOpportunity : function (req, res) {
+		var id = req.params.id.toString();
+		Opportunity.fineOne({ _id : id})
+		.exec(function (error, opportunity) {
+			if (opportunity) {
+				res.status(200).send(opportunity)
+			} else {
+				helpers.errorHandler(error, req, res);
+			}
+		});
+	}
 }
