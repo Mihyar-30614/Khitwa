@@ -131,7 +131,7 @@ module.exports = {
 	},
 	getOpportunity : function (req, res) {
 		var id = req.params.id.toString();
-		Opportunity.fineOne({ _id : id})
+		Opportunity.findOne({ _id : id})
 		.exec(function (error, opportunity) {
 			if (opportunity) {
 				res.status(200).send(opportunity)
