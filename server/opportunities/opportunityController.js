@@ -1,6 +1,7 @@
 var Opportunity = require('./opportunityModel.js');
 var User = require('../users/userModel.js');
 var Q = require('q');
+var helpers = require('../config/helpers.js');
 var jwt = require('jwt-simple');
 var Opening = require('../openings/openingModel.js');
 var Organization = require('../organizations/organizationModel.js');
@@ -8,6 +9,7 @@ var Organization = require('../organizations/organizationModel.js');
 var createOpening = Q.nbind(Opening.create, Opening);
 var findOpportunity = Q.nbind(Opportunity.findOne, Opportunity);
 var findAllOpenings = Q.nbind(Opening.find, Opening);
+var updateOrganization = Q.nbind(Organization.update, Organization);
 
 module.exports = {
 	
@@ -53,7 +55,7 @@ module.exports = {
 		  			.then(function(openings) {
 		  				findAllOpenings({'_id': { $in: openings}})
 				        .then(function(allOpenings){
-				          res.json(allOpenings);
+				          res.status(200).send(allOpenings);
 				        })
 		  			})
 		  			.fail(function(err){
@@ -135,7 +137,7 @@ module.exports = {
 			if (opportunity) {
 				res.status(200).send(opportunity)
 			} else {
-				helpers.errorHandler(error, req, res);
+				helpers.errorHandler('Opportunity Not Found', req, res);
 			}
 		});
 	},
@@ -149,5 +151,42 @@ module.exports = {
 				helpers.errorHandler(error, req, res);
 			}
 		});
+	},
+	deleteOne : function(req,res, next){
+	  	var id=(req.params.id).toString();
+	  	var orgId;
+	    findOpportunity({ _id : id})
+	    .then(function(opportunity){
+	    	orgId = opportunity._organizer;
+	    	Opening.remove({_id:{$in: opportunity.currOpenings}}, function(err, removed){
+	    		if(err){
+	    			helpers.errorHandler("Couldn't remove current openings", req, res);
+	    		} else {
+	    			Opening.remove({_id:{$in: opportunity.closedOpenings}}, function(err, removed){
+	    				if(err){
+			    			helpers.errorHandler("Couldn't remove closed openings", req, res);
+			    		} else {
+			    			opportunity.remove(function(err,table) {
+					        if(err){
+					          helpers.errorHandler('Unable to delete organization', req, res);
+					        } else {
+					      		updateOrganization({ _id: orgId }, { $pull: { currentOpportunities: id } })
+						    	.fail(function (err) {
+						    		updateOrganization({ _id: orgId }, { $pull: { pastOpportunities: id } })
+							    	.fail(function (err) {
+							    		next(err)
+							    	})
+					  			})
+		          				res.status(201).send('Opportunity Successfully Removed');
+				        		}
+				      		});
+			    		}
+	    			})
+	    		}
+	    	})
+	    })
+	    .fail(function(err){
+			next(error);
+	    })
 	}
 }
