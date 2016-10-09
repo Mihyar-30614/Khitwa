@@ -30,6 +30,8 @@ module.exports = function(app, express){
 	app.get('/api/opportunity/currentopenings/:id', opportunityController.getCurrOpenings);
 	app.get('/api/opportunity/closedopenings/:id', opportunityController.getClosedOpenings);
 	app.get('/api/opportunity/get/:id', opportunityController.getOpportunity);
+	app.get('/api/opportunities/organization/:id', opportunityController.getOpportunityByOrgId);
+	
 
 	// openings routes goes here
 	app.get('/api/opening/getall',openingController.allOpenings );
