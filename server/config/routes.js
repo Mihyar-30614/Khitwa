@@ -35,4 +35,5 @@ module.exports = function(app, express){
 
 	// Openings routes goes here
 	app.get('/api/opening/getall',openingController.allOpenings );
+	app.post('/api/openings/closeOpening/:id', openingController.closeOpening);
 };
