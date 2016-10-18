@@ -6,10 +6,7 @@ var opportunitySchema = new Schema({
 		type: String, 
 		required : true
 	},
-	_organizer : {
-		type : mongoose.Schema.Types.ObjectId,
-		ref : 'Organization'
-	},
+	_organizer : String,
 	startDate : {
 		type : String,
 		required : true
@@ -20,8 +17,8 @@ var opportunitySchema = new Schema({
 	description : String,
 	skillsRequired : [String],
 	poster : String, 
-	currOpenings : [{type: Schema.Types.ObjectId, ref : 'Opening'}],
-	closedOpenings : [{type: Schema.Types.ObjectId, ref : 'Opening'}],
+	currOpenings : [String],
+	closedOpenings : [String],
 	status : {
 		type : String,
 		enum : ['Active', 'Closed']
