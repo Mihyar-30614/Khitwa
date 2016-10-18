@@ -16,6 +16,7 @@ module.exports = {
 			}else {
 				 var newOrg = Organization({
 				 name : req.body.name,
+				 password : req.body.password,
 				 causes_area : req.body.causes_area,
 				 locations : req.body.locations,
 				 missionStatement : req.body.missionStatement,
@@ -78,7 +79,14 @@ module.exports = {
 		        organization.picture = req.body.picture || organization.picture;
 		        organization.currentOpportunities = req.body.currentOpportunities || organization.currentOpportunities;
 		        organization.pastOpportunities = req.body.pastOpportunities || organization.pastOpportunities;
-		        organization.owners = req.body.owners || organization.owners;
+		        if(req.body.oldPassword){
+						Organization.comparePassword(req.body.oldPassword , organization.password , res , function(){
+								organization.password = req.body.password;
+								organization.save(function(err, savedOrg){
+									res.status(201).send('Updated \n' + savedOrg);
+								});
+						});
+					}
 
 		        organization.save(function(error, saved){
 		        	if (error) {
