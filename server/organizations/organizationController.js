@@ -62,7 +62,7 @@ module.exports = {
 	},
 
 	editProfile :  function (req, res) {
-		Organization.findOne({ _id: req.params.id.toString()})
+		Organization.findOne({ name: req.params.name})
 		.exec( function (error, organization){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -70,7 +70,6 @@ module.exports = {
 				helpers.errorHandler('Organization Not Found');
 			}else{
 
-        		organization.name = req.body.name || organization.name;
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
 		        organization.locations = req.body.locations || organization.locations;
 		        organization.missionStatement = req.body.missionStatement || organization.missionStatement;
