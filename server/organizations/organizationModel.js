@@ -7,7 +7,7 @@ var SALT_WORK_FACTOR = 10;
 
 var OrganizationSchema = new Schema({
   name: {type: String, required: true, unique: true},
-  pssword: {type: String, required: true}
+  pssword: {type: String, required: true},
   causes_area: [String],
   locations: [String],
   missionStatement: String,
