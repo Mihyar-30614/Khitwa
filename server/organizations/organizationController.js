@@ -38,6 +38,30 @@ module.exports = {
 		});
 	},
 
+	signin : function (req, res) {
+		var name =  req.body.name;
+		var password = req.body.password;
+
+		Organization.findOne({name : name})
+		.exec(function (error, organization) {
+			if (organization) {
+				organization.comparePassword(password, organization.password, res, function (found) {
+					if (found) {
+						var token = jwt.encode(organization,'secret');
+						res.setHeader('x-access-token',token);
+						res.json({ token : token, name : organization.name });
+					} else {
+						helpers.errorHandler('Wrong Password', req, res);
+					}
+				})
+			} else if(error){
+				helpers.errorHandler(error, req, res);
+			}else{
+				helpers.errorHandler('User Does Not Exists', req, res);
+			}
+		})
+	},
+
 	getByName : function (req, res) {
 		Organization.findOne({ name: req.params.name})
 		.exec(function (error, organization) {
