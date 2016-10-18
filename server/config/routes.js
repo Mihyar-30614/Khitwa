@@ -16,7 +16,7 @@ module.exports = function(app, express){
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.createOrganization);
-	app.get('/api/organization/getbyname/:name', organizationController.getByName);
+	app.get('/api/organization/getByName/:name', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit/:id', organizationController.editProfile);
 	app.post('/api/organization/delete/:id', organizationController.deleteOrganization);
