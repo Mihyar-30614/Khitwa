@@ -92,7 +92,7 @@ module.exports = {
 	},
 
 	deleteOrganization : function (req, res ) {
-		Organization.findOne({ _id: req.params.id.toString()}).remove()
+		Organization.findOne({ name: req.params.name}).remove()
 		.exec(function (error, organization){
 			if(organization.result.n){
 				res.status(201).send('Organization Deleted');
