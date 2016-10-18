@@ -1,5 +1,9 @@
 var mongoose = require('mongoose');
+var Q = require('q');
 var Schema = mongoose.Schema;
+
+var bcrypt = require('bcrypt-nodejs');
+var SALT_WORK_FACTOR = 10;
 
 var OrganizationSchema = new Schema({
   name: {type: String, required: true, unique: true},
