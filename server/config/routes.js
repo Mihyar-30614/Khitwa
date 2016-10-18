@@ -18,8 +18,8 @@ module.exports = function(app, express){
 	app.post('/api/organization/signup', organizationController.createOrganization);
 	app.get('/api/organization/getByName/:name', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
-	app.post('/api/organization/edit/:id', organizationController.editProfile);
-	app.post('/api/organization/delete/:id', organizationController.deleteOrganization);
+	app.post('/api/organization/edit/:name', organizationController.editProfile);
+	app.post('/api/organization/delete/:name', organizationController.deleteOrganization);
 	app.post('/api/organization/add/:id', organizationController.addOpportunity);
 	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
 
