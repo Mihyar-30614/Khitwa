@@ -45,7 +45,7 @@ module.exports = {
 		Organization.findOne({name : name})
 		.exec(function (error, organization) {
 			if (organization) {
-				organization.comparePassword(password, organization.password, res, function (found) {
+				Organization.comparePassword(password, organization.password, res, function (found) {
 					if (found) {
 						var token = jwt.encode(organization,'secret');
 						res.setHeader('x-access-token',token);
