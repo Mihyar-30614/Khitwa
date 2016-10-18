@@ -4,8 +4,7 @@ var Schema = mongoose.Schema;
 var openingSchema = new Schema({
 	title : { type : String, required : true},
 	_opportunity: {
-		type : mongoose.Schema.Types.ObjectId,
-		ref : 'Opportunity',
+		type : String,
 		required : true
 	},
 	numberOfVolunteers: Number,
@@ -13,9 +12,9 @@ var openingSchema = new Schema({
 	description : String, 
 	skillsRequired : [String],
 	rescources : [String],
-	pendingApps: [{ type : mongoose.Types.ObjectId, ref : 'User'}],
-	volunteers : [{ type : mongoose.Types.ObjectId, ref : 'User'}],
-	rejectedApps : [{ type : mongoose.Types.ObjectId, ref : 'User'}],
+	pendingApps: [String],
+	volunteers : [String],
+	rejectedApps : [String],
 	status : { type : String, enum : ['Active', 'Closed'], required : true}
 });
 
