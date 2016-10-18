@@ -15,7 +15,6 @@ module.exports = {
 				helpers.errorHandler('Name Already Exists', req, res);
 			}else {
 				 var newOrg = Organization({
-				 EIN : req.body.EIN,
 				 name : req.body.name,
 				 causes_area : req.body.causes_area,
 				 locations : req.body.locations,
@@ -24,8 +23,7 @@ module.exports = {
 				 rate : req.body.rate,
 				 picture : req.body.picture,
 				 currentOpportunities : req.body.currentOpportunities,
-				 pastOpportunities : req.body.pastOpportunities,
-				 owners : req.body.owners
+				 pastOpportunities : req.body.pastOpportunities
 				});
 
 				newOrg.save( function (error, saved){
@@ -39,11 +37,11 @@ module.exports = {
 		});
 	},
 
-	getOne : function (req, res) {
-		Organization.findOne({ _id: req.params.id.toString()})
+	getByName : function (req, res) {
+		Organization.findOne({ name: req.params.name})
 		.exec(function (error, organization) {
 			if (organization) {
-				res.status(200).send(organization);
+				res.status(200).send(JSON.stringify(organization));
 			}else{
 				helpers.errorHandler('Organization Not Found', req, res);
 			}
@@ -72,7 +70,6 @@ module.exports = {
 				helpers.errorHandler('Organization Not Found');
 			}else{
 
-				organization.EIN = req.body.EIN || organization.EIN;
         		organization.name = req.body.name || organization.name;
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
 		        organization.locations = req.body.locations || organization.locations;
