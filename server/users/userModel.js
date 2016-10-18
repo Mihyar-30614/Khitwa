@@ -31,8 +31,7 @@ var UserSchema = new mongoose.Schema({
   causes: [String],
   rate: Number,
   picture: String,
-  salt: String,
-  events : [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+  salt: String
 });
 
 var User = mongoose.model('User' , UserSchema);
