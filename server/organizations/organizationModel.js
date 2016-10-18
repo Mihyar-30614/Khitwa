@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var OrganizationSchema = new Schema({
-	EIN: String,
   name: {type: String, required: true, unique: true},
   causes_area: [String],
   locations: [String],
