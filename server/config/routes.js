@@ -22,6 +22,7 @@ module.exports = function(app, express){
 	app.post('/api/organization/delete/:name', organizationController.deleteOrganization);
 	app.post('/api/organization/add/:id', organizationController.addOpportunity);
 	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
+	app.post('/api/organization/signin', organizationController.signin);
 
 	// Opportunities routes goes here
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
