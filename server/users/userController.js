@@ -140,5 +140,18 @@ module.exports = {
 
 	requestNewPass : function (req, res){
 		// to work on later
+	},
+
+	deleteUser : function (req, res) {
+		var username= req.params.username;
+
+		User.findOne({username: username}).remove()
+		.exec(function (error, deleted) {
+			if (deleted.result.n) {
+				res.status(201).send('User Deleted');
+			} else {
+				helpers.errorHandler(error, req, res);
+			}
+		})
 	}
 };
