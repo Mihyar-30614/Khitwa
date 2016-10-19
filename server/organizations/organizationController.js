@@ -62,6 +62,26 @@ module.exports = {
 		})
 	},
 
+	checkAuth : function (req, res) {
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		}else{
+			var organization = jwt.decode(token,'secret');
+			// res.status(200).send(organization)
+			Organization.findOne({name : organization.name})
+			.exec(function (error, org) {
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else if(org){
+					res.status(200).send('Authorized');
+				}else{
+					helpers.errorHandler('Organization Not Found');
+				}
+			})
+		}
+	},
+
 	getByName : function (req, res) {
 		Organization.findOne({ name: req.params.name})
 		.exec(function (error, organization) {
