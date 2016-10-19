@@ -29,7 +29,7 @@ module.exports = {
 
 				newOrg.save( function (error, saved){
 					if (saved) {
-						res.status(201).send(JSON.stringify(saved));
+						res.status(201).send('Organization Created');
 					}else{
 						helpers.errorHandler(error, req, res);
 					}
@@ -68,7 +68,6 @@ module.exports = {
 			helpers.errorHandler('No Token', req, res);
 		}else{
 			var organization = jwt.decode(token,'secret');
-			// res.status(200).send(organization)
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
 				if (error) {
