@@ -10,9 +10,10 @@ module.exports = function(app, express){
 	app.post('/api/users/signin', userController.signin);
 	app.post('/api/users/signup', userController.signup);
 	app.get('/api/users/getall', userController.getAll);
-	app.get('/api/users/x/:username', userController.getUser);
+	app.get('/api/users/getUser/:username', userController.getUser);
 	app.get('/api/users/signedin', userController.checkAuth);
 	app.post('/api/user/edit/:username', userController.editUser);
+	app.post('/api/user/delete/:username', userController.deleteUser);
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.createOrganization);
