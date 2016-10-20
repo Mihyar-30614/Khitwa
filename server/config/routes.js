@@ -21,7 +21,7 @@ module.exports = function(app, express){
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit/:name', organizationController.editProfile);
 	app.post('/api/organization/delete/:name', organizationController.deleteOrganization);
-	app.post('/api/organization/add/:id', organizationController.addOpportunity);
+	app.post('/api/organization/addOpportunity', organizationController.addOpportunity);
 	app.post('/api/organization/close/:id', organizationController.closeOpportunity);
 	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/signedin', organizationController.checkAuth);
