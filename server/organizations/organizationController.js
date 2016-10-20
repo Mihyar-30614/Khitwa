@@ -154,10 +154,98 @@ module.exports = {
 	},
 
 	addOpportunity : function (req, res) {
-		//TODO
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		}else{
+			var organization = jwt.decode(token,'secret');
+			var organizer = organization.name;
+			var newOpp = new Opportunity({
+				title : req.body.title,
+				_organizer : organizer,
+				startDate : req.body.startDate,
+				endDate: req.body.endDate,
+				location : req.body.location,
+				causesArea : req.body.causesArea,
+				description : req.body.description,
+				skillsRequired : req.body.skillsRequired,
+				poster : req.body.poster,
+				currOpenings : req.body.currOpenings,
+				closedOppenings : req.body.closedOppenings,
+				status : req.body.status
+			});
+
+			newOpp.save(function (error, saved) {
+				if (saved) {
+					Organization.findOne({name : organizer})
+					.exec(function (error, org) {
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						} else if(org){
+							var id = saved._id;
+							org.currentOpportunities.push(id);
+							org.save(function (error, savedArray) {
+								if (error) {
+									helpers.errorHandler(error, req, res);
+								} else {
+									console.log(org.currentOpportunities)
+								}
+							})
+						}else{
+							helpers.errorHandler('Organization Not Found');
+						}
+					})
+					res.status(201).send('Opportunity Created');
+				} else {
+					helpers.errorHandler(error, req, res);
+				}
+			});
+		}
 	},
 
 	closeOpportunity : function (req, res) {
-		//TODO
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			var organization = jwt.decode(token, 'secret');
+			var id = req.params.id;
+			Opportunity.findOne({_id : id})
+			.exec(function (error, found) {
+				if (found) {
+					found.status='Closed';
+					found.save(function (error, saved) {
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						} else {
+							res.status(201).send('Opportunity Closed');
+						}
+					})
+				} else if(error) {
+					helpers.errorHandler(error, req, res);
+				}else{
+					helpers.errorHandler('Opportunity Not Found');
+				}
+			})
+			Organization.findOne({name : organization.name})
+			.exec(function (error, org) {
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else if (org) {
+					var index = org.currentOpportunities.indexOf(id.toString());
+					var toClose = org.currentOpportunities.splice(index,1);
+					org.pastOpportunities.push(toClose);
+					org.save(function (error, savedOrg) {
+						if (savedOrg) {
+							console.log('Moved To Past Opportunities');
+						} else {
+							helpers.errorHandler(error, req, res);
+						}
+					})
+				}else{
+					helpers.errorHandler('Organization Not Found');
+				}
+			})
 		}
+	}
 };
