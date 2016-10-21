@@ -1,7 +1,6 @@
 var Opportunity = require('./opportunityModel.js');
 var Opening = require('../openings/openingModel.js');
 var Organization = require('../organizations/organizationModel.js');
-// var User = require('../users/userModel.js');
 var Q = require('q');
 var helpers = require('../config/helpers.js');
 var jwt = require('jwt-simple');
@@ -75,23 +74,28 @@ module.exports = {
 				if (error) {
 					helpers.errorHandler(error, req, res);
 				} else if (opportunity) {
-					opportunity.title = req.body.title || opportunity.title;
-  					opportunity.startDate = req.body.startDate || opportunity.startDate;
-  					opportunity.endDate = req.body.endDate || opportunity.endDate;
-  					opportunity.location = req.body.location || opportunity.location;
-  					opportunity.causesArea = req.body.causesArea || opportunity.causesArea;
-  					opportunity.description = req.body.description || opportunity.description;
-  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
-  					opportunity.poster = req.body.poster || opportunity.poster;
-  					opportunity.save()
-  					.exec(function (error, saved) {
-  						if (error) {
-  							helpers.errorHandler(error, req, res);
-  						} else {
-  							res.status(201).send('\n Updated!');
-  						}
-  					})
-				}else{
+					orgna = jwt.decode(token,'secret');
+					if (opportunity._organizer === orgna.name) {
+						opportunity.title = req.body.title || opportunity.title;
+	  					opportunity.startDate = req.body.startDate || opportunity.startDate;
+	  					opportunity.endDate = req.body.endDate || opportunity.endDate;
+	  					opportunity.location = req.body.location || opportunity.location;
+	  					opportunity.causesArea = req.body.causesArea || opportunity.causesArea;
+	  					opportunity.description = req.body.description || opportunity.description;
+	  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
+	  					opportunity.poster = req.body.poster || opportunity.poster;
+	  					opportunity.save()
+	  					.exec(function (error, saved) {
+	  						if (error) {
+	  							helpers.errorHandler(error, req, res);
+	  						} else {
+	  							res.status(201).send('\n Updated!');
+	  						}
+	  					})
+					} else {
+						helpers.errorHandler('Not Authorized To Modify Others');
+					}
+				} else {
 					helpers.errorHandler('Opportunity Not Found');
 				}
 			})
@@ -99,9 +103,11 @@ module.exports = {
   	},
 
   	getCurrOpenings: function (req,res) {
+  		//TODO: return an array of current openings
 	},
 
 	getClosedOpenings: function (req,res) {
+		//TODO: return an array of closed openings
 	},
 
 	getOpportunity : function (req, res) {
@@ -129,5 +135,6 @@ module.exports = {
 	},
 
 	deleteOne : function(req,res){
+		//TODO: decide if the org can delete past opportunities
 	}
 }
