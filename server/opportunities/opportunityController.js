@@ -25,7 +25,7 @@ module.exports = {
 			helpers.errorHandler('No Token', req, res);
 		} else {
 			var openingId;
-			var opportunityId = req.params.id;
+			var opportunityId = req.params.id.toString();
 			var newOpening = new Opening({
 				title : req.body.title,
 				_opportunity : opportunityId,
@@ -65,6 +65,37 @@ module.exports = {
 	},
 
 	editOpportunity : function (req,res) {
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			var id = req.params.id.toString();
+			Opportunity.findOne({_id : id})
+			.exec(function (error, opportunity) {
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else if (opportunity) {
+					opportunity.title = req.body.title || opportunity.title;
+  					opportunity.startDate = req.body.startDate || opportunity.startDate;
+  					opportunity.endDate = req.body.endDate || opportunity.endDate;
+  					opportunity.location = req.body.location || opportunity.location;
+  					opportunity.causesArea = req.body.causesArea || opportunity.causesArea;
+  					opportunity.description = req.body.description || opportunity.description;
+  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
+  					opportunity.poster = req.body.poster || opportunity.poster;
+  					opportunity.save()
+  					.exec(function (error, saved) {
+  						if (error) {
+  							helpers.errorHandler(error, req, res);
+  						} else {
+  							res.status(201).send('\n Updated!');
+  						}
+  					})
+				}else{
+					helpers.errorHandler('Opportunity Not Found');
+				}
+			})
+		}
   	},
 
   	getCurrOpenings: function (req,res) {
