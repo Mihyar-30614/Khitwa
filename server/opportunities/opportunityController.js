@@ -103,7 +103,37 @@ module.exports = {
   	},
 
   	getCurrOpenings: function (req,res) {
-  		//TODO: return an array of current openings
+  		// This should be tested
+  		var open=[];
+  		var id = req.params.id;
+  		var token = req.headers['x-access-token'];
+  		if (!token) {
+  			helpers.errorHandler('No Token', req, res);
+  		} else {
+  			Opportunity.findOne({_id : id})
+  			.then(function (error, opportunity) {
+  				if (error) {
+  					helpers.errorHandler(error, req, res);
+  				} else if(opportunity){
+  					return opportunity.currOpenings;
+  				}else{
+  					helpers.errorHandler('Opportunity Not Found');
+  				}
+  			})
+  			.then(function (current) {
+  				for (var i = 0; i < current.length; i++) {
+  					Opening.find({_id : current[i]})
+  					.then(function (error, opening) {
+  						if (error) {
+  							helpers.errorHandler(error, req, res);
+  						} else if(opening){
+  							open.push(opening);
+  						}
+  					})
+  				}
+  				res.status(200).send(open)
+  			})
+  		}
 	},
 
 	getClosedOpenings: function (req,res) {
