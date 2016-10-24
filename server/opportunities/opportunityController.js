@@ -111,10 +111,8 @@ module.exports = {
   			helpers.errorHandler('No Token', req, res);
   		} else {
   			Opportunity.findOne({_id : id})
-  			.then(function (error, opportunity) {
-  				if (error) {
-  					helpers.errorHandler(error, req, res);
-  				} else if(opportunity){
+  			.then(function (opportunity) {
+				if(opportunity){
   					return opportunity.currOpenings;
   				}else{
   					helpers.errorHandler('Opportunity Not Found');
@@ -123,10 +121,8 @@ module.exports = {
   			.then(function (current) {
   				for (var i = 0; i < current.length; i++) {
   					Opening.find({_id : current[i]})
-  					.then(function (error, opening) {
-  						if (error) {
-  							helpers.errorHandler(error, req, res);
-  						} else if(opening){
+  					.then(function (opening) {
+  						if(opening){
   							open.push(opening);
   						}
   					})
@@ -137,7 +133,16 @@ module.exports = {
 	},
 
 	getClosedOpenings: function (req,res) {
-		//TODO: return an array of closed openings
+		var token = req.headers['x-access-token'];
+		var id = req.params.id;
+		if (!token) {
+			helpers.errorHandler('No Token');
+		} else {
+			Opportunity.findOne({_id : id})
+			.then(function () {
+				// body...
+			})
+		}
 	},
 
 	getOpportunity : function (req, res) {
