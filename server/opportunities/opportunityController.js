@@ -133,14 +133,29 @@ module.exports = {
 	},
 
 	getClosedOpenings: function (req,res) {
+		// This should be tested
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
+		var close = [];
 		if (!token) {
 			helpers.errorHandler('No Token');
 		} else {
 			Opportunity.findOne({_id : id})
-			.then(function () {
-				// body...
+			.then(function (opportunity) {
+				if (opportunity) {
+					return opportunity.closedOpenings;
+				} else {
+					helpers.errorHandler('Opportunity Not Found');
+				}
+			})
+			.then(function (closed) {
+				for (var i = 0; i < closed.length; i++) {
+					Opening.find({ _id : closed[i] })
+					.then(function (closedOpp) {
+						close.push(closedOpp);
+					}) 
+				}
+				res.status(200).send(closedOpp);
 			})
 		}
 	},
