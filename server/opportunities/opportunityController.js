@@ -185,6 +185,28 @@ module.exports = {
 	},
 
 	deleteOne : function(req,res){
-		//TODO: decide if the org can delete past opportunities
+		var token = req.headers['x-access-token'];
+		var id = req.params.id;
+		if (!token) {
+			helpers.errorHandler('No Token');
+		} else {
+			var org = jwt.decode(token, 'secret');
+			Organization.findOne({name : org.name})
+			.exec(function (error, organization) {
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else if (organization) {
+					var index = organization.pastOpportunities.indexOf(id);
+					organization.splice(index, 1);
+					organization.save(function (saved) {
+						if (saved) {
+							res.status(201).send('Opportunity Deleted');
+						}
+					})
+				}else{
+					helpers.errorHandler('Organization Not Found', req, res);
+				}
+			})
+		}
 	}
 }
