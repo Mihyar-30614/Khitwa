@@ -243,10 +243,8 @@ module.exports = {
 							opportunity.closedOpenings.splice(index,1);
 							opportunity.currOpenings.push(id);
 
-							opportunity.save(function (error, saved) {
-								if (error) {
-									helpers.errorHandler(error, req, res);
-								} else {
+							opportunity.save(function (saved) {
+								if (saved) {
 									res.status(201).send('Opening reopened');
 								}
 							})
