@@ -249,6 +249,43 @@ module.exports = {
 		}
 	},
 	reopenOpportunity : function (req, res) {
-		// need to be done
+		var token = req.headers['x-access-token'];
+		var id = req. params.id.toString();
+
+		if (!token) {
+			headers.errorHandler('No Token', req, res);
+		} else {
+			Opportunity.findOne({_id : id})
+			.exec(function (error, opportunity) {
+				if (error) {
+					headers.errorHandler(error, req, res);
+				} else if (opportunity) {
+					opportunity.status='Active';
+					var org = opportunity._organizer;
+					Organization.findOne({name : org})
+					.exec(function (error, organization) {
+						if (error) {
+							headers.errorHandler(error, req, res);
+						} else if (organization) {
+							var index = organization.pastOpportunities.indexOf(id);
+							organization.pastOpportunities.splice(index,1);
+							organization.currentOpportunities.push(id);
+							organization.save()
+							.exec(function (error, saved) {
+								if (error) {
+									headers.errorHandler(error, req, res);
+								} else {
+									res.status(201).send('Opportunity Reopened');
+								}
+							})
+						} else {
+							helpers.errorHandler('Organization Not Found');
+						}
+					})
+				} else {
+					headers.errorHandler('Opportunity Not Found');
+				}
+			})
+		}
 	}
 };
