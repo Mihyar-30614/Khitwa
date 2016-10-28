@@ -6,6 +6,7 @@ var Q = require('q');
 module.exports = {
 
 	signin: function (req, res) {
+
 		var username = req.body.username;
 		var password = req.body.password;
 
@@ -30,6 +31,7 @@ module.exports = {
 	},
 
 	signup : function (req, res) {
+
 		var username = req.body.username;
 
 		User.findOne({ username : username})
@@ -52,10 +54,8 @@ module.exports = {
 					causes : req.body.causes,
 					picture : req.body.picture
 				});
-				newUser.save(function (error, newUser) {
-					if (error) {
-						helpers.errorHandler(error, req, res);
-					} else{
+				newUser.save(function (newUser) {
+					if (newUser) {
 						res.status(201).send('User Created');
 					}
 				});
@@ -64,6 +64,7 @@ module.exports = {
 	},
 
 	checkAuth : function (req, res, next) {
+
 	    var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -83,6 +84,7 @@ module.exports = {
 	},
 
 	getUser : function (req, res){
+
 		User.findOne({ username: req.params.username}, function(error, user){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -93,6 +95,7 @@ module.exports = {
 	},
 
 	getAll : function (req, res){
+
 		User.find({}, function(error, users){
 			if (error) {
 				helpers.errorHandler(error, req, res);
@@ -102,8 +105,9 @@ module.exports = {
 		});
 	},
 
-	// a function that allows for the user to edit their basic infor
+	// a function that allows for the user to edit their basic info
 	editUser : function (req, res) {
+
 		User.findOne({ username : req.params.username})
 		.exec(function (error, user){
 			if (error) {
@@ -119,16 +123,14 @@ module.exports = {
 				if(req.body.oldPassword){
 						User.comparePassword(req.body.oldPassword , user.password , res , function(){
 								user.password = req.body.password;
-								user.save(function(err, savedUser){
+								user.save(function(savedUser){
 									res.status(201).send('Updated \n' + savedUser);
 								});
 						});
 					}
 
-				user.save(function (error, savedUser){
-					if (error) {
-						helpers.errorHandler(error, req, res);
-					}else{
+				user.save(function (savedUser){
+					if (savedUser) {
 						res.status(201).send(JSON.stringify(savedUser));
 					}
 				});
@@ -143,6 +145,7 @@ module.exports = {
 	},
 
 	deleteUser : function (req, res) {
+		
 		var username= req.params.username;
 
 		User.findOne({username: username}).remove()
