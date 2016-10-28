@@ -25,7 +25,7 @@ module.exports = function(app, express){
 	app.post('/api/organization/closeOpportunity/:id', organizationController.closeOpportunity);
 	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/signedin', organizationController.checkAuth);
-	app.post('/api/organization/reopenOpportunity', organizationController.reopenOpportunity);
+	app.post('/api/organization/reopenOpportunity/:id', organizationController.reopenOpportunity);
 
 	// Opportunities routes goes here
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
