@@ -247,5 +247,8 @@ module.exports = {
 				}
 			})
 		}
+	},
+	reopenOpportunity : function (req, res) {
+		// need to be done
 	}
 };
