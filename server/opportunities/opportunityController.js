@@ -196,8 +196,14 @@ module.exports = {
 				if (error) {
 					helpers.errorHandler(error, req, res);
 				} else if (organization) {
-					var index = organization.pastOpportunities.indexOf(id);
-					organization.splice(index, 1);
+					if (organization.pastOpportunities.indexOf(id)>0) {
+						var index = organization.pastOpportunities.indexOf(id);
+						organization.pastOpportunities.splice(index, 1);
+					} else {
+						var index = organization.currentOpportunities.indexOf(id);
+						organization.currentOpportunities.splice(index, 1);
+					}
+
 					organization.save(function (saved) {
 						if (saved) {
 							res.status(201).send('Opportunity Deleted');
