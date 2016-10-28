@@ -8,6 +8,7 @@ var jwt = require('jwt-simple');
 module.exports = {
 	
 	allOpportunities : function (req, res) {
+		
 		Opportunity.find({})
 		.exec(function(error, opportunities){
 			if (error) {
@@ -19,6 +20,7 @@ module.exports = {
 	},
 
 	addOpening: function (req, res) {
+
 		var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -60,6 +62,7 @@ module.exports = {
 	},
 
 	editOpportunity : function (req,res) {
+
 		var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -96,7 +99,7 @@ module.exports = {
   	},
 
   	getCurrOpenings: function (req,res) {
-  		// This should be tested
+  		
   		var open=[];
   		var id = req.params.id;
   		var token = req.headers['x-access-token'];
@@ -126,7 +129,7 @@ module.exports = {
 	},
 
 	getClosedOpenings: function (req,res) {
-		// This should be tested
+		
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
 		var close = [];
