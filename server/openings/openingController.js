@@ -35,7 +35,11 @@ module.exports = {
         } else if (opening) {
           opportunitId = opening._opportunity;
           opening.status = 'Closed';
-          console.log('Opening Closed');
+          opening.save(function (saved) {
+            if (saved) {
+             console.log('Opening Closed');      
+            }
+          })
 
           Opportunity.findOne({_id : opportunitId})
           .exec(function (error, opportunity) {
