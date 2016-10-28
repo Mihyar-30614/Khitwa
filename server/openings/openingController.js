@@ -8,6 +8,7 @@ var jwt = require('jwt-simple');
 module.exports = {
 
 	allOpenings : function (req, res) {
+
     Opening.find({})
     .exec(function (error, openings) {
       if (error) {
@@ -21,6 +22,7 @@ module.exports = {
 	},
 	
 	closeOpening: function (req, res) {
+
     var token = req.headers['x-access-token'];
     var id = req.params.id.toString();
     var opportunitId;
@@ -66,6 +68,7 @@ module.exports = {
 	},
 
 	deleteOne : function(req, res){
+    
     var token = req.headers['x-access-token'];
     var id = req.params.id.toString();
 
