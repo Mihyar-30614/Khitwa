@@ -211,6 +211,53 @@ module.exports = {
 	},
 
 	reopenOpening : function (req, res) {
-		// TODO
+		var token = req.headers['x-access-token'];
+		var id = req.params.id.toString();
+
+		if (!token) {
+			headers.errorHandler('No Token');
+		} else {
+
+			Opening.findOne({_id : id})
+			.exec(function (error, opening) {
+				if (error) {
+					helpers.errorHandler(error, req, res);
+				} else if (opening) {
+					var opportunityId = opening._opportunity;
+					opening.status= 'Active';
+
+					opening.save(function (error, saved) {
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						} else {
+							console.log('Changed to Active');
+						}
+					})
+
+					Opportunity.findOne({_id : opportunityId})
+					.exec(function (error, opportunity) {
+						if (error) {
+							helpers.errorHandler(error, req, res);
+						} else if (opportunity) {
+							var index = opportunity.closedOpenings.indexOf(id);
+							opportunity.closedOpenings.splice(index,1);
+							opportunity.currOpenings.push(id);
+
+							opportunity.save(function (error, saved) {
+								if (error) {
+									helpers.errorHandler(error, req, res);
+								} else {
+									res.status(201).send('Opening reopened');
+								}
+							})
+						} else {
+							helpers.errorHandler('Opportunit Not Found', req, res);
+						}
+					})
+				} else {
+					helpers.errorHandler('Opening Not Found', req, res);
+				}
+			})
+		}
 	}
 }
