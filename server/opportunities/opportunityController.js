@@ -208,5 +208,9 @@ module.exports = {
 				}
 			})
 		}
+	},
+
+	reopenOpening : function (req, res) {
+		// TODO
 	}
 }
