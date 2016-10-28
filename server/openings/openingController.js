@@ -64,6 +64,55 @@ module.exports = {
 	},
 
 	deleteOne : function(req, res){
+    var token = req.headers['x-access-token'];
+    var id = req.params.id.toString();
+
+    if (!token) {
+      helpers.errorHandler('No Token', req, res);
+    } else {
+
+      Opening.findOne({ _id : id})
+      .exec(function (error, opening) {
+        if (error) {
+          helpers.errorHandler(error, req, res);
+        } else if (opening) {
+          opening.remove()
+          .exec(function (error, open) {
+            if (open.result.n) {
+              var oppId = opening._opportunity;
+              Opportunity.findOne({ _id : oppId})
+              .exec(function (error, opportunity) {
+                if (error) {
+                  helpers.errorHandler(error, req, res);
+                } else if (opportunity) {
+                  if(opportunity.currOpenings.indexOf(id)>0){
+                    var index = opportunity.currOpenings.indexOf(id);
+                    opportunity.currOpenings.splice(index,1);
+                  }else{
+                    var index = opportunity.closedOpenings.indexOf(id);
+                    opportunity.closedOpenings.splice(index,1);
+                  }
+
+                  opportunity.save(function (error, saved) {
+                    if (error) {
+                      helpers.errorHandler(error, req, res);
+                    } else {
+                      res.status(201).send('Opening Deleted');
+                    }
+                  })
+                } else {
+                  helpers.errorHandler('Opportunity Not Found', req, res);
+                }
+              })
+            }else{
+              helpers.errorHandler('Opening Delete Failed', req, res);
+            }
+          })
+        } else {
+          helpers.errorHandler('Opening Not Found', req, res);
+        }
+      })
+    }
 	},
 
 	editOpening : function (req, res) {
