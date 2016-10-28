@@ -218,7 +218,7 @@ module.exports = {
 						if (error) {
 							helpers.errorHandler(error, req, res);
 						} else {
-							res.status(201).send('Opportunity Closed');
+							console.log('Changed to Closed');
 						}
 					})
 				} else if(error) {
@@ -237,7 +237,7 @@ module.exports = {
 					org.pastOpportunities.push(toClose);
 					org.save(function (error, savedOrg) {
 						if (savedOrg) {
-							console.log('Moved To Past Opportunities');
+							res.status(201).send('Opportunity Closed');
 						} else {
 							helpers.errorHandler(error, req, res);
 						}
