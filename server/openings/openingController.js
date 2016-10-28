@@ -45,11 +45,9 @@ module.exports = {
               var index = opportunity.currOpenings.indexOf(id);
               opportunity.currOpenings.splice(index,1);
               opportunity.closedOpenings.push(id);
-              opportunity.save(function (error, saved) {
+              opportunity.save(function (saved) {
                 if (saved) {
                   res.status(201).send('Opening Closed');
-                } else {
-                  helpers.errorHandler(error, req, res);
                 }
               })
             } else {
@@ -93,10 +91,8 @@ module.exports = {
                     opportunity.closedOpenings.splice(index,1);
                   }
 
-                  opportunity.save(function (error, saved) {
-                    if (error) {
-                      helpers.errorHandler(error, req, res);
-                    } else {
+                  opportunity.save(function (saved) {
+                    if (saved) {
                       res.status(201).send('Opening Deleted');
                     }
                   })
