@@ -7,6 +7,7 @@ var helpers = require('../config/helpers.js');
 module.exports = {
 
 	createOrganization : function (req, res) {
+
 		Organization.findOne({name: req.body.name})
 		.exec( function (error, found){
 			if (error) {
@@ -39,6 +40,7 @@ module.exports = {
 	},
 
 	signin : function (req, res) {
+
 		var name =  req.body.name;
 		var password = req.body.password;
 
@@ -63,6 +65,7 @@ module.exports = {
 	},
 
 	checkAuth : function (req, res) {
+
 		var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -82,6 +85,7 @@ module.exports = {
 	},
 
 	getByName : function (req, res) {
+
 		Organization.findOne({ name: req.params.name})
 		.exec(function (error, organization) {
 			if (organization) {
@@ -93,6 +97,7 @@ module.exports = {
 	},
 
 	getAll : function (req, res) {
+
 		Organization.find({})
 		.exec( function (error, organization){
 			if (organization) {
@@ -106,6 +111,7 @@ module.exports = {
 	},
 
 	editProfile :  function (req, res) {
+
 		Organization.findOne({ name: req.params.name})
 		.exec( function (error, organization){
 			if (error) {
@@ -125,16 +131,14 @@ module.exports = {
 		        if(req.body.oldPassword){
 						Organization.comparePassword(req.body.oldPassword , organization.password , res , function(){
 								organization.password = req.body.password;
-								organization.save(function(err, savedOrg){
+								organization.save(function(savedOrg){
 									res.status(201).send('Updated \n' + savedOrg);
 								});
 						});
 					}
 
-		        organization.save(function(error, saved){
-		        	if (error) {
-		        		helpers.errorHandler(error, req, res);
-		        	}else {
+		        organization.save(function(saved){
+		        	if (saved) {
 		        		res.status(201).send(JSON.stringify(saved));
 		        	}
 		        });
@@ -143,6 +147,7 @@ module.exports = {
 	},
 
 	deleteOrganization : function (req, res ) {
+
 		Organization.findOne({ name: req.params.name}).remove()
 		.exec(function (error, organization){
 			if(organization.result.n){
@@ -154,6 +159,7 @@ module.exports = {
 	},
 
 	addOpportunity : function (req, res) {
+
 		var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -204,6 +210,7 @@ module.exports = {
 	},
 
 	closeOpportunity : function (req, res) {
+
 		var token = req.headers['x-access-token'];
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
@@ -249,6 +256,7 @@ module.exports = {
 		}
 	},
 	reopenOpportunity : function (req, res) {
+		
 		var token = req.headers['x-access-token'];
 		var id = req. params.id.toString();
 
