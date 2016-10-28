@@ -188,7 +188,7 @@ module.exports = {
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
 		if (!token) {
-			helpers.errorHandler('No Token');
+			helpers.errorHandler('No Token', req, res);
 		} else {
 			var org = jwt.decode(token, 'secret');
 			Organization.findOne({name : org.name})
