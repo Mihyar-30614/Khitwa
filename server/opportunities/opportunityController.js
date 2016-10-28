@@ -35,10 +35,8 @@ module.exports = {
 				resources : req.body.resources,
 				status : req.body.status
 			})
-			newOpening.save(function (error, saved) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else {
+			newOpening.save(function (saved) {
+				if (saved) {
 					openingId = saved._id;
 					console.log('Opening Created');
 				}
@@ -49,10 +47,8 @@ module.exports = {
 					helpers.errorHandler(error, req, res);
 				} else if (opportunity) {
 					opportunity.currOpenings.push(openingId);
-					opportunity.save(function (error, saved) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else {
+					opportunity.save(function (saved) {
+						if (saved) {
 							res.status(201).send('Opening Added');
 						}
 					})
@@ -84,11 +80,8 @@ module.exports = {
 	  					opportunity.description = req.body.description || opportunity.description;
 	  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
 	  					opportunity.poster = req.body.poster || opportunity.poster;
-	  					opportunity.save()
-	  					.exec(function (error, saved) {
-	  						if (error) {
-	  							helpers.errorHandler(error, req, res);
-	  						} else {
+	  					opportunity.save(function (saved) {
+	  						if (saved) {
 	  							res.status(201).send('\n Updated!');
 	  						}
 	  					})
@@ -232,10 +225,8 @@ module.exports = {
 					var opportunityId = opening._opportunity;
 					opening.status= 'Active';
 
-					opening.save(function (error, saved) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else {
+					opening.save(function (saved) {
+						if (saved) {
 							console.log('Changed to Active');
 						}
 					})
