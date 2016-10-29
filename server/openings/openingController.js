@@ -3,7 +3,7 @@ var Opening=require('./openingModel.js');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
-// var User = require('../users/userModel.js');
+var User = require('../users/userModel.js');
 
 module.exports = {
 
@@ -136,7 +136,7 @@ module.exports = {
           opening.description = req.body.description || opening.description;
           opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
           opening.resources = req.body.resources || opening.resources;
-          
+
           opening.save(function (saved) {
             if (saved) {
               res.status(201).send('Opening Edited');
@@ -150,6 +150,39 @@ module.exports = {
 	},
 
   applyToOpening: function (req, res){
+
+    var token = req.headers['x-access-token'];
+    var id = req.params.id.toString();
+
+    if (!token) {
+      helpers.errorHandler('No Token', req, res);
+    } else {
+      var user = jwt-decode(token,'secret');
+      User.findOne({name : user.name})
+      .exec(function (error, user) {
+        if (error) {
+          helpers.errorHandler(error, req, res);
+        } else if (user) {
+          Opening.findOne({ _id : id})
+          .exec(function (error, opening) {
+            if (error) {
+              helpers.errorHandler(error, req, res);
+            } else if (opening) {
+              opening.pendingApps.push(user.name);
+              opening.save(function (saved) {
+                if (saved) {
+                  res.status(201).send('User Applied');
+                }
+              })
+            } else {
+              helpers.errorHandler('Opening Not Found', req, res);
+            }
+          })
+        } else {
+          helpers.errorHandler('User Not Found', req, res);
+        }
+      })
+    }
   },
 
   approveVolunteer: function (req, res){
