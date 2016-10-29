@@ -42,4 +42,6 @@ module.exports = function(app, express){
 	app.get('/api/opening/getall',openingController.allOpenings );
 	app.post('/api/openings/closeOpening/:id', openingController.closeOpening);
 	app.post('/api/opening/delete/:id',openingController.deleteOne);
+	app.post('/api/opening/edit/:id', openingController.editOpening);
+	app.post('/api/opening/apply/:id', openingController.applyToOpening);
 };
