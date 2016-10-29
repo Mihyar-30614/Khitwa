@@ -1,9 +1,10 @@
-var Opportunity=require('../opportunities/opportunityModel.js');
-var Opening=require('./openingModel.js');
+var Opportunity = require('../opportunities/opportunityModel.js');
+var Opening = require('./openingModel.js');
+var User = require('../users/userModel.js');
+var Organization = require('../organizations/organizationController.js');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
-var User = require('../users/userModel.js');
 
 module.exports = {
 
@@ -186,6 +187,42 @@ module.exports = {
   },
 
   approveVolunteer: function (req, res){
+
+    var token = req.headers['x-access-token'];
+    var openingId = req.params.id.toString();
+    var applicantId = req.body.applicantId;
+
+    if (!token) {
+      helpers.errorHandler('No Token', req, res);
+    } else {
+      var user = jwt-decode(token,'secret');
+      Organization.findOne({ name : user.name})
+      .exec(function (error, org) {
+        if (error) {
+          helpers.errorHandler(error, req, res);
+        } else if (org) {
+          Opening.findOne({ _id : openingId })
+          .exec(function (error, opening) {
+            if (error) {
+              helpers.errorHandler(error, req, res);
+            } else if (opening) {
+              var index = opening.pendingApps.indexOf(applicantId);
+              opening.pendingApps.splice(index,1);
+              opening.volunteers.push(applicantId);
+              opening.save(function (saved) {
+                if (saved) {
+                  res.status(201).send('User Approved');
+                }
+              })
+            } else {
+              helpers.errorHandler('Opening Not Found');
+            }
+          })
+        } else {
+          helpers.errorHandler('Not Authorized');
+        }
+      })
+    }
   },
 
   rejectVolunteer: function (req, res){
