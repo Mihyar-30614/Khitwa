@@ -19,7 +19,7 @@ module.exports = {
 					if (found) {
 						var token = jwt.encode(user, 'secret');
 						res.setHeader('x-access-token', token);
-						res.json({token : token, userId: user._id});
+						res.json({token : token, username: user.username});
 					}else{
 						helpers.errorHandler('Incorrect Password');
 					}
@@ -126,15 +126,21 @@ module.exports = {
 				if(req.body.oldPassword){
 						User.comparePassword(req.body.oldPassword , user.password , res , function(){
 								user.password = req.body.password;
-								user.save(function(savedUser){
+								user.save(function(error, savedUser){
+									if (savedUser) {
 									res.status(201).send('Updated \n' + savedUser);
+									} else {
+										helpers.errorHandler(error, req, res);
+									}
 								});
 						});
 					}
 
-				user.save(function (savedUser){
+				user.save(function (error, savedUser){
 					if (savedUser) {
 						res.status(201).send(JSON.stringify(savedUser));
+					}else{
+						helpers.errorHandler(error, req, res);
 					}
 				});
 			}else{
