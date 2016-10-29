@@ -119,6 +119,34 @@ module.exports = {
 	},
 
 	editOpening : function (req, res) {
+
+    var token = req.headers['x-access-token'];
+    var id = req.params.id.toString();
+    if (!token) {
+      helpers.errorHandler('No Token', req, res);
+    } else {
+      Opening.findOne({ _id : id })
+      .exec(function (error, opening) {
+        if (error) {
+          helpers.errorHandler(error, req, res);
+        } else if (opening) {
+          opening.title = req.body.title || opening.title;
+          opening.numberOfVolunteers = req.body.numberOfVolunteers || opening.numberOfVolunteers;
+          opening.location = req.body.location || opening.location;
+          opening.description = req.body.description || opening.description;
+          opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
+          opening.resources = req.body.resources || opening.resources;
+          
+          opening.save(function (saved) {
+            if (saved) {
+              res.status(201).send('Opening Edited');
+            }
+          })
+        } else {
+          helpers.errorHandler('Opening Not Found', req, res);
+        }
+      })
+    }
 	},
 
   applyToOpening: function (req, res){
