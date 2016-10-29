@@ -45,4 +45,5 @@ module.exports = function(app, express){
 	app.post('/api/opening/edit/:id', openingController.editOpening);
 	app.post('/api/opening/apply/:id', openingController.applyToOpening);
 	app.post('/api/opening/approve/:id', openingController.approveVolunteer);
+	app.post('/api/opening/reject/:id', openingController.rejectVolunteer);
 };
