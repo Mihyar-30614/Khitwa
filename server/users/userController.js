@@ -39,7 +39,7 @@ module.exports = {
 			if (error) {
 				helpers.errorHandler(error, req,res);
 			}else if (user) {
-				helpers.errorHandler('Account Already exists');
+				helpers.errorHandler('Account Already exists', req, res);
 			}else{
 				var newUser = new User({
 					username : req.body.username,
@@ -54,9 +54,12 @@ module.exports = {
 					causes : req.body.causes,
 					picture : req.body.picture
 				});
-				newUser.save(function (newUser) {
-					if (newUser) {
+				console.log(newUser);
+				newUser.save(function (error ,saved) {
+					if (saved) {
 						res.status(201).send('User Created');
+					}else{
+						helpers.errorHandler(error, req, res);
 					}
 				});
 			}
