@@ -226,6 +226,42 @@ module.exports = {
   },
 
   rejectVolunteer: function (req, res){
+
+    var token = req.headers['x-access-token'];
+    var openingId = req.params.id.toString();
+    var applicantId = req.body.applicantId;
+
+    if (!token) {
+      helpers.errorHandler('No Token', req, res);
+    } else {
+      var user = jwt-decode(token,'secret');
+      Organization.findOne({ name : user.name})
+      .exec(function (error, org) {
+        if (error) {
+          helpers.errorHandler(error, req, res);
+        } else if (org) {
+          Opening.findOne({ _id : openingId })
+          .exec(function (error, opening) {
+            if (error) {
+              helpers.errorHandler(error, req, res);
+            } else if (opening) {
+              var index = opening.pendingApps.indexOf(applicantId);
+              opening.pendingApps.splice(index,1);
+              opening.rejectedApps.push(applicantId);
+              opening.save(function (saved) {
+                if (saved) {
+                  res.status(201).send('User Rejected');
+                }
+              })
+            } else {
+              helpers.errorHandler('Opening Not Found');
+            }
+          })
+        } else {
+          helpers.errorHandler('Not Authorized');
+        }
+      })
+    }
   },
   
 	getOpening: function (req, res) {
