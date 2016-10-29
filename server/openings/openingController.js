@@ -265,5 +265,17 @@ module.exports = {
   },
   
 	getOpening: function (req, res) {
+
+    var id = req.params.id.toString();
+    Opening.findOne({ _id : id })
+    .exec(function (error, opening) {
+      if (error) {
+        helpers.errorHandler(error, req, res);
+      } else if (opening) {
+        res.status(200).send(opening);
+      } else {
+        helpers.errorHandler('Opening Not Found');
+      }
+    })
   }
 }
