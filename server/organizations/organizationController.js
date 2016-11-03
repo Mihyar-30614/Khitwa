@@ -267,26 +267,26 @@ module.exports = {
 		var id = req. params.id.toString();
 
 		if (!token) {
-			headers.errorHandler('No Token', req, res);
+			helpers.errorHandler('No Token', req, res);
 		} else {
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
 				if (error) {
-					headers.errorHandler(error, req, res);
+					helpers.errorHandler(error, req, res);
 				} else if (opportunity) {
 					opportunity.status='Active';
 					var org = jwt.decode(token, 'secret');
 					Organization.findOne({name : org.name})
 					.exec(function (error, organization) {
 						if (error) {
-							headers.errorHandler(error, req, res);
+							helpers.errorHandler(error, req, res);
 						} else if (organization) {
 							var index = organization.pastOpportunities.indexOf(id);
 							organization.pastOpportunities.splice(index,1);
 							organization.currentOpportunities.push(id);
 							organization.save(function (error, saved) {
 								if (error) {
-									headers.errorHandler(error, req, res);
+									helpers.errorHandler(error, req, res);
 								} else {
 									console.log('Moved to open opportunity array');
 								}
