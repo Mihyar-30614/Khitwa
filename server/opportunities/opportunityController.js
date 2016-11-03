@@ -13,6 +13,8 @@ module.exports = {
 		.exec(function(error, opportunities){
 			if (error) {
 				helpers.errorHandler(error, req, res);
+			} else if (opportunities.length === 0) {
+				res.status(200).send('No Opportunities');
 			} else {
 				res.status(200).send(opportunities)
 			}
@@ -184,8 +186,8 @@ module.exports = {
 	},
 
 	getOpportunityByOrgId : function (req, res) {
-		var id = req.params.id.toString();
-		Opportunity.find({_organizer : id})
+		var name = req.params.name.toString();
+		Opportunity.find({_organizer : name})
 		.exec(function (error, opportunity) {
 			if (opportunity) {
 				res.status(200).send(opportunity);
@@ -215,9 +217,18 @@ module.exports = {
 						organization.currentOpportunities.splice(index, 1);
 					}
 
-					organization.save(function (saved) {
+					organization.save(function (error,saved) {
 						if (saved) {
+							console.log('Removed from Organization');
+						}
+					})
+
+					Opportunity.findOne({_id : id}).remove()
+					.exec(function (error, opportunity) {
+						if (opportunity.result.n) {
 							res.status(201).send('Opportunity Deleted');
+						}else{
+							helpers.errorHandler(error, req, res);
 						}
 					})
 				}else{
@@ -232,7 +243,7 @@ module.exports = {
 		var id = req.params.id.toString();
 
 		if (!token) {
-			headers.errorHandler('No Token');
+			helpers.errorHandler('No Token', req, res);
 		} else {
 
 			Opening.findOne({_id : id})
@@ -243,7 +254,7 @@ module.exports = {
 					var opportunityId = opening._opportunity;
 					opening.status= 'Active';
 
-					opening.save(function (saved) {
+					opening.save(function (error, saved) {
 						if (saved) {
 							console.log('Changed to Active');
 						}
@@ -254,11 +265,15 @@ module.exports = {
 						if (error) {
 							helpers.errorHandler(error, req, res);
 						} else if (opportunity) {
-							var index = opportunity.closedOpenings.indexOf(id);
-							opportunity.closedOpenings.splice(index,1);
-							opportunity.currOpenings.push(id);
+							if (opportunity.closedOpenings.indexOf(id)>0) {
+								var index = opportunity.closedOpenings.indexOf(id);
+								opportunity.closedOpenings.splice(index,1);
+								opportunity.currOpenings.push(id);
+							}else{
+								helpers.errorHandler('No Such Opening Closed', req, res);
+							}
 
-							opportunity.save(function (saved) {
+							opportunity.save(function (error, saved) {
 								if (saved) {
 									res.status(201).send('Opening reopened');
 								}
