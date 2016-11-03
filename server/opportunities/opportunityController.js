@@ -25,7 +25,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
 		} else {
-			var openingId;
+
 			var opportunityId = req.params.id.toString();
 			var newOpening = new Opening({
 				title : req.body.title,
@@ -37,21 +37,23 @@ module.exports = {
 				resources : req.body.resources,
 				status : req.body.status
 			})
-			newOpening.save(function (saved) {
-				if (saved) {
-					openingId = saved._id;
-					console.log('Opening Created');
-				}
-			})
+
 			Opportunity.findOne({_id : opportunityId})
 			.exec(function (error, opportunity) {
 				if (error) {
 					helpers.errorHandler(error, req, res);
 				} else if (opportunity) {
-					opportunity.currOpenings.push(openingId);
-					opportunity.save(function (saved) {
+						newOpening.save(function (error, saved) {
 						if (saved) {
-							res.status(201).send('Opening Added');
+
+							opportunity.currOpenings.push(saved._id);
+							opportunity.save(function (error, oppSaved) {
+								if (oppSaved) {
+									res.status(201).send('Opening Added');
+								}
+							})
+						}else if (error) {
+							helpers.errorHandler(error, req, res);
 						}
 					})
 				}else{
