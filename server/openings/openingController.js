@@ -29,16 +29,16 @@ module.exports = {
     var opportunitId;
 
     if (!token) {
-      headers.errorHandler('No Token', req, res);
+      helpers.errorHandler('No Token', req, res);
     } else {
       Opening.findOne({_id : id})
       .exec(function (error, opening) {
         if (error) {
-          headers.errorHandler(error, req, res);
+          helpers.errorHandler(error, req, res);
         } else if (opening) {
           opportunitId = opening._opportunity;
           opening.status = 'Closed';
-          opening.save(function (saved) {
+          opening.save(function (error,saved) {
             if (saved) {
              console.log('Opening Closed');      
             }
@@ -47,18 +47,18 @@ module.exports = {
           Opportunity.findOne({_id : opportunitId})
           .exec(function (error, opportunity) {
             if (error) {
-              headers.errorHandler(error, req, res);
+              helpers.errorHandler(error, req, res);
             } else if (opportunity) {
               var index = opportunity.currOpenings.indexOf(id);
               opportunity.currOpenings.splice(index,1);
               opportunity.closedOpenings.push(id);
-              opportunity.save(function (saved) {
+              opportunity.save(function (error,saved) {
                 if (saved) {
                   res.status(201).send('Opening Closed');
                 }
               })
             } else {
-              headers.errorHandler('Opportunity Not Found', req, res);
+              helpers.errorHandler('Opportunity Not Found', req, res);
             }
           })
         } else {
