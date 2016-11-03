@@ -117,7 +117,7 @@ module.exports = {
 			if (error) {
 				helpers.errorHandler(error, req, res);
 			} else if (!organization) {
-				helpers.errorHandler('Organization Not Found');
+				helpers.errorHandler('Organization Not Found', req, res);
 			}else{
 
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
@@ -126,8 +126,8 @@ module.exports = {
 		        organization.contactInfo = req.body.contactInfo || organization.contactInfo;
 		        organization.rate = req.body.rate || organization.rate;
 		        organization.picture = req.body.picture || organization.picture;
-		        organization.currentOpportunities = req.body.currentOpportunities || organization.currentOpportunities;
-		        organization.pastOpportunities = req.body.pastOpportunities || organization.pastOpportunities;
+		        // organization.currentOpportunities = req.body.currentOpportunities || organization.currentOpportunities;
+		        // organization.pastOpportunities = req.body.pastOpportunities || organization.pastOpportunities;
 		        if(req.body.oldPassword){
 						Organization.comparePassword(req.body.oldPassword , organization.password , res , function(){
 								organization.password = req.body.password;
@@ -137,7 +137,7 @@ module.exports = {
 						});
 					}
 
-		        organization.save(function(saved){
+		        organization.save(function(error,saved){
 		        	if (saved) {
 		        		res.status(201).send(JSON.stringify(saved));
 		        	}
@@ -148,14 +148,20 @@ module.exports = {
 
 	deleteOrganization : function (req, res ) {
 
-		Organization.findOne({ name: req.params.name}).remove()
-		.exec(function (error, organization){
-			if(organization.result.n){
-				res.status(201).send('Organization Deleted');
-			}else{
-				helpers.errorHandler(error, req, res);
-			}
-		});
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			org = jwt.decode(token, 'secret');
+			Organization.findOne({ name: org.name}).remove()
+			.exec(function (error, organization){
+				if(organization.result.n){
+					res.status(201).send('Organization Deleted');
+				}else{
+					helpers.errorHandler(error, req, res);
+				}
+			});
+		}
 	},
 
 	addOpportunity : function (req, res) {
@@ -261,37 +267,41 @@ module.exports = {
 		var id = req. params.id.toString();
 
 		if (!token) {
-			headers.errorHandler('No Token', req, res);
+			helpers.errorHandler('No Token', req, res);
 		} else {
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
 				if (error) {
-					headers.errorHandler(error, req, res);
+					helpers.errorHandler(error, req, res);
 				} else if (opportunity) {
 					opportunity.status='Active';
-					var org = opportunity._organizer;
-					Organization.findOne({name : org})
+					var org = jwt.decode(token, 'secret');
+					Organization.findOne({name : org.name})
 					.exec(function (error, organization) {
 						if (error) {
-							headers.errorHandler(error, req, res);
+							helpers.errorHandler(error, req, res);
 						} else if (organization) {
 							var index = organization.pastOpportunities.indexOf(id);
 							organization.pastOpportunities.splice(index,1);
 							organization.currentOpportunities.push(id);
-							organization.save()
-							.exec(function (error, saved) {
+							organization.save(function (error, saved) {
 								if (error) {
-									headers.errorHandler(error, req, res);
+									helpers.errorHandler(error, req, res);
 								} else {
-									res.status(201).send('Opportunity Reopened');
+									console.log('Moved to open opportunity array');
 								}
 							})
 						} else {
-							helpers.errorHandler('Organization Not Found');
+							helpers.errorHandler('Organization Not Found', req, res);
+						}
+					})
+					opportunity.save(function (error,saved) {
+						if (saved) {
+							res.status(201).send('Opportunity Reopened');
 						}
 					})
 				} else {
-					headers.errorHandler('Opportunity Not Found');
+					helpers.errorHandler('Opportunity Not Found', req, res);
 				}
 			})
 		}

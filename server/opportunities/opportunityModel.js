@@ -22,7 +22,8 @@ var opportunitySchema = new Schema({
 	status : {
 		type : String,
 		enum : ['Active', 'Closed']
-	}
+	},
+	fullCurrent : [String]
 });
 
 var Opportunity = mongoose.model('Opportunity', opportunitySchema);
