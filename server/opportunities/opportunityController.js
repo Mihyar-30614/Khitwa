@@ -85,7 +85,7 @@ module.exports = {
 	  					opportunity.description = req.body.description || opportunity.description;
 	  					opportunity.requiredSkills = req.body.requiredSkills || opportunity.requiredSkills;
 	  					opportunity.poster = req.body.poster || opportunity.poster;
-	  					opportunity.save(function (saved) {
+	  					opportunity.save(function (error, saved) {
 	  						if (saved) {
 	  							res.status(201).send('\n Updated!');
 	  						}
@@ -102,30 +102,35 @@ module.exports = {
 
   	getCurrOpenings: function (req,res) {
   		
-  		var open=[];
   		var id = req.params.id;
   		var token = req.headers['x-access-token'];
+
   		if (!token) {
   			helpers.errorHandler('No Token', req, res);
   		} else {
   			Opportunity.findOne({_id : id})
-  			.then(function (opportunity) {
+  			.exec(function (error, opportunity) {
 				if(opportunity){
-  					return opportunity.currOpenings;
+  					for (var i = 0; i < opportunity.currOpenings.length; i++) {
+  						Opening.find({_id: opportunity.currOpenings[i]})
+  						.exec(function (error,opening) {
+  							if (opening) {
+	  							opportunity.fullCurrent.push(opening)
+		  						opportunity.save()
+		  					}
+	  					}).then(function () {
+	  						res.status(200).send(opportunity.fullCurrent);
+		  					opportunity.fullCurrent=[];
+		  					opportunity.save(function (error, emptyed) {
+		  						if (emptyed) {
+		  							console.log('Emptyed');
+		  						}
+		  					})
+	  					})
+  					}
   				}else{
-  					helpers.errorHandler('Opportunity Not Found');
+  					helpers.errorHandler('Opportunity Not Found', req, res);
   				}
-  			})
-  			.then(function (current) {
-  				for (var i = 0; i < current.length; i++) {
-  					Opening.find({_id : current[i]})
-  					.then(function (opening) {
-  						if(opening){
-  							open.push(opening);
-  						}
-  					})
-  				}
-  				res.status(200).send(open)
   			})
   		}
 	},
@@ -134,27 +139,35 @@ module.exports = {
 		
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
-		var close = [];
+
 		if (!token) {
 			helpers.errorHandler('No Token');
 		} else {
+
 			Opportunity.findOne({_id : id})
-			.then(function (opportunity) {
-				if (opportunity) {
-					return opportunity.closedOpenings;
-				} else {
-					helpers.errorHandler('Opportunity Not Found');
-				}
-			})
-			.then(function (closed) {
-				for (var i = 0; i < closed.length; i++) {
-					Opening.find({ _id : closed[i] })
-					.then(function (closedOpp) {
-						close.push(closedOpp);
-					}) 
-				}
-				res.status(200).send(closedOpp);
-			})
+  			.exec(function (error, opportunity) {
+				if(opportunity){
+  					for (var i = 0; i < opportunity.closedOpenings.length; i++) {
+  						Opening.find({_id: opportunity.closedOpenings[i]})
+  						.exec(function (error,closed) {
+  							if (closed) {
+	  							opportunity.fullCurrent.push(closed)
+		  						opportunity.save()
+		  					}
+	  					}).then(function () {
+	  						res.status(200).send(opportunity.fullCurrent);
+		  					opportunity.fullCurrent=[];
+		  					opportunity.save(function (error, emptyed) {
+		  						if (emptyed) {
+		  							console.log('Emptyed');
+		  						}
+		  					})
+	  					})
+  					}
+  				}else{
+  					helpers.errorHandler('Opportunity Not Found', req, res);
+  				}
+  			})
 		}
 	},
 
@@ -259,5 +272,20 @@ module.exports = {
 				}
 			})
 		}
-	}
+	},
+	// empty : function (req, res) {
+		
+	// 	var id = req.params.id.toString();
+	// 	Opportunity.findOne({_id : id})
+	// 	.exec(function (error, opportunity) {
+	// 		if (opportunity) {
+	// 			opportunity.currOpenings=[];
+	// 			opportunity.save(function (error,saved) {
+	// 				if (saved) {
+	// 					res.status(201).send('Emptyed');
+	// 				}
+	// 			})
+	// 		}
+	// 	})
+	// }
 }
