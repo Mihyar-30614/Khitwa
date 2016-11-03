@@ -34,7 +34,7 @@ module.exports = function(app, express){
 	app.get('/api/opportunity/currentopenings/:id', opportunityController.getCurrOpenings);
 	app.get('/api/opportunity/closedopenings/:id', opportunityController.getClosedOpenings);
 	app.get('/api/opportunity/get/:id', opportunityController.getOpportunity);
-	app.get('/api/opportunities/organization/:id', opportunityController.getOpportunityByOrgId);
+	app.get('/api/opportunities/organization/:name', opportunityController.getOpportunityByOrgId);
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
 	app.post('/api/opportunity/reopenOpening/:id',opportunityController.reopenOpening);
 	// app.post('/api/opportunity/empty/:id',opportunityController.empty);

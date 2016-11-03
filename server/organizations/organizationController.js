@@ -78,7 +78,7 @@ module.exports = {
 				} else if(org){
 					res.status(200).send('Authorized');
 				}else{
-					helpers.errorHandler('Organization Not Found');
+					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
@@ -105,7 +105,7 @@ module.exports = {
 			}else if (error) {
 				helpers.errorHandler(error, req, res);
 			}else{
-				helpers.errorHandler('Organization Not Found');
+				helpers.errorHandler('Organization Not Found', req, res);
 			}
 		});
 	},
