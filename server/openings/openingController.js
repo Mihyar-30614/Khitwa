@@ -1,7 +1,7 @@
 var Opportunity = require('../opportunities/opportunityModel.js');
+var Organization = require('../organizations/organizationController.js');
 var Opening = require('./openingModel.js');
 var User = require('../users/userModel.js');
-var Organization = require('../organizations/organizationController.js');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
@@ -14,7 +14,7 @@ module.exports = {
     .exec(function (error, openings) {
       if (error) {
         helpers.errorHandler(error, req, res);
-      } else if (openings) {
+      } else if (openings.length>0) {
         res.status(200).send(openings);
       } else{
         helpers.errorHandler('No Openings', req, res);
@@ -76,18 +76,19 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-
-      Opening.findOne({ _id : id})
+      Opening.findOne({ _id:id})
       .exec(function (error, opening) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (opening) {
-          opening.remove()
+          if (opening) {
+            var oppId = opening._opportunity;
+
+      Opening.findOne({ _id : id}).remove()
           .exec(function (error, open) {
             if (open.result.n) {
-              var oppId = opening._opportunity;
+              console.log(oppId);
               Opportunity.findOne({ _id : oppId})
               .exec(function (error, opportunity) {
+                console.log(error)
+                console.log(opportunity)
                 if (error) {
                   helpers.errorHandler(error, req, res);
                 } else if (opportunity) {
@@ -99,7 +100,7 @@ module.exports = {
                     opportunity.closedOpenings.splice(index,1);
                   }
 
-                  opportunity.save(function (saved) {
+                  opportunity.save(function (error,saved) {
                     if (saved) {
                       res.status(201).send('Opening Deleted');
                     }
@@ -109,11 +110,9 @@ module.exports = {
                 }
               })
             }else{
-              helpers.errorHandler('Opening Delete Failed', req, res);
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
-        } else {
-          helpers.errorHandler('Opening Not Found', req, res);
         }
       })
     }
@@ -138,7 +137,7 @@ module.exports = {
           opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
           opening.resources = req.body.resources || opening.resources;
 
-          opening.save(function (saved) {
+          opening.save(function (error,saved) {
             if (saved) {
               res.status(201).send('Opening Edited');
             }
