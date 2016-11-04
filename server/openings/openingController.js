@@ -1,7 +1,7 @@
 var Opportunity = require('../opportunities/opportunityModel.js');
 var Organization = require('../organizations/organizationController.js');
 var Opening = require('./openingModel.js');
-var User = require('../users/userModel.js');
+var User = require('../users/userController.js');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
@@ -169,7 +169,7 @@ module.exports = {
               helpers.errorHandler(error, req, res);
             } else if (opening) {
               opening.pendingApps.push(user.name);
-              opening.save(function (saved) {
+              opening.save(function (error, saved) {
                 if (saved) {
                   res.status(201).send('User Applied');
                 }
@@ -208,17 +208,17 @@ module.exports = {
               var index = opening.pendingApps.indexOf(applicantId);
               opening.pendingApps.splice(index,1);
               opening.volunteers.push(applicantId);
-              opening.save(function (saved) {
+              opening.save(function (error, saved) {
                 if (saved) {
                   res.status(201).send('User Approved');
                 }
               })
             } else {
-              helpers.errorHandler('Opening Not Found');
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
         } else {
-          helpers.errorHandler('Not Authorized');
+          helpers.errorHandler('Not Authorized', req, res);
         }
       })
     }
@@ -247,17 +247,17 @@ module.exports = {
               var index = opening.pendingApps.indexOf(applicantId);
               opening.pendingApps.splice(index,1);
               opening.rejectedApps.push(applicantId);
-              opening.save(function (saved) {
+              opening.save(function (error, saved) {
                 if (saved) {
                   res.status(201).send('User Rejected');
                 }
               })
             } else {
-              helpers.errorHandler('Opening Not Found');
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
         } else {
-          helpers.errorHandler('Not Authorized');
+          helpers.errorHandler('Not Authorized', req, res);
         }
       })
     }
@@ -273,7 +273,7 @@ module.exports = {
       } else if (opening) {
         res.status(200).send(opening);
       } else {
-        helpers.errorHandler('Opening Not Found');
+        helpers.errorHandler('Opening Not Found', req, res);
       }
     })
   }
