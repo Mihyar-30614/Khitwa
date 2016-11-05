@@ -158,8 +158,8 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
-      User.findOne({name : user.name})
+      var user = jwt.decode(token,'secret');
+      User.findOne({username : user.username})
       .exec(function (error, user) {
         if (error) {
           helpers.errorHandler(error, req, res);
@@ -169,12 +169,20 @@ module.exports = {
             if (error) {
               helpers.errorHandler(error, req, res);
             } else if (opening) {
-              opening.pendingApps.push(user.name);
-              opening.save(function (error, saved) {
-                if (saved) {
-                  res.status(201).send('User Applied');
-                }
-              })
+              if (opening.pendingApps.indexOf(user.username) === -1) {
+                  opening.pendingApps.push(user.username);
+                  opening.save(function (error, saved) {
+                    if (saved) {
+                      res.status(201).send('User Applied');
+                    }
+                  })
+              } else {
+                var index = opening.pendingApps.indexOf(user.username);
+                opening.pendingApps.splice(index,1);
+                opening.save(function (error, saved) {
+                  res.status(201).send('Application Cancelled');
+                })
+              }
             } else {
               helpers.errorHandler('Opening Not Found', req, res);
             }
