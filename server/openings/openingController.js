@@ -1,7 +1,8 @@
 var Opportunity = require('../opportunities/opportunityModel.js');
+var Organization = require('../organizations/organizationModel.js');
 var Opening = require('./openingModel.js');
 var User = require('../users/userModel.js');
-var Organization = require('../organizations/organizationController.js');
+
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
@@ -14,7 +15,7 @@ module.exports = {
     .exec(function (error, openings) {
       if (error) {
         helpers.errorHandler(error, req, res);
-      } else if (openings) {
+      } else if (openings.length>0) {
         res.status(200).send(openings);
       } else{
         helpers.errorHandler('No Openings', req, res);
@@ -76,18 +77,19 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-
-      Opening.findOne({ _id : id})
+      Opening.findOne({ _id:id})
       .exec(function (error, opening) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (opening) {
-          opening.remove()
+          if (opening) {
+            var oppId = opening._opportunity;
+
+      Opening.findOne({ _id : id}).remove()
           .exec(function (error, open) {
             if (open.result.n) {
-              var oppId = opening._opportunity;
+              console.log(oppId);
               Opportunity.findOne({ _id : oppId})
               .exec(function (error, opportunity) {
+                console.log(error)
+                console.log(opportunity)
                 if (error) {
                   helpers.errorHandler(error, req, res);
                 } else if (opportunity) {
@@ -99,7 +101,7 @@ module.exports = {
                     opportunity.closedOpenings.splice(index,1);
                   }
 
-                  opportunity.save(function (saved) {
+                  opportunity.save(function (error,saved) {
                     if (saved) {
                       res.status(201).send('Opening Deleted');
                     }
@@ -109,11 +111,9 @@ module.exports = {
                 }
               })
             }else{
-              helpers.errorHandler('Opening Delete Failed', req, res);
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
-        } else {
-          helpers.errorHandler('Opening Not Found', req, res);
         }
       })
     }
@@ -138,7 +138,7 @@ module.exports = {
           opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
           opening.resources = req.body.resources || opening.resources;
 
-          opening.save(function (saved) {
+          opening.save(function (error,saved) {
             if (saved) {
               res.status(201).send('Opening Edited');
             }
@@ -158,8 +158,8 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
-      User.findOne({name : user.name})
+      var user = jwt.decode(token,'secret');
+      User.findOne({username : user.username})
       .exec(function (error, user) {
         if (error) {
           helpers.errorHandler(error, req, res);
@@ -169,12 +169,20 @@ module.exports = {
             if (error) {
               helpers.errorHandler(error, req, res);
             } else if (opening) {
-              opening.pendingApps.push(user.name);
-              opening.save(function (saved) {
-                if (saved) {
-                  res.status(201).send('User Applied');
-                }
-              })
+              if (opening.pendingApps.indexOf(user.username) === -1) {
+                  opening.pendingApps.push(user.username);
+                  opening.save(function (error, saved) {
+                    if (saved) {
+                      res.status(201).send('User Applied');
+                    }
+                  })
+              } else {
+                var index = opening.pendingApps.indexOf(user.username);
+                opening.pendingApps.splice(index,1);
+                opening.save(function (error, saved) {
+                  res.status(201).send('Application Cancelled');
+                })
+              }
             } else {
               helpers.errorHandler('Opening Not Found', req, res);
             }
@@ -195,7 +203,7 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
+      var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
       .exec(function (error, org) {
         if (error) {
@@ -209,17 +217,17 @@ module.exports = {
               var index = opening.pendingApps.indexOf(applicantId);
               opening.pendingApps.splice(index,1);
               opening.volunteers.push(applicantId);
-              opening.save(function (saved) {
+              opening.save(function (error, saved) {
                 if (saved) {
                   res.status(201).send('User Approved');
                 }
               })
             } else {
-              helpers.errorHandler('Opening Not Found');
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
         } else {
-          helpers.errorHandler('Not Authorized');
+          helpers.errorHandler('Not Authorized', req, res);
         }
       })
     }
@@ -234,7 +242,7 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
+      var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
       .exec(function (error, org) {
         if (error) {
@@ -246,19 +254,23 @@ module.exports = {
               helpers.errorHandler(error, req, res);
             } else if (opening) {
               var index = opening.pendingApps.indexOf(applicantId);
-              opening.pendingApps.splice(index,1);
-              opening.rejectedApps.push(applicantId);
-              opening.save(function (saved) {
-                if (saved) {
-                  res.status(201).send('User Rejected');
-                }
-              })
+              if (index>0) {
+                opening.pendingApps.splice(index,1);
+                opening.rejectedApps.push(applicantId);
+                opening.save(function (error, saved) {
+                  if (saved) {
+                    res.status(201).send('User Rejected');
+                  }
+                })
+              } else {
+                helpers.errorHandler('User Not Found', req, res);
+              }
             } else {
-              helpers.errorHandler('Opening Not Found');
+              helpers.errorHandler('Opening Not Found', req, res);
             }
           })
         } else {
-          helpers.errorHandler('Not Authorized');
+          helpers.errorHandler('Not Authorized', req, res);
         }
       })
     }
@@ -274,7 +286,7 @@ module.exports = {
       } else if (opening) {
         res.status(200).send(opening);
       } else {
-        helpers.errorHandler('Opening Not Found');
+        helpers.errorHandler('Opening Not Found', req, res);
       }
     })
   }

@@ -59,7 +59,7 @@ module.exports = {
 						}
 					})
 				}else{
-					helpers.errorHandler('Opportunity Not Found');
+					helpers.errorHandler('Opportunity Not Found', req, res);
 				}
 			})
 		}
@@ -93,10 +93,10 @@ module.exports = {
 	  						}
 	  					})
 					} else {
-						helpers.errorHandler('Not Authorized To Modify Others');
+						helpers.errorHandler('Not Authorized To Modify Others', req, res);
 					}
 				} else {
-					helpers.errorHandler('Opportunity Not Found');
+					helpers.errorHandler('Opportunity Not Found', req, res);
 				}
 			})
 		}
@@ -143,7 +143,7 @@ module.exports = {
 		var id = req.params.id;
 
 		if (!token) {
-			helpers.errorHandler('No Token');
+			helpers.errorHandler('No Token', req, res);
 		} else {
 
 			Opportunity.findOne({_id : id})
