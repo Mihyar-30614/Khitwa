@@ -1,6 +1,14 @@
 {
   "name": "khitwa",
   "version": "1.1.1",
+  "respository": {
+    "type": "git",
+    "url": "https://github.com/Khitwa/Khitwa.git"
+  },
+  "engines": {
+    "node": "6.3.1"
+  },
+  "license": "LICENSED",
   "description": "Khitwa: Volunteer engaging project",
   "dependencies": {
     "gulp": "^3.5.6",
