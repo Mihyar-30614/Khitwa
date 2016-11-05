@@ -54,7 +54,6 @@ module.exports = {
 					causes : req.body.causes,
 					picture : req.body.picture
 				});
-				console.log(newUser);
 				newUser.save(function (error ,saved) {
 					if (saved) {
 						res.status(201).send('User Created');
