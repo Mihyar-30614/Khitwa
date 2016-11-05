@@ -254,13 +254,17 @@ module.exports = {
               helpers.errorHandler(error, req, res);
             } else if (opening) {
               var index = opening.pendingApps.indexOf(applicantId);
-              opening.pendingApps.splice(index,1);
-              opening.rejectedApps.push(applicantId);
-              opening.save(function (error, saved) {
-                if (saved) {
-                  res.status(201).send('User Rejected');
-                }
-              })
+              if (index>0) {
+                opening.pendingApps.splice(index,1);
+                opening.rejectedApps.push(applicantId);
+                opening.save(function (error, saved) {
+                  if (saved) {
+                    res.status(201).send('User Rejected');
+                  }
+                })
+              } else {
+                helpers.errorHandler('User Not Found', req, res);
+              }
             } else {
               helpers.errorHandler('Opening Not Found', req, res);
             }
