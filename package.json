@@ -8,6 +8,11 @@
   "engines": {
     "node": "6.3.1"
   },
+  "scripts": {
+    "test" : "node_modules/.bin/_mocha -- -R spec ./Tests/Server/*.js",
+    "cover": "istanbul cover node_modules/.bin/_mocha -- -R spec ./test/front-end/*.js",
+    "postinstall": "npm install -g bower; bower install"
+  },
   "license": "UNLICENSED",
   "description": "Khitwa: Volunteer engaging project",
   "dependencies": {
