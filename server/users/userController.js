@@ -21,7 +21,7 @@ module.exports = {
 						res.setHeader('x-access-token', token);
 						res.json({token : token, username: user.username});
 					}else{
-						helpers.errorHandler('Incorrect Password');
+						helpers.errorHandler('Incorrect Password', req, res);
 					}
 				});
 			}else {
@@ -66,7 +66,7 @@ module.exports = {
 		});
 	},
 
-	checkAuth : function (req, res, next) {
+	checkAuth : function (req, res) {
 
 	    var token = req.headers['x-access-token'];
 		if (!token) {
@@ -80,7 +80,7 @@ module.exports = {
 				} else if(org){
 					res.status(200).send('Authorized');
 				}else{
-					helpers.errorHandler('User Not Found');
+					helpers.errorHandler('User Not Found', req, res);
 				}
 			})
 		}
