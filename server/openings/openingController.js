@@ -1,7 +1,8 @@
 var Opportunity = require('../opportunities/opportunityModel.js');
-var Organization = require('../organizations/organizationController.js');
+var Organization = require('../organizations/organizationModel.js');
 var Opening = require('./openingModel.js');
-var User = require('../users/userController.js');
+var User = require('../users/userModel.js');
+
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
