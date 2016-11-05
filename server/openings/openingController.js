@@ -203,7 +203,7 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
+      var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
       .exec(function (error, org) {
         if (error) {
@@ -242,7 +242,7 @@ module.exports = {
     if (!token) {
       helpers.errorHandler('No Token', req, res);
     } else {
-      var user = jwt-decode(token,'secret');
+      var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
       .exec(function (error, org) {
         if (error) {
