@@ -13,6 +13,13 @@ db.once('open',function () {
 // start listening to requests on port 8080
 
 var app = express();
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Headers');
+	next();
+});
+
 // configure our server with all the middleware and routing
 var port = process.env.PORT || 8000;
 
