@@ -99,13 +99,30 @@ module.exports = {
 
 	getAll : function (req, res){
 
-		User.find({}, function(error, users){
-			if (error) {
+		User.find({})
+		.exec(function (error, users) {
+			if (users) {
+				var array = [];
+				for (var i = 0; i < users.length; i++) {
+					var obj={};
+					obj.username = users[i].username;
+					obj.firstName = users[i].firstName;
+					obj.lastName = users[i].lastName;
+					obj.email = users[i].email;
+					obj.dateOfBirth = users[i].dateOfBirth;
+					obj.gender = users[i].gender;
+					obj.phoneNumber = users[i].phoneNumber;
+					obj.skills = users[i].skills;
+					obj.causes = users[i].causes;
+					obj.rate = users[i].rate || 'N/A';
+					obj.picture = users[i].picture || 'http://i.imgur.com/FlEXhZo.jpg?1';
+					array.push(obj);
+				}
+				res.status(200).send(array);
+			}else{
 				helpers.errorHandler(error, req, res);
-			} else{
-				res.status(200).send(users);
 			}
-		});
+		})
 	},
 
 	// a function that allows for the user to edit their basic info
