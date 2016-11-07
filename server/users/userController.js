@@ -87,13 +87,14 @@ module.exports = {
 
 	getUser : function (req, res){
 
-		User.findOne({ username: req.params.username}, function(error, user){
-			if (error) {
-				helpers.errorHandler(error, req, res);
+		User.findOne({ username: req.params.username})
+		.exec(function (error, user) {
+			if (user) {
+				res.status(200).send(user)
 			}else{
-				res.status(200).send(user);
+				helpers.errorHandler('User Not Found', req, res);
 			}
-		});
+		})
 	},
 
 	getAll : function (req, res){
