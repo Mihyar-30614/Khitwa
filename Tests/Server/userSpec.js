@@ -172,5 +172,28 @@ describe('User Test Database', function (done) {
 		});
 	});
 
-	
+	describe('Get User in User Controller', function (done) {
+		
+		it('Should return 500 ERROR if user was not found', function (done) {
+			chai.request(server)
+				.get('/api/users/getUser/Someone')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					done();
+				})
+		});
+
+		it('Should return 200 and User', function (done) {
+			chai.request(server)
+				.get('/api/users/getUser/Mihyar')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body).to.be.a('object');
+					expect(res.body.firstName).to.be.equal('Mihyar');
+					expect(res.body.lastName).to.be.equal('Almasalma');
+					expect(res.body.email).to.be.equal('mihyar@khitwa.org');
+					done();
+				})
+		})
+	})
 });
