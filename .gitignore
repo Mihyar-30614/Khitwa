@@ -5,3 +5,7 @@ node_modules/
 platforms/
 plugins/
 www/lib
+._*
+db/
+npm-debug.log
+coverage/

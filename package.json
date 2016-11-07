@@ -9,9 +9,7 @@
     "node": "6.3.1"
   },
   "scripts": {
-    "test" : "node_modules/.bin/_mocha -- -R spec ./Tests/Server/*.js",
-    "cover": "istanbul cover node_modules/.bin/_mocha -- -R spec ./test/front-end/*.js",
-    "postinstall": "npm install -g bower; bower install"
+    "test" : "./node_modules/.bin/istanbul cover -x '*Spec.js' -x 'helpers.js' -x 'openingModel.js' -x 'server.js' -x 'middleware.js' -x 'organizationModel.js' -x 'userModel.js' -x 'opportunityModel' %APPDATA%/npm/node_modules/mocha/bin/_mocha -- -R spec ./Tests/Server/**/*.js"
   },
   "license": "UNLICENSED",
   "description": "Khitwa: Volunteer engaging project",
