@@ -1,13 +1,13 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
-// connect to mongo database named "VolunteerHub"
-var mongoURI =  process.env.MONGODB_URI || 'mongodb://localhost/Khitwa';
+var dbc = process.env.NODE_ENV === 'test'? 'mongodb://localhost/Khitwa-test' : 'mongodb://localhost/Khitwa';
+var mongoURI =  process.env.MONGODB_URI || dbc;
 mongoose.connect(mongoURI);
 db = mongoose.connection;
 
 db.once('open',function () {
-	console.log('mongoDB is open');
+	console.log('mongoDB is open', dbc);
 });
 
 // start listening to requests on port 8080
