@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'test';
 var sinon = require('sinon');
 var expect = require ('chai').expect;
 var path = require('path')
@@ -193,7 +194,7 @@ describe('User Test Database', function (done) {
 					expect(res.body.lastName).to.be.equal('Almasalma');
 					expect(res.body.email).to.be.equal('mihyar@khitwa.org');
 					done();
-				})
+				});
 		})
 	})
 });
