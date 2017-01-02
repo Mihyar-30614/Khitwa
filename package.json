@@ -6,7 +6,7 @@
     "url": "https://github.com/Khitwa/Khitwa.git"
   },
   "engines": {
-    "node": "6.3.1"
+    "node": "latest"
   },
   "scripts": {
     "test":"npm run backend",
