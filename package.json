@@ -11,7 +11,7 @@
   "scripts": {
     "test":"npm run backend",
     "backend" : "./node_modules/.bin/istanbul cover -x '*Spec.js' -x 'helpers.js' -x 'openingModel.js' -x 'server.js' -x 'middleware.js' -x 'organizationModel.js' -x 'userModel.js' -x 'opportunityModel' node_modules/mocha/bin/_mocha -- -R spec ./Tests/Server/**/*.js",
-    "postinstall": "npm install -g bower && bower install"
+    "postinstall": "npm install -g bower; bower install"
   },
   "license": "UNLICENSED",
   "description": "Khitwa: Volunteer engaging project",
