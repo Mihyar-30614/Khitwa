@@ -200,6 +200,11 @@ describe('User Test Database', function (done) {
 
 	describe('Get All Users in User Controller', function (done) {
 		
+		it('Should have a method called getall', function (done) {
+			expect(typeof userController.getAll).to.be.equal('function');
+			done();
+		});
+
 		it('Should return 200 and Users', function (done) {
 			chai.request(server)
 				.get('/api/users/getall')
@@ -209,7 +214,6 @@ describe('User Test Database', function (done) {
 					done();
 				});
 		});
+	});
 
-
-	})
 });
