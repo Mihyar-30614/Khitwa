@@ -195,6 +195,21 @@ describe('User Test Database', function (done) {
 					expect(res.body.email).to.be.equal('mihyar@khitwa.org');
 					done();
 				});
-		})
+		});
+	});
+
+	describe('Get All Users in User Controller', function (done) {
+		
+		it('Should return 200 and Users', function (done) {
+			chai.request(server)
+				.get('/api/users/getall')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body).to.be.a('array');
+					done();
+				});
+		});
+
+
 	})
 });
