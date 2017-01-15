@@ -128,40 +128,45 @@ module.exports = {
 	// a function that allows for the user to edit their basic info
 	editUser : function (req, res) {
 
-		User.findOne({ username : req.params.username})
-		.exec(function (error, user){
-			if (user) {
-				user.firstName = req.body.firstName || user.firstName;
-				user.lastName = req.body.lastName || user.lastName;
-				user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
-				user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
-				user.skills = req.body.skills || user.skills;
-				user.causes = req.body.causes || user.causes;
-				user.picture = req.body.picture || user.picture;
-				if(req.body.oldPassword){
-						User.comparePassword(req.body.oldPassword , user.password , res , function(){
-								user.password = req.body.password;
-								user.save(function(error, savedUser){
-									if (savedUser) {
-									res.status(201).send('Updated \n' + savedUser);
-									} else {
-										helpers.errorHandler(error, req, res);
-									}
-								});
-						});
-					}
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		}else{
+			User.findOne({ username : req.params.username})
+			.exec(function (error, user){
+				if (user) {
+					user.firstName = req.body.firstName || user.firstName;
+					user.lastName = req.body.lastName || user.lastName;
+					user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+					user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+					user.skills = req.body.skills || user.skills;
+					user.causes = req.body.causes || user.causes;
+					user.picture = req.body.picture || user.picture;
+					if(req.body.oldPassword){
+							User.comparePassword(req.body.oldPassword , user.password , res , function(){
+									user.password = req.body.password;
+									user.save(function(error, savedUser){
+										if (savedUser) {
+										res.status(201).send('Updated \n' + savedUser);
+										} else {
+											helpers.errorHandler(error, req, res);
+										}
+									});
+							});
+						}
 
-				user.save(function (error, savedUser){
-					if (savedUser) {
-						res.status(201).send(JSON.stringify(savedUser));
-					}else{
-						helpers.errorHandler(error, req, res);
-					}
-				});
-			}else{
-				helpers.errorHandler('User not Found', req, res);
-			}
-		});
+					user.save(function (error, savedUser){
+						if (savedUser) {
+							res.status(201).send(JSON.stringify(savedUser));
+						}else{
+							helpers.errorHandler(error, req, res);
+						}
+					});
+				}else{
+					helpers.errorHandler('User not Found', req, res);
+				}
+			});
+		}
 	},
 
 	requestNewPass : function (req, res){
