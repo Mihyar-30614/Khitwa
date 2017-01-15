@@ -12,9 +12,7 @@ module.exports = {
 
 		User.findOne({username : username})
 		.exec(function (error, user){
-			if (error) {
-				helpers.errorHandler(error,req, res);
-			}else if (user) {
+			if (user) {
 				User.comparePassword(password, user.password, res, function (found){
 					if (found) {
 						var token = jwt.encode(user, 'secret');
