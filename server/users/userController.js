@@ -143,7 +143,7 @@ module.exports = {
 					if(req.body.oldPassword){
 							User.comparePassword(req.body.oldPassword , user.password , res , function(){
 									user.password = req.body.password;
-									user.save(function(error, savedUser){
+									user.save(function(error, saved){
 										res.status(201).send('Updated');
 									});
 							});
