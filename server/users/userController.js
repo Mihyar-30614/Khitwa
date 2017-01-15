@@ -20,8 +20,6 @@ module.exports = {
 						var token = jwt.encode(user, 'secret');
 						res.setHeader('x-access-token', token);
 						res.json({token : token, username: user.username});
-					}else{
-						helpers.errorHandler('Incorrect Password', req, res);
 					}
 				});
 			}else {
