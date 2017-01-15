@@ -159,15 +159,20 @@ module.exports = {
 
 	deleteUser : function (req, res) {
 		
-		var username= req.params.username;
-
-		User.findOne({username: username}).remove()
-		.exec(function (error, deleted) {
-			if (deleted.result.n) {
-				res.status(201).send('User Deleted');
-			} else {
-				helpers.errorHandler(error, req, res);
-			}
-		})
-	}
+		var username = req.params.username;
+		var token = req.headers['x-access-token'];
+		
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			User.findOne({username: username}).remove()
+			.exec(function (error, deleted) {
+				if (deleted.result.n) {
+					res.status(201).send('User Deleted');
+				} else {
+					helpers.errorHandler(error, req, res);
+				}
+			})
+		}
+	};
 };
