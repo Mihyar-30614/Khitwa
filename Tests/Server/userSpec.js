@@ -259,6 +259,20 @@ describe('User Test Database', function (done) {
 				});
 		});
 
+		it('Should return 500 Wrong Password if oldPassword is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.set('x-access-token',token)
+				.send({
+					'oldPassword':'12345',
+					'password':'1234'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
 	});
 
 });
