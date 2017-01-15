@@ -68,9 +68,7 @@ module.exports = {
 			var user = jwt.decode(token,'secret');
 			User.findOne({name : user.name})
 			.exec(function (error, org) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if(org){
+				if(org){
 					res.status(200).send('Authorized');
 				}else{
 					helpers.errorHandler('User Not Found', req, res);
