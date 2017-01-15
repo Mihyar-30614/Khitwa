@@ -216,4 +216,24 @@ describe('User Test Database', function (done) {
 		});
 	});
 
+	describe('Edit User in User Controller', function (done) {
+		
+		it('Should have a method called editUser', function (done) {
+			expect(typeof userController.editUser).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 ERROR if user not found', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/someone')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User not Found');
+					done();
+				});
+		});
+
+		
+	});
+
 });
