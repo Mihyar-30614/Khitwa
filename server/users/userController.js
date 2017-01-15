@@ -32,9 +32,7 @@ module.exports = {
 
 		User.findOne({ username : username})
 		.exec(function(error, user){
-			if (error) {
-				helpers.errorHandler(error, req,res);
-			}else if (user) {
+			if (user) {
 				helpers.errorHandler('Account Already exists', req, res);
 			}else{
 				var newUser = new User({
