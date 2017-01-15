@@ -130,9 +130,7 @@ module.exports = {
 
 		User.findOne({ username : req.params.username})
 		.exec(function (error, user){
-			if (error) {
-				helpers.errorHandler(error, req, res);
-			}else if (user) {
+			if (user) {
 				user.firstName = req.body.firstName || user.firstName;
 				user.lastName = req.body.lastName || user.lastName;
 				user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
