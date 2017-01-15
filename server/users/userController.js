@@ -146,21 +146,13 @@ module.exports = {
 							User.comparePassword(req.body.oldPassword , user.password , res , function(){
 									user.password = req.body.password;
 									user.save(function(error, savedUser){
-										if (savedUser) {
-										res.status(201).send('Updated \n' + savedUser);
-										} else {
-											helpers.errorHandler(error, req, res);
-										}
+										res.status(201).send('Updated');
 									});
 							});
 						}
 
 					user.save(function (error, savedUser){
-						if (savedUser) {
-							res.status(201).send(JSON.stringify(savedUser));
-						}else{
-							helpers.errorHandler(error, req, res);
-						}
+						res.status(201).send(JSON.stringify(savedUser));
 					});
 				}else{
 					helpers.errorHandler('User not Found', req, res);
