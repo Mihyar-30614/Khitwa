@@ -223,7 +223,17 @@ describe('User Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 ERROR if user not found', function (done) {
+		it('Should return 500 No Token if the user was not signed in', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		xit('Should return 500 ERROR if user not found', function (done) {
 			chai.request(server)
 				.post('/api/user/edit/someone')
 				.end(function (error, res) {
@@ -233,7 +243,19 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		
+		xit('Should change password if oldPassword is passed in the body', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.send({
+					'oldPassword': '1234',
+					'password':'test'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					done();
+				});
+		});
+
 	});
 
 });
