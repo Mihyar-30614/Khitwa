@@ -217,6 +217,7 @@ describe('User Test Database', function (done) {
 	});
 
 	describe('Edit User in User Controller', function (done) {
+		var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
 		
 		it('Should have a method called editUser', function (done) {
 			expect(typeof userController.editUser).to.be.equal('function');
@@ -233,9 +234,10 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		xit('Should return 500 ERROR if user not found', function (done) {
+		it('Should return 500 ERROR if user not found', function (done) {
 			chai.request(server)
 				.post('/api/user/edit/someone')
+				.set('x-access-token',token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('User not Found');
@@ -243,9 +245,10 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		xit('Should change password if oldPassword is passed in the body', function (done) {
+		it('Should change password if oldPassword is passed in the body', function (done) {
 			chai.request(server)
 				.post('/api/user/edit/Mihyar')
+				.set('x-access-token',token)
 				.send({
 					'oldPassword': '1234',
 					'password':'test'
