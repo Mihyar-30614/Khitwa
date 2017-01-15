@@ -275,4 +275,12 @@ describe('User Test Database', function (done) {
 		});
 	});
 
+	describe('Delete User in User Controller', function (done) {
+		
+		it('Should have a methid called deleteUser', function (done) {
+			expect(typeof userController.deleteUser).to.be.equal('function');
+			done();
+		});
+	});
+
 });
