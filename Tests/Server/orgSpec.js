@@ -16,7 +16,12 @@ describe('Organization Test Database', function (done) {
 
 	beforeEach(function (done) {
 		var newOrg = new Organization({
-
+			'name':'KhitwaOrg',
+			'password':'1234',
+			'cause_area':'volunteering',
+			'locations':'Canada',
+			'missionStatement':'A step in the right direction',
+			'contactInfo':'Khitwa@khitwa.org'
 		})
 		newOrg.save(function (error,saved) {
 			done();
