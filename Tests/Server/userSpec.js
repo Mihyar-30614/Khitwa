@@ -276,7 +276,9 @@ describe('User Test Database', function (done) {
 	});
 
 	describe('Delete User in User Controller', function (done) {
-		
+
+		var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
+
 		it('Should have a methid called deleteUser', function (done) {
 			expect(typeof userController.deleteUser).to.be.equal('function');
 			done();
@@ -288,6 +290,26 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return 500 ERROR when no user is passed', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Someone')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					done();
+				});
+		});
+
+		it('Should delete a user when given the right info', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Mihyar')
+				.set('x-access-token',token)
+				.end(function (error,res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('User Deleted');
 					done();
 				});
 		});
