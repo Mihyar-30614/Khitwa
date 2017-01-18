@@ -7,8 +7,8 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var Organization = require('../../server/organizarions/organizarionModel');
-var organizarionController = require('../../server/organizarions/organizarionController');
+var Organization = require('../../server/organizations/organizationModel');
+var organizationController = require('../../server/organizations/organizationController');
 
 describe('Organization Test Database', function (done) {
 	
