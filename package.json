@@ -10,6 +10,8 @@
   },
   "scripts": {
     "test":"npm run backend",
+    "userTest": "mocha ./Tests/Server/userSpec.js",
+    "orgTest":"./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha ./Tests/Server/orgSpec.js",
     "backend" : "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./Tests/Server/*.js",
     "postinstall": "npm install -g bower && bower install"
   },
