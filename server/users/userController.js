@@ -12,16 +12,12 @@ module.exports = {
 
 		User.findOne({username : username})
 		.exec(function (error, user){
-			if (error) {
-				helpers.errorHandler(error,req, res);
-			}else if (user) {
+			if (user) {
 				User.comparePassword(password, user.password, res, function (found){
 					if (found) {
 						var token = jwt.encode(user, 'secret');
 						res.setHeader('x-access-token', token);
 						res.json({token : token, username: user.username});
-					}else{
-						helpers.errorHandler('Incorrect Password', req, res);
 					}
 				});
 			}else {
@@ -36,9 +32,7 @@ module.exports = {
 
 		User.findOne({ username : username})
 		.exec(function(error, user){
-			if (error) {
-				helpers.errorHandler(error, req,res);
-			}else if (user) {
+			if (user) {
 				helpers.errorHandler('Account Already exists', req, res);
 			}else{
 				var newUser = new User({
@@ -74,9 +68,7 @@ module.exports = {
 			var user = jwt.decode(token,'secret');
 			User.findOne({name : user.name})
 			.exec(function (error, org) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if(org){
+				if(org){
 					res.status(200).send('Authorized');
 				}else{
 					helpers.errorHandler('User Not Found', req, res);
@@ -128,42 +120,37 @@ module.exports = {
 	// a function that allows for the user to edit their basic info
 	editUser : function (req, res) {
 
-		User.findOne({ username : req.params.username})
-		.exec(function (error, user){
-			if (error) {
-				helpers.errorHandler(error, req, res);
-			}else if (user) {
-				user.firstName = req.body.firstName || user.firstName;
-				user.lastName = req.body.lastName || user.lastName;
-				user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
-				user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
-				user.skills = req.body.skills || user.skills;
-				user.causes = req.body.causes || user.causes;
-				user.picture = req.body.picture || user.picture;
-				if(req.body.oldPassword){
-						User.comparePassword(req.body.oldPassword , user.password , res , function(){
-								user.password = req.body.password;
-								user.save(function(error, savedUser){
-									if (savedUser) {
-									res.status(201).send('Updated \n' + savedUser);
-									} else {
-										helpers.errorHandler(error, req, res);
-									}
-								});
-						});
-					}
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		}else{
+			User.findOne({ username : req.params.username})
+			.exec(function (error, user){
+				if (user) {
+					user.firstName = req.body.firstName || user.firstName;
+					user.lastName = req.body.lastName || user.lastName;
+					user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+					user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+					user.skills = req.body.skills || user.skills;
+					user.causes = req.body.causes || user.causes;
+					user.picture = req.body.picture || user.picture;
+					if(req.body.oldPassword){
+							User.comparePassword(req.body.oldPassword , user.password , res , function(){
+									user.password = req.body.password;
+									user.save(function(error, saved){
+										res.status(201).send('Updated');
+									});
+							});
+						}
 
-				user.save(function (error, savedUser){
-					if (savedUser) {
+					user.save(function (error, savedUser){
 						res.status(201).send(JSON.stringify(savedUser));
-					}else{
-						helpers.errorHandler(error, req, res);
-					}
-				});
-			}else{
-				helpers.errorHandler('User not Found', req, res);
-			}
-		});
+					});
+				}else{
+					helpers.errorHandler('User not Found', req, res);
+				}
+			});
+		}
 	},
 
 	requestNewPass : function (req, res){
@@ -172,15 +159,20 @@ module.exports = {
 
 	deleteUser : function (req, res) {
 		
-		var username= req.params.username;
-
-		User.findOne({username: username}).remove()
-		.exec(function (error, deleted) {
-			if (deleted.result.n) {
-				res.status(201).send('User Deleted');
-			} else {
-				helpers.errorHandler(error, req, res);
-			}
-		})
+		var username = req.params.username;
+		var token = req.headers['x-access-token'];
+		
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			User.findOne({username: username}).remove()
+			.exec(function (error, deleted) {
+				if (deleted.result.n) {
+					res.status(201).send('User Deleted');
+				} else {
+					helpers.errorHandler(error, req, res);
+				}
+			})
+		}
 	}
 };

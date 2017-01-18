@@ -200,6 +200,11 @@ describe('User Test Database', function (done) {
 
 	describe('Get All Users in User Controller', function (done) {
 		
+		it('Should have a method called getall', function (done) {
+			expect(typeof userController.getAll).to.be.equal('function');
+			done();
+		});
+
 		it('Should return 200 and Users', function (done) {
 			chai.request(server)
 				.get('/api/users/getall')
@@ -209,7 +214,104 @@ describe('User Test Database', function (done) {
 					done();
 				});
 		});
+	});
 
+	describe('Edit User in User Controller', function (done) {
+		var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
+		
+		it('Should have a method called editUser', function (done) {
+			expect(typeof userController.editUser).to.be.equal('function');
+			done();
+		});
 
-	})
+		it('Should return 500 No Token if the user was not signed in', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return 500 ERROR if user not found', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/someone')
+				.set('x-access-token',token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User not Found');
+					done();
+				});
+		});
+
+		it('Should change password if oldPassword is passed in the body', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.set('x-access-token',token)
+				.send({
+					'oldPassword': '1234',
+					'password':'test'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					done();
+				});
+		});
+
+		it('Should return 500 Wrong Password if oldPassword is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/user/edit/Mihyar')
+				.set('x-access-token',token)
+				.send({
+					'oldPassword':'12345',
+					'password':'1234'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
+	});
+
+	describe('Delete User in User Controller', function (done) {
+
+		var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
+
+		it('Should have a methid called deleteUser', function (done) {
+			expect(typeof userController.deleteUser).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 No Token when no token is passed', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Mihyar')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return 500 ERROR when no user is passed', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Someone')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					done();
+				});
+		});
+
+		it('Should delete a user when given the right info', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Mihyar')
+				.set('x-access-token',token)
+				.end(function (error,res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('User Deleted');
+					done();
+				});
+		});
+	});
 });
