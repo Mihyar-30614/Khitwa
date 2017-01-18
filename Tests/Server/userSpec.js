@@ -281,6 +281,15 @@ describe('User Test Database', function (done) {
 			expect(typeof userController.deleteUser).to.be.equal('function');
 			done();
 		});
-	});
 
+		it('Should return 500 No Token when no token is passed', function (done) {
+			chai.request(server)
+				.post('/api/user/delete/Mihyar')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+	});
 });
