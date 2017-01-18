@@ -52,6 +52,7 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(error).to.not.equal(null);
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User does not exist');
 					done();
 				});
 		});
@@ -109,6 +110,7 @@ describe('User Test Database', function (done) {
 				})
 				.end(function (req, res) {
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Account Already exists');
 					done();
 				});
 		});
