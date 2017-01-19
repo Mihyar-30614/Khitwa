@@ -62,7 +62,57 @@ describe('Organization Test Database', function (done) {
 					expect(res.status).to.be.equal(201);
 					expect(res.text).to.be.equal('Organization Created');
 					done();
-				})
-		})
+				});
+		});
 	});
+
+	describe('Organization Signin',function (done) {
+		
+		it('Should have a method called signin', function (done) {
+			expect(typeof organizationController.signin).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 User Does Not Exists when organization is not registered', function (done) {
+			chai.request(server)
+				.post('/api/organization/signin')
+				.send({
+					'name':'Something',
+					'password':'Something'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User Does Not Exists');
+					done();
+				});
+		});
+
+		it('Should return 500 Wrong Password when the password is wrong', function (done) {
+			chai.request(server)
+				.post('/api/organization/signin')
+				.send({
+					'name':'KhitwaOrg',
+					'password':'password'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
+
+		it('Should give access token when signin',function (done) {
+			chai.request(server)
+				.post('/api/organization/signin')
+				.send({
+					'name':'KhitwaOrg',
+					'password' : '1234'
+				})
+				.end(function (error, res) {
+					expect(res.body.token).to.not.equal(undefined);
+					expect(res.body.name).to.be.equal('KhitwaOrg');
+					done();
+				});
+		});
+	})
 });
