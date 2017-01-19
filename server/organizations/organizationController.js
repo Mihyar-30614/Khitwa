@@ -10,9 +10,7 @@ module.exports = {
 
 		Organization.findOne({name: req.body.name})
 		.exec( function (error, found){
-			if (error) {
-				helpers.errorHandler(error, req, res);
-			} else if (found) {
+			if (found) {
 				helpers.errorHandler('Name Already Exists', req, res);
 			}else {
 				 var newOrg = Organization({
@@ -31,8 +29,6 @@ module.exports = {
 				newOrg.save( function (error, saved){
 					if (saved) {
 						res.status(201).send('Organization Created');
-					}else{
-						helpers.errorHandler(error, req, res);
 					}
 				});
 			}
@@ -56,8 +52,6 @@ module.exports = {
 						helpers.errorHandler('Wrong Password', req, res);
 					}
 				})
-			} else if(error){
-				helpers.errorHandler(error, req, res);
 			}else{
 				helpers.errorHandler('User Does Not Exists', req, res);
 			}
@@ -73,9 +67,7 @@ module.exports = {
 			var organization = jwt.decode(token,'secret');
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if(org){
+				if(org){
 					res.status(200).send('Authorized');
 				}else{
 					helpers.errorHandler('Organization Not Found', req, res);
@@ -102,8 +94,6 @@ module.exports = {
 		.exec( function (error, organization){
 			if (organization) {
 				res.status(200).send(JSON.stringify(organization));
-			}else if (error) {
-				helpers.errorHandler(error, req, res);
 			}else{
 				helpers.errorHandler('Organization Not Found', req, res);
 			}
@@ -114,9 +104,7 @@ module.exports = {
 
 		Organization.findOne({ name: req.params.name})
 		.exec( function (error, organization){
-			if (error) {
-				helpers.errorHandler(error, req, res);
-			} else if (!organization) {
+			if (!organization) {
 				helpers.errorHandler('Organization Not Found', req, res);
 			}else{
 
@@ -191,15 +179,11 @@ module.exports = {
 				if (saved) {
 					Organization.findOne({name : organizer})
 					.exec(function (error, org) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else if(org){
+						if(org){
 							var id = saved._id;
 							org.currentOpportunities.push(id);
 							org.save(function (error, savedArray) {
-								if (error) {
-									helpers.errorHandler(error, req, res);
-								} else {
+								if (savedArray) {
 									console.log(org.currentOpportunities)
 								}
 							})
@@ -208,8 +192,6 @@ module.exports = {
 						}
 					})
 					res.status(201).send('Opportunity Created');
-				} else {
-					helpers.errorHandler(error, req, res);
 				}
 			});
 		}
@@ -228,35 +210,27 @@ module.exports = {
 				if (found) {
 					found.status='Closed';
 					found.save(function (error, saved) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else {
+						if (saved) {
 							console.log('Changed to Closed');
 						}
 					})
-				} else if(error) {
-					helpers.errorHandler(error, req, res);
 				}else{
-					helpers.errorHandler('Opportunity Not Found');
+					helpers.errorHandler('Opportunity Not Found', req, res);
 				}
 			})
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (org) {
+			 	if (org) {
 					var index = org.currentOpportunities.indexOf(id.toString());
 					var toClose = org.currentOpportunities.splice(index,1);
 					org.pastOpportunities.push(toClose);
 					org.save(function (error, savedOrg) {
 						if (savedOrg) {
 							res.status(201).send('Opportunity Closed');
-						} else {
-							helpers.errorHandler(error, req, res);
 						}
 					})
 				}else{
-					helpers.errorHandler('Organization Not Found');
+					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
@@ -271,23 +245,17 @@ module.exports = {
 		} else {
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (opportunity) {
+				if (opportunity) {
 					opportunity.status='Active';
 					var org = jwt.decode(token, 'secret');
 					Organization.findOne({name : org.name})
 					.exec(function (error, organization) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else if (organization) {
+						if (organization) {
 							var index = organization.pastOpportunities.indexOf(id);
 							organization.pastOpportunities.splice(index,1);
 							organization.currentOpportunities.push(id);
 							organization.save(function (error, saved) {
-								if (error) {
-									helpers.errorHandler(error, req, res);
-								} else {
+								if (saved) {
 									console.log('Moved to open opportunity array');
 								}
 							})

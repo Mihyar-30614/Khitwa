@@ -52,6 +52,7 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(error).to.not.equal(null);
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User does not exist');
 					done();
 				});
 		});
@@ -109,6 +110,7 @@ describe('User Test Database', function (done) {
 				})
 				.end(function (req, res) {
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Account Already exists');
 					done();
 				});
 		});
@@ -158,6 +160,7 @@ describe('User Test Database', function (done) {
 				.get('/api/users/signedin')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
 					done();
 				})
 		});
@@ -168,6 +171,7 @@ describe('User Test Database', function (done) {
 				.set('x-access-token', token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
+					expect(res.text).to.be.equal('Authorized');
 					done();
 				})
 		});
@@ -180,6 +184,7 @@ describe('User Test Database', function (done) {
 				.get('/api/users/getUser/Someone')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User Not Found');
 					done();
 				})
 		});
