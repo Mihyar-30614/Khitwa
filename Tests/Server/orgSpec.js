@@ -32,4 +32,37 @@ describe('Organization Test Database', function (done) {
 		Organization.collection.drop();
 		done();
 	});
+
+	describe('Create Organization', function (done) {
+		
+		it('Should have a function called createOrganization', function (done) {
+			expect(typeof organizationController.createOrganization).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 Name Already Exists if the name is taken', function (done) {
+			chai.request(server)
+				.post('/api/organization/signup')
+				.send({'name':'KhitwaOrg'})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Name Already Exists');
+					done();
+				});
+		});
+
+		it('Should register new organization', function (done) {
+			chai.request(server)
+				.post('/api/organization/signup')
+				.send({
+					'name':'newOrg',
+					'password': 'newPassword'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Organization Created');
+					done();
+				})
+		})
+	});
 });
