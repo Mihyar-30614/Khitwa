@@ -81,7 +81,7 @@ module.exports = {
 		Organization.findOne({ name: req.params.name})
 		.exec(function (error, organization) {
 			if (organization) {
-				res.status(200).send(JSON.stringify(organization));
+				res.status(200).send(organization);
 			}else{
 				helpers.errorHandler('Organization Not Found', req, res);
 			}
@@ -93,9 +93,7 @@ module.exports = {
 		Organization.find({})
 		.exec( function (error, organization){
 			if (organization) {
-				res.status(200).send(JSON.stringify(organization));
-			}else{
-				helpers.errorHandler('Organization Not Found', req, res);
+				res.status(200).send(organization);
 			}
 		});
 	},

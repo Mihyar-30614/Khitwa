@@ -145,4 +145,51 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Get Organization by Name', function (done) {
+		
+		it('Should have a method called getByName', function (done) {
+			expect(typeof organizationController.getByName).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 Organization Not Found if the name is not registered', function (done) {
+			chai.request(server)
+				.get('/api/organization/getByName/Something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Organization Not Found');
+					done();
+				});
+		});
+
+		it('Should return 200 Organization when passed registered organization', function (done) {
+			chai.request(server)
+				.get('/api/organization/getByName/KhitwaOrg')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body.name).to.be.equal('KhitwaOrg');
+					done();
+				});
+		});
+	});
+
+	describe('Get All organizations', function (done) {
+		
+		it('Should have a method called getAll', function (done) {
+			expect(typeof organizationController.getAll).to.be.equal('function');
+			done();
+		});
+
+		it('Shoulde return Array of organizations', function (done) {
+			chai.request(server)
+				.get('/api/organization/all')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body[0].name).to.be.equal('KhitwaOrg');
+					expect(Array.isArray(res.body)).to.be.equal(true);
+					done();
+				});
+		});
+	});
 });
