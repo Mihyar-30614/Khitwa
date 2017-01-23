@@ -93,7 +93,7 @@ module.exports = {
 		Organization.find({})
 		.exec( function (error, organization){
 			if (organization) {
-				res.status(200).send(JSON.stringify(organization));
+				res.status(200).send(organization);
 			}
 		});
 	},
