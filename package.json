@@ -31,6 +31,7 @@
     "bower": "latest",
     "express": "^4.4.5",
     "gulp-util": "^2.2.14",
+    "gulp-minify-css": "^0.3.0",
     "jwt-simple": "^0.2.0",
     "mongoose": "^4.1.0",
     "morgan": "^1.1.1",
