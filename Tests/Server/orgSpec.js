@@ -173,4 +173,23 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Get All organizations', function (done) {
+		
+		it('Should have a method called getAll', function (done) {
+			expect(typeof organizationController.getAll).to.be.equal('function');
+			done();
+		});
+
+		it('Shoulde return Array of organizations', function (done) {
+			chai.request(server)
+				.get('/api/organization/all')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body[0].name).to.be.equal('KhitwaOrg');
+					expect(Array.isArray(res.body)).to.be.equal(true);
+					done();
+				});
+		});
+	});
 });
