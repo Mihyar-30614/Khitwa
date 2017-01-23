@@ -48,7 +48,6 @@
     "karma-chrome-launcher": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.1",
     "karma-spec-reporter": "0.0.26",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^1.1.1",
