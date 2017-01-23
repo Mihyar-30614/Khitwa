@@ -9,27 +9,27 @@
     "node": "6.3.1"
   },
   "scripts": {
-    "test":"npm run backend",
+    "test": "npm run backend",
     "userTest": "mocha ./Tests/Server/userSpec.js",
-    "orgTest":"./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha ./Tests/Server/orgSpec.js",
-    "backend" : "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./Tests/Server/*.js",
-    "start":"nodemon ./server/server.js",
+    "orgTest": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha ./Tests/Server/orgSpec.js",
+    "backend": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec ./Tests/Server/*.js",
+    "start": "nodemon ./server/server.js",
     "postinstall": "npm install -g bower && bower install"
   },
   "license": "UNLICENSED",
   "description": "Khitwa: Volunteer engaging project",
   "dependencies": {
+    "express": "^4.14.0",
     "gulp": "^3.5.6",
-    "gulp-sass": "^2.0.4",
-    "gulp-concat": "^2.2.0",
     "gulp-clean-css": "latest",
-    "gulp-rename": "^1.2.0"
+    "gulp-concat": "^2.2.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^2.0.4"
   },
   "devDependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.4.3",
     "bower": "latest",
-    "express": "^4.4.5",
     "gulp-util": "^2.2.14",
     "gulp-minify-css": "^0.3.0",
     "jwt-simple": "^0.2.0",
