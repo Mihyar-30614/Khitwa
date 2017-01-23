@@ -94,8 +94,6 @@ module.exports = {
 		.exec( function (error, organization){
 			if (organization) {
 				res.status(200).send(JSON.stringify(organization));
-			}else{
-				helpers.errorHandler('Organization Not Found', req, res);
 			}
 		});
 	},
