@@ -28,7 +28,8 @@
     "gulp-sass": "^2.0.4",
     "jwt-simple": "^0.5.1",
     "mongoose": "^4.7.7",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "q": "^1.4.1"
   },
   "devDependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -37,7 +38,6 @@
     "gulp-minify-css": "^0.3.0",
     "nodemon": "^1.10.2",
     "path": "^0.12.7",
-    "q": "^1.4.1",
     "request": "^2.74.0",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
