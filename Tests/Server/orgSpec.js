@@ -230,12 +230,26 @@ describe('Organization Test Database', function (done) {
 				.post('/api/organization/edit')
 				.set('x-access-token', token)
 				.send({
-					'oldPassword':'12345'
+					'oldPassword':'12345',
 					'password':'newPassword'
 				})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
+
+		it('Should return 201 Updated when passed oldPassword', function (done) {
+			chai.request(server)
+				.post('/api/organization/edit')
+				.set('x-access-token', token)
+				.send({
+					'oldPassword':'1234',
+					'password':'newPassword'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
 					done();
 				});
 		});
