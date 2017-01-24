@@ -146,7 +146,7 @@ module.exports = {
 						}
 
 					user.save(function (error, savedUser){
-						res.status(201).send(JSON.stringify(savedUser));
+						res.status(201).send(savedUser);
 					});
 				}else{
 					helpers.errorHandler(error, req, res);
