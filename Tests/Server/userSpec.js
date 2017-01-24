@@ -231,7 +231,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 500 No Token if the user was not signed in', function (done) {
 			chai.request(server)
-				.post('/api/user/edit/Mihyar')
+				.post('/api/user/edit')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('No Token');
@@ -239,20 +239,9 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		it('Should return 500 ERROR if user not found', function (done) {
-			chai.request(server)
-				.post('/api/user/edit/someone')
-				.set('x-access-token',token)
-				.end(function (error, res) {
-					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('User not Found');
-					done();
-				});
-		});
-
 		it('Should change password if oldPassword is passed in the body', function (done) {
 			chai.request(server)
-				.post('/api/user/edit/Mihyar')
+				.post('/api/user/edit')
 				.set('x-access-token',token)
 				.send({
 					'oldPassword': '1234',
@@ -266,7 +255,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 500 Wrong Password if oldPassword is incorrect', function (done) {
 			chai.request(server)
-				.post('/api/user/edit/Mihyar')
+				.post('/api/user/edit')
 				.set('x-access-token',token)
 				.send({
 					'oldPassword':'12345',
@@ -275,6 +264,20 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
+
+		it('Should modify the user info', function (done) {
+			chai.request(server)
+				.post('/api/user/edit')
+				.set('x-access-token', token)
+				.send({
+					'lastName' : 'Al-Masalma'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.body.lastName).to.be.equal('Al-Masalma');
 					done();
 				});
 		});

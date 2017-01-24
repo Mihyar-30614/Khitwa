@@ -12,14 +12,14 @@ module.exports = function(app, express){
 	app.get('/api/users/getall', userController.getAll);
 	app.get('/api/users/getUser/:username', userController.getUser);
 	app.get('/api/users/signedin', userController.checkAuth);
-	app.post('/api/user/edit/:username', userController.editUser);
+	app.post('/api/user/edit', userController.editUser);
 	app.post('/api/user/delete/:username', userController.deleteUser);
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.createOrganization);
 	app.get('/api/organization/getByName/:name', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
-	app.post('/api/organization/edit/:name', organizationController.editProfile);
+	app.post('/api/organization/edit', organizationController.editProfile);
 	app.post('/api/organization/delete', organizationController.deleteOrganization);
 	app.post('/api/organization/addOpportunity', organizationController.addOpportunity);
 	app.post('/api/organization/closeOpportunity/:id', organizationController.closeOpportunity);

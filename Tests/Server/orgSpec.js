@@ -192,4 +192,66 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Edit Profile Organization', function (done) {
+		
+		it('Should have a method called editProfile', function (done) {
+			expect(typeof organizationController.editProfile).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 No Token when not signedin', function (done) {
+			chai.request(server)
+				.post('/api/organization/edit')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should modify organization profile', function (done) {
+			chai.request(server)
+				.post('/api/organization/edit')
+				.set('x-access-token', token)
+				.send({
+					'locations': ['Canada','Syria']
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(Array.isArray(res.body.locations)).to.be.equal(true);
+					expect(res.body.locations[1]).to.be.equal('Syria');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Wrong Password if the password entered is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/organization/edit')
+				.set('x-access-token', token)
+				.send({
+					'oldPassword':'12345',
+					'password':'newPassword'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Wrong Password');
+					done();
+				});
+		});
+
+		it('Should return 201 Updated when passed oldPassword', function (done) {
+			chai.request(server)
+				.post('/api/organization/edit')
+				.set('x-access-token', token)
+				.send({
+					'oldPassword':'1234',
+					'password':'newPassword'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					done();
+				});
+		});
+	});
 });
