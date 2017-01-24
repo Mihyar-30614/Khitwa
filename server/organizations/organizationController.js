@@ -122,7 +122,7 @@ module.exports = {
 						Organization.comparePassword(req.body.oldPassword , organization.password , res , function(){
 								organization.password = req.body.password;
 								organization.save(function(savedOrg){
-									res.status(201).send('Updated \n' + savedOrg);
+									res.status(201).send('Updated');
 								});
 						});
 					}
