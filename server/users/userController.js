@@ -125,7 +125,8 @@ module.exports = {
 			helpers.errorHandler('No Token', req, res);
 		}else{
 			var user = jwt.decode(token,'secret');
-			User.findOne({ username : user.name})
+
+			User.findOne({ username : user.username})
 			.exec(function (error, user){
 				if (user) {
 					user.firstName = req.body.firstName || user.firstName;
@@ -147,6 +148,8 @@ module.exports = {
 					user.save(function (error, savedUser){
 						res.status(201).send(JSON.stringify(savedUser));
 					});
+				}else{
+					helpers.errorHandler(error, req, res);
 				}
 			});
 		}
