@@ -272,7 +272,7 @@ describe('User Test Database', function (done) {
 			chai.request(server)
 				.post('/api/user/edit')
 				.set('x-access-token', token)
-				.post({
+				.send({
 					'lastName' : 'Al-Masalma'
 				})
 				.end(function (error, res) {
