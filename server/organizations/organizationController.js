@@ -100,11 +100,15 @@ module.exports = {
 
 	editProfile :  function (req, res) {
 
-		Organization.findOne({ name: req.params.name})
-		.exec( function (error, organization){
-			if (!organization) {
-				helpers.errorHandler('Organization Not Found', req, res);
-			}else{
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			var org = jwt.decode(token,'secret');
+
+			Organization.findOne({ name: org.name})
+			.exec( function (error, organization){
+
 
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
 		        organization.locations = req.body.locations || organization.locations;
@@ -125,7 +129,7 @@ module.exports = {
 
 		        organization.save(function(error,saved){
 		        	if (saved) {
-		        		res.status(201).send(JSON.stringify(saved));
+		        		res.status(201).send(saved);
 		        	}
 		        });
 			}
