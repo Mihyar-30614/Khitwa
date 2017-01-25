@@ -48,8 +48,6 @@ module.exports = {
 						var token = jwt.encode(organization,'secret');
 						res.setHeader('x-access-token',token);
 						res.json({ token : token, name : organization.name });
-					} else {
-						helpers.errorHandler('Wrong Password', req, res);
 					}
 				})
 			}else{
@@ -229,8 +227,6 @@ module.exports = {
 							res.status(201).send('Opportunity Closed');
 						}
 					})
-				}else{
-					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
@@ -259,8 +255,6 @@ module.exports = {
 									console.log('Moved to open opportunity array');
 								}
 							})
-						} else {
-							helpers.errorHandler('Organization Not Found', req, res);
 						}
 					})
 					opportunity.save(function (error,saved) {
