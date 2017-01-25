@@ -227,8 +227,6 @@ module.exports = {
 							res.status(201).send('Opportunity Closed');
 						}
 					})
-				}else{
-					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
