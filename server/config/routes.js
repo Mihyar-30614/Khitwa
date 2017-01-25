@@ -13,7 +13,7 @@ module.exports = function(app, express){
 	app.get('/api/users/getUser/:username', userController.getUser);
 	app.get('/api/users/signedin', userController.checkAuth);
 	app.post('/api/user/edit', userController.editUser);
-	app.post('/api/user/delete/:username', userController.deleteUser);
+	app.post('/api/user/delete', userController.deleteUser);
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.createOrganization);
