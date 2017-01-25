@@ -48,8 +48,6 @@ module.exports = {
 						var token = jwt.encode(organization,'secret');
 						res.setHeader('x-access-token',token);
 						res.json({ token : token, name : organization.name });
-					} else {
-						helpers.errorHandler('Wrong Password', req, res);
 					}
 				})
 			}else{
