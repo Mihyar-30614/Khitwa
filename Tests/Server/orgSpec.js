@@ -283,4 +283,41 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Organization Add Opportunity', function (done) {
+		
+		it('Should have a method called addOpportunity', function (done) {
+			expect(typeof organizationController.addOpportunity).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 No Token if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/organization/addOpportunity')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should create Opportunity', function (done) {
+			chai.request(server)
+				.post('/api/organization/addOpportunity')
+				.set('x-access-token', token)
+				.send({
+					"title":"AHR",
+					"startDate":"25-NOV-2016",
+					"endDate":"26-NOV-2016",
+					"location":"Halifax",
+					"causesArea":"Education",
+					"description":"Education changes the world!"
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Opportunity Created');
+					done();
+				});
+		});
+	});
 });
