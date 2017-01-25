@@ -161,13 +161,13 @@ module.exports = {
 
 	deleteUser : function (req, res) {
 		
-		var username = req.params.username;
 		var token = req.headers['x-access-token'];
 		
 		if (!token) {
 			helpers.errorHandler('No Token', req, res);
 		} else {
-			User.findOne({username: username}).remove()
+			var user = jwt.decode(token,'secret');
+			User.findOne({username: user.username}).remove()
 			.exec(function (error, deleted) {
 				if (deleted.result.n) {
 					res.status(201).send('User Deleted');
