@@ -255,7 +255,7 @@ describe('Organization Test Database', function (done) {
 		});
 	});
 
-	describe('Organization Delte', function (done) {
+	describe('Organization Delete', function (done) {
 
 		it('Should have a method called deleteOrganization', function (done) {
 			expect( typeof organizationController.deleteOrganization).to.be.equal('function');
@@ -320,4 +320,63 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Organization Close Opportunity', function (done) {
+		
+		it('Should have a method called closeOpportunity', function (done) {
+			expect(typeof organizationController.closeOpportunity).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 No Token if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/organization/closeOpportunity/581a85af49be4b14f4c45555')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect',function (done) {
+			chai.request(server)
+				.post('/api/organization/closeOpportunity/581a85af49be4b14f4c45555')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+
+		it('Should Close Opportunity', function (done) {
+			chai.request(server)
+				.post('/api/organization/addOpportunity')
+				.set('x-access-token', token)
+				.send({
+					"title":"AHR",
+					"startDate":"25-NOV-2016",
+					"endDate":"26-NOV-2016",
+					"location":"Halifax",
+					"causesArea":"Education",
+					"description":"Education changes the world!"
+				})
+				.end(function (error, res) {
+					chai.request(server)
+						.get('/api/organization/getByName/KhitwaOrg')
+						.end(function (error, res) {
+							var id = res.body.currentOpportunities[0];
+							
+							chai.request(server)
+								.post('/api/organization/closeOpportunity/'+id)
+								.set('x-access-token', token)
+								.end(function (error, res) {
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Opportunity Closed');
+									done();
+								});
+						});
+				});
+		});
+	})
 });
