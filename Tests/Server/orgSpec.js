@@ -254,4 +254,33 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 	});
+
+	describe('Organization Delte', function (done) {
+
+		it('Should have a method called deleteOrganization', function (done) {
+			expect( typeof organizationController.deleteOrganization).to.be.equal('function');
+			done();
+		});
+		
+		it('Should return ERROR 500 No Token when not signedin', function (done) {
+			chai.request(server)
+				.post('/api/organization/delete')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should delete organization', function (done) {
+			chai.request(server)
+				.post('/api/organization/delete')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Organization Deleted');
+					done();
+				});
+		});
+	});
 });
