@@ -255,8 +255,6 @@ module.exports = {
 									console.log('Moved to open opportunity array');
 								}
 							})
-						} else {
-							helpers.errorHandler('Organization Not Found', req, res);
 						}
 					})
 					opportunity.save(function (error,saved) {
