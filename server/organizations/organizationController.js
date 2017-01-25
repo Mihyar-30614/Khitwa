@@ -189,8 +189,6 @@ module.exports = {
 									console.log(org.currentOpportunities)
 								}
 							})
-						}else{
-							helpers.errorHandler('Organization Not Found');
 						}
 					})
 					res.status(201).send('Opportunity Created');

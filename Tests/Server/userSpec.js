@@ -292,9 +292,9 @@ describe('User Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 No Token when no token is passed', function (done) {
+		it('Should return 500 No Token when not signed in', function (done) {
 			chai.request(server)
-				.post('/api/user/delete/Mihyar')
+				.post('/api/user/delete')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('No Token');
@@ -302,18 +302,9 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		it('Should return 500 ERROR when no user is passed', function (done) {
+		it('Should delete a user ', function (done) {
 			chai.request(server)
-				.post('/api/user/delete/Someone')
-				.end(function (error, res) {
-					expect(res.status).to.be.equal(500);
-					done();
-				});
-		});
-
-		it('Should delete a user when given the right info', function (done) {
-			chai.request(server)
-				.post('/api/user/delete/Mihyar')
+				.post('/api/user/delete')
 				.set('x-access-token',token)
 				.end(function (error,res) {
 					expect(res.status).to.be.equal(201);
