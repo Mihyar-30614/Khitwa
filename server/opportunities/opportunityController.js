@@ -42,9 +42,7 @@ module.exports = {
 
 			Opportunity.findOne({_id : opportunityId})
 			.exec(function (error, opportunity) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (opportunity) {
+				if (opportunity) {
 						newOpening.save(function (error, saved) {
 						if (saved) {
 
@@ -54,8 +52,6 @@ module.exports = {
 									res.status(201).send('Opening Added');
 								}
 							})
-						}else if (error) {
-							helpers.errorHandler(error, req, res);
 						}
 					})
 				}else{
@@ -74,9 +70,7 @@ module.exports = {
 			var id = req.params.id.toString();
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (opportunity) {
+				if (opportunity) {
 					orgna = jwt.decode(token,'secret');
 					if (opportunity._organizer === orgna.name) {
 						opportunity.title = req.body.title || opportunity.title;
@@ -206,9 +200,7 @@ module.exports = {
 			var org = jwt.decode(token, 'secret');
 			Organization.findOne({name : org.name})
 			.exec(function (error, organization) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (organization) {
+				if (organization) {
 					if (organization.pastOpportunities.indexOf(id)>0) {
 						var index = organization.pastOpportunities.indexOf(id);
 						organization.pastOpportunities.splice(index, 1);
@@ -248,9 +240,7 @@ module.exports = {
 
 			Opening.findOne({_id : id})
 			.exec(function (error, opening) {
-				if (error) {
-					helpers.errorHandler(error, req, res);
-				} else if (opening) {
+				if (opening) {
 					var opportunityId = opening._opportunity;
 					opening.status= 'Active';
 
@@ -262,9 +252,7 @@ module.exports = {
 
 					Opportunity.findOne({_id : opportunityId})
 					.exec(function (error, opportunity) {
-						if (error) {
-							helpers.errorHandler(error, req, res);
-						} else if (opportunity) {
+						if (opportunity) {
 							if (opportunity.closedOpenings.indexOf(id)>0) {
 								var index = opportunity.closedOpenings.indexOf(id);
 								opportunity.closedOpenings.splice(index,1);
@@ -287,20 +275,5 @@ module.exports = {
 				}
 			})
 		}
-	},
-	// empty : function (req, res) {
-		
-	// 	var id = req.params.id.toString();
-	// 	Opportunity.findOne({_id : id})
-	// 	.exec(function (error, opportunity) {
-	// 		if (opportunity) {
-	// 			opportunity.currOpenings=[];
-	// 			opportunity.save(function (error,saved) {
-	// 				if (saved) {
-	// 					res.status(201).send('Emptyed');
-	// 				}
-	// 			})
-	// 		}
-	// 	})
-	// }
+	}
 }
