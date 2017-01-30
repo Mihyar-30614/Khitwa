@@ -12,6 +12,8 @@ var Organization = require('../../server/organizations/organizationModel');
 var organizationController = require('../../server/organizations/organizationController');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
+var Opening = require('../../server/openings/openingModel');
+var openingController = require('../../server/openings/openingController');
 
 describe('Opportunity Test DataBase', function (done) {
 	
@@ -47,7 +49,7 @@ describe('Opportunity Test DataBase', function (done) {
 		done();
 	});
 
-	describe('All Opportunities Function', function (done) {
+	describe('All Opportunities', function (done) {
 		
 		it('Should have a method called allOpportunities', function (done) {
 			expect(typeof opportunityController.allOpportunities).to.be.equal('function');
@@ -64,6 +66,62 @@ describe('Opportunity Test DataBase', function (done) {
 					done();
 				});
 		});
-
 	});
-})
+
+	describe('Add Opening', function (done) {
+
+		it('Should have a method called addOpening', function (done) {
+			expect(typeof opportunityController.addOpening).to.be.equal('function');
+			done();
+		});
+		
+		it('Should return ERROR 500 if you not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opportunities/addOpening/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opportunities/addOpening/somethingnotright')
+				.set('x-access-token',token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+
+		it('Should add new opening', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+
+					chai.request(server)
+						.post('/api/opportunities/addOpening/'+id)
+						.set('x-access-token',token)
+						.send({
+							"title":"First Opening",
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('Opening Added');
+							done();
+						});
+				});
+		});
+	});
+
+	
+});
