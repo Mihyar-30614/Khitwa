@@ -29,6 +29,7 @@ describe('Opportunity Test DataBase', function (done) {
 		newOrg.save();
 		var newOpp = new Opportunity({
 			"title":"AHR",
+			"_organizer":"KhitwaOrg",
 			"startDate":"25-NOV-2016",
 			"endDate":"26-NOV-2016",
 			"location":"Halifax",
@@ -42,8 +43,27 @@ describe('Opportunity Test DataBase', function (done) {
 
 	afterEach(function (done) {
 		Organization.collection.drop();
+		Opportunity.collection.drop();
 		done();
 	});
 
-	
+	describe('All Opportunities Function', function (done) {
+		
+		it('Should have a method called allOpportunities', function (done) {
+			expect(typeof opportunityController.allOpportunities).to.be.equal('function');
+			done();
+		});
+
+		it('Should return an array of organization', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/getall')
+				.end(function (error, res) {
+					expect(Array.isArray(res.body)).to.be.equal(true);
+					expect(res.body.length).to.be.equal(1);
+					expect(res.body[0].title).to.be.equal('AHR');
+					done();
+				});
+		});
+
+	});
 })
