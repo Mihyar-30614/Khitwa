@@ -81,7 +81,7 @@ module.exports = {
 	  					opportunity.poster = req.body.poster || opportunity.poster;
 	  					opportunity.save(function (error, saved) {
 	  						if (saved) {
-	  							res.status(201).send('\n Updated!');
+	  							res.status(201).send(opportunity);
 	  						}
 	  					})
 					} else {

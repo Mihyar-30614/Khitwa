@@ -123,5 +123,54 @@ describe('Opportunity Test DataBase', function (done) {
 		});
 	});
 
+	describe('Edit Opportunity', function (done) {
+		
+		it('Should have a method called editOpportunity', function (done) {
+			expect(typeof opportunityController.editOpportunity).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 No Token if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opportunity/edit/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opportunity Not Found if the id was incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opportunity/edit/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+
+		it('Should be able to modify an opportunity', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+
+					chai.request(server)
+						.post('/api/opportunity/edit/'+id)
+						.set('x-access-token', token)
+						.send({
+							'title':'test'
+						})
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.body.title).to.be.equal('test');
+							done();
+						});
+				});
+		});
+	});
+
 	
 });
