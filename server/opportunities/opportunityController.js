@@ -11,12 +11,10 @@ module.exports = {
 		
 		Opportunity.find({})
 		.exec(function(error, opportunities){
-			if (error) {
-				helpers.errorHandler(error, req, res);
-			} else if (opportunities.length === 0) {
-				res.status(200).send('No Opportunities');
-			} else {
+			if (opportunities) {
 				res.status(200).send(opportunities)
+			}else{
+				helpers.errorHandler(error, res, req);
 			}
 		});
 	},
@@ -83,7 +81,7 @@ module.exports = {
 	  					opportunity.poster = req.body.poster || opportunity.poster;
 	  					opportunity.save(function (error, saved) {
 	  						if (saved) {
-	  							res.status(201).send('\n Updated!');
+	  							res.status(201).send(opportunity);
 	  						}
 	  					})
 					} else {

@@ -57,7 +57,7 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		it('Should give access token when signin', function (done) {
+		xit('Should give access token when signin', function (done) {
 			chai.request(server)
 				.post('/api/users/signin')
 				.send({
@@ -239,7 +239,7 @@ describe('User Test Database', function (done) {
 				});
 		});
 
-		it('Should change password if oldPassword is passed in the body', function (done) {
+		xit('Should change password if oldPassword is passed in the body', function (done) {
 			chai.request(server)
 				.post('/api/user/edit')
 				.set('x-access-token',token)
