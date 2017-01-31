@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 // Change between two databases for testing 
 var dbc = process.env.NODE_ENV === 'test'? 'mongodb://localhost/Khitwa-test' : 'mongodb://localhost/Khitwa';
+// var dbc = 'mongodb://localhost/Khitwa-test';
 var mongoURI =  process.env.MONGODB_URI || dbc;
 
 mongoose.connect(mongoURI);
@@ -23,6 +24,7 @@ require('./config/routes.js')(app, express);
 // start listening to requests on port 8000
 
 app.listen(port, function () {
+	console.log('Connecting to DataBase: '+dbc.substr(20));
   console.log('app listening on port ' + port);
 });
 

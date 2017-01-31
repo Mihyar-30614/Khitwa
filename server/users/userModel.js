@@ -34,19 +34,6 @@ var UserSchema = new Schema({
   salt: String
 });
 
-var User = mongoose.model('User' , UserSchema);
-
-User.comparePassword = function(candidatePassword, savedPassword, res, cb){
-  bcrypt.compare( candidatePassword, savedPassword, function(err, isMatch){
-    if(!isMatch){
-      res.status(500).send('Wrong Password');
-    } else if(isMatch){
-      cb(isMatch);
-    }
-  });
-};
-
-
 UserSchema.pre('save', function (next) {
   var user = this;
 
@@ -74,5 +61,21 @@ UserSchema.pre('save', function (next) {
     });
   });
 });
+
+var User = mongoose.model('User' , UserSchema);
+
+User.comparePassword = function(candidatePassword, savedPassword, res, cb){
+  bcrypt.compare( candidatePassword, savedPassword, function(err, isMatch){
+    console.log(isMatch);
+    console.log(err);
+    if(!isMatch){
+      res.status(500).send('Wrong Password');
+    } else if(isMatch){
+      cb(isMatch);
+    }else{
+      res.status(500).send(err);
+    }
+  });
+};
 
 module.exports = User;

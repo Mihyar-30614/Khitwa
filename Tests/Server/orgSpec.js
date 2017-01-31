@@ -102,7 +102,7 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 
-		xit('Should give access token when signin',function (done) {
+		it('Should give access token when signin',function (done) {
 			chai.request(server)
 				.post('/api/organization/signin')
 				.send({
@@ -240,7 +240,7 @@ describe('Organization Test Database', function (done) {
 				});
 		});
 
-		xit('Should return 201 Updated when passed oldPassword', function (done) {
+		it('Should return 201 Updated when passed oldPassword', function (done) {
 			chai.request(server)
 				.post('/api/organization/edit')
 				.set('x-access-token', token)

@@ -19,18 +19,6 @@ var OrganizationSchema = new Schema({
   salt : String
 });
 
-var Organization = mongoose.model('Organization' , OrganizationSchema);
-
-Organization.comparePassword = function(candidatePassword, savedPassword, res, cb){
-  bcrypt.compare( candidatePassword, savedPassword, function(err, isMatch){
-    if(!isMatch){
-      res.status(500).send('Wrong Password');
-    } else if(isMatch){
-      cb(isMatch);
-    }
-  });
-};
-
 OrganizationSchema.pre('save', function (next) {
   var organization = this;
 
@@ -44,13 +32,11 @@ OrganizationSchema.pre('save', function (next) {
     if (err) {
       return next(err);
     }
-
     // hash the password along with our new salt
     bcrypt.hash(organization.password, salt, null, function (err, hash) {
       if (err) {
         return next(err);
       }
-
       // override the cleartext password with the hashed one
       organization.password = hash;
       organization.salt = salt;
@@ -58,5 +44,19 @@ OrganizationSchema.pre('save', function (next) {
     });
   });
 });
+
+var Organization = mongoose.model('Organization' , OrganizationSchema);
+
+Organization.comparePassword = function(candidatePassword, savedPassword, res, cb){
+  bcrypt.compare( candidatePassword, savedPassword, function(err, isMatch){
+    if(!isMatch){
+      res.status(500).send('Wrong Password');
+    } else if(isMatch){
+      cb(isMatch);
+    }else{
+      res.status(500).send(err);
+    }
+  });
+};
 
 module.exports = Organization;
