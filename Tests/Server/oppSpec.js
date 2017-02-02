@@ -230,4 +230,40 @@ describe('Opportunity Test DataBase', function (done) {
 				});
 		});
 	});
+
+	describe('Get Opportunity', function (done) {
+		
+		it('Should have a method called getOpportunity', function (done) {
+			expect(typeof opportunityController.getOpportunity).to.be.equal('function');
+			done();
+		});
+
+		it('Should return 500 ERROR Opportunity Not Found if id is incorrect', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/get/somethingnotright')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+
+		it('Should return an opportunity', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+
+					chai.request(server)
+						.get('/api/opportunity/get/'+id)
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(200);
+							expect(res.body.title).to.be.equal('AHR');
+							done();
+						});
+				});
+		});
+	});
+
+	
 });
