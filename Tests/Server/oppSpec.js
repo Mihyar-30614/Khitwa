@@ -201,4 +201,33 @@ describe('Opportunity Test DataBase', function (done) {
 				});
 		});
 	});
+
+	describe('Get Closed Openings', function (done) {
+		
+		it('Should have a method called getClosedOpenings', function (done) {
+			expect(typeof opportunityController.getClosedOpenings).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 No Token when not signed in', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/closedopenings/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/closedopenings/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+	});
 });
