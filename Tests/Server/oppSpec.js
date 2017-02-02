@@ -265,5 +265,31 @@ describe('Opportunity Test DataBase', function (done) {
 		});
 	});
 
-	
+	describe('Get Opportunity By Organization ID', function (done) {
+		
+		it('Should have a method called getOpportunityByOrgId', function (done) {
+			expect(typeof opportunityController.getOpportunityByOrgId).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Opportunity Not Found if id is incorrect', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/organization/somethingnotright')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opportunity Not Found');
+					done();
+				});
+		});
+
+		it('Should return Opportunity', function (done) {
+			chai.request(server)
+				.get('/api/opportunities/organization/KhitwaOrg')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(res.body[0]._organizer).to.be.equal('KhitwaOrg');
+					done();
+				});
+		});
+	});
 });

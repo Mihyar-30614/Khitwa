@@ -181,10 +181,10 @@ module.exports = {
 		var name = req.params.name.toString();
 		Opportunity.find({_organizer : name})
 		.exec(function (error, opportunity) {
-			if (opportunity) {
+			if (opportunity.length>0) {
 				res.status(200).send(opportunity);
 			} else {
-				helpers.errorHandler(error, req, res);
+				helpers.errorHandler('Opportunity Not Found', req, res);
 			}
 		});
 	},
