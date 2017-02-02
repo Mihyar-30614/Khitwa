@@ -66,8 +66,6 @@ var User = mongoose.model('User' , UserSchema);
 
 User.comparePassword = function(candidatePassword, savedPassword, res, cb){
   bcrypt.compare( candidatePassword, savedPassword, function(err, isMatch){
-    console.log(isMatch);
-    console.log(err);
     if(!isMatch){
       res.status(500).send('Wrong Password');
     } else if(isMatch){
