@@ -202,9 +202,11 @@ module.exports = {
 					if (organization.pastOpportunities.indexOf(id)>0) {
 						var index = organization.pastOpportunities.indexOf(id);
 						organization.pastOpportunities.splice(index, 1);
-					} else {
+					} else if (organization.currentOpportunities.indexOf(id)>0) {
 						var index = organization.currentOpportunities.indexOf(id);
 						organization.currentOpportunities.splice(index, 1);
+					}else{
+						helpers.errorHandler('Wrong ID', req, res);
 					}
 
 					organization.save(function (error,saved) {
