@@ -1,15 +1,12 @@
 var jwt = require('jwt-simple');
 
 module.exports = {
-  errorLogger: function (error, req, res, next) {
-    // log the error then send it to the next middleware in
-    console.error(error.stack);
-    next(error);
-  },
-  errorHandler: function (error, req, res) {
+
+  errorHandler: function (error, req, res, value) {
     // send error message to client
     // message for gracefull error handling on app
-    res.status(500).send(error);
+    var stat = value || 500;
+    res.status(stat).send(error);
   },
 
   decode: function (req, res, next) {
