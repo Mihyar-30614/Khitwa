@@ -199,30 +199,31 @@ module.exports = {
 			Organization.findOne({name : org.name})
 			.exec(function (error, organization) {
 				if (organization) {
-					if (organization.pastOpportunities.indexOf(id)>0) {
-						var index = organization.pastOpportunities.indexOf(id);
-						organization.pastOpportunities.splice(index, 1);
-					} else if (organization.currentOpportunities.indexOf(id)>0) {
-						var index = organization.currentOpportunities.indexOf(id);
-						organization.currentOpportunities.splice(index, 1);
+					if(organization.pastOpportunities.indexOf(id)>-1 || organization.currentOpportunities.indexOf(id)>-1){
+						if (organization.pastOpportunities.indexOf(id)>-1) {
+							var index = organization.pastOpportunities.indexOf(id);
+							organization.pastOpportunities.splice(index, 1);
+						} else {
+							var index = organization.currentOpportunities.indexOf(id);
+							organization.currentOpportunities.splice(index, 1);
+						}	
+						organization.save(function (error,saved) {
+							if (saved) {
+								console.log('Removed from Organization');
+							}
+						})
+
+						Opportunity.findOne({_id : id}).remove()
+						.exec(function (error, opportunity) {
+							if (opportunity.result.n) {
+								res.status(201).send('Opportunity Deleted');
+							}else{
+								helpers.errorHandler(error, req, res);
+							}
+						})
 					}else{
 						helpers.errorHandler('Wrong ID', req, res);
 					}
-
-					organization.save(function (error,saved) {
-						if (saved) {
-							console.log('Removed from Organization');
-						}
-					})
-
-					Opportunity.findOne({_id : id}).remove()
-					.exec(function (error, opportunity) {
-						if (opportunity.result.n) {
-							res.status(201).send('Opportunity Deleted');
-						}else{
-							helpers.errorHandler(error, req, res);
-						}
-					})
 				}else{
 					helpers.errorHandler('Organization Not Found', req, res);
 				}
