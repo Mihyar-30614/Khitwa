@@ -69,6 +69,43 @@ describe('Opportunity Test DataBase', function (done) {
 		});
 	});
 
+	describe('Add Opportunity', function (done) {
+		
+		it('Should have a method called addOpportunity', function (done) {
+			expect(typeof opportunityController.addOpportunity).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 No Token if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opportunity/addOpportunity')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Token');
+					done();
+				});
+		});
+
+		it('Should create Opportunity', function (done) {
+			chai.request(server)
+				.post('/api/opportunity/addOpportunity')
+				.set('x-access-token', token)
+				.send({
+					"title":"AHR",
+					"startDate":"25-NOV-2016",
+					"endDate":"26-NOV-2016",
+					"location":"Halifax",
+					"causesArea":"Education",
+					"description":"Education changes the world!"
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Opportunity Created');
+					done();
+				});
+		});
+	});
+
 	describe('Add Opening', function (done) {
 
 		it('Should have a method called addOpening', function (done) {

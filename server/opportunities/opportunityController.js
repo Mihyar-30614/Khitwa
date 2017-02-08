@@ -19,6 +19,49 @@ module.exports = {
 		});
 	},
 
+	addOpportunity : function (req, res) {
+
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		}else{
+			var organization = jwt.decode(token,'secret');
+			var organizer = organization.name;
+			var newOpp = new Opportunity({
+				title : req.body.title,
+				_organizer : organizer,
+				startDate : req.body.startDate,
+				endDate: req.body.endDate,
+				location : req.body.location,
+				causesArea : req.body.causesArea,
+				description : req.body.description,
+				skillsRequired : req.body.skillsRequired,
+				poster : req.body.poster,
+				currOpenings : req.body.currOpenings,
+				closedOppenings : req.body.closedOppenings,
+				status : req.body.status
+			});
+
+			newOpp.save(function (error, saved) {
+				if (saved) {
+					Organization.findOne({name : organizer})
+					.exec(function (error, org) {
+						if(org){
+							var id = saved._id;
+							org.currentOpportunities.push(id);
+							org.save(function (error, savedArray) {
+								if (savedArray) {
+									console.log(org.currentOpportunities)
+								}
+							})
+						}
+					})
+					res.status(201).send('Opportunity Created');
+				}
+			});
+		}
+	},
+
 	addOpening: function (req, res) {
 
 		var token = req.headers['x-access-token'];
