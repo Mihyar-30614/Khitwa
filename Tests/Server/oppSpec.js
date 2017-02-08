@@ -356,5 +356,33 @@ describe('Opportunity Test DataBase', function (done) {
 				});
 		});
 
-	})
+		it('Should delete an opportunity', function (done) {
+			chai.request(server)
+				.post('/api/organization/addOpportunity')
+				.set('x-access-token', token)
+				.send({
+					"title":"AHR",
+					"startDate":"25-NOV-2016",
+					"endDate":"26-NOV-2016",
+					"location":"Halifax",
+					"causesArea":"Education",
+					"description":"Education changes the world!"
+				})
+				.end(function (error, res) {
+					chai.request(server)
+						.get('/api/organization/getByName/KhitwaOrg')
+						.end(function (error, res) {
+							var id = res.body.currentOpportunities[0];
+							chai.request(server)
+								.post('/api/opportunity/delete/'+id)
+								.set('x-access-token', token)
+								.end(function (error, res) {
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Opportunity Deleted');
+									done();
+								});
+					});
+				});
+		});
+	});
 });
