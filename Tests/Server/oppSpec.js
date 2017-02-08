@@ -360,7 +360,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should delete it if it was in past opportunities', function (done) {
 			chai.request(server)
-				.post('/api/organization/addOpportunity')
+				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
 					"title":"AHR",
@@ -395,7 +395,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should delete an opportunity', function (done) {
 			chai.request(server)
-				.post('/api/organization/addOpportunity')
+				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
 					"title":"AHR",
