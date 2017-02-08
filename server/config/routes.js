@@ -36,7 +36,6 @@ module.exports = function(app, express){
 	app.get('/api/opportunity/get/:id', opportunityController.getOpportunity);
 	app.get('/api/opportunities/organization/:name', opportunityController.getOpportunityByOrgId);
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
-	app.post('/api/opportunity/reopenOpening/:id',opportunityController.reopenOpening);
 	// app.post('/api/opportunity/empty/:id',opportunityController.empty);
 
 	// Openings routes goes here
@@ -48,4 +47,5 @@ module.exports = function(app, express){
 	app.post('/api/opening/approve/:id', openingController.approveVolunteer);
 	app.post('/api/opening/reject/:id', openingController.rejectVolunteer);
 	app.get('/api/opening/getOne/:id', openingController.getOpening);
+	app.post('/api/opening/reopenOpening/:id',openingController.reopenOpening);
 };

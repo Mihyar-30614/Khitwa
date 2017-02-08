@@ -229,52 +229,5 @@ module.exports = {
 				}
 			})
 		}
-	},
-
-	reopenOpening : function (req, res) {
-		var token = req.headers['x-access-token'];
-		var id = req.params.id.toString();
-
-		if (!token) {
-			helpers.errorHandler('No Token', req, res);
-		} else {
-
-			Opening.findOne({_id : id})
-			.exec(function (error, opening) {
-				if (opening) {
-					var opportunityId = opening._opportunity;
-					opening.status= 'Active';
-
-					opening.save(function (error, saved) {
-						if (saved) {
-							console.log('Changed to Active');
-						}
-					})
-
-					Opportunity.findOne({_id : opportunityId})
-					.exec(function (error, opportunity) {
-						if (opportunity) {
-							if (opportunity.closedOpenings.indexOf(id)>0) {
-								var index = opportunity.closedOpenings.indexOf(id);
-								opportunity.closedOpenings.splice(index,1);
-								opportunity.currOpenings.push(id);
-							}else{
-								helpers.errorHandler('No Such Opening Closed', req, res);
-							}
-
-							opportunity.save(function (error, saved) {
-								if (saved) {
-									res.status(201).send('Opening reopened');
-								}
-							})
-						} else {
-							helpers.errorHandler('Opportunit Not Found', req, res);
-						}
-					})
-				} else {
-					helpers.errorHandler('Opening Not Found', req, res);
-				}
-			})
-		}
 	}
 }
