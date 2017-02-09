@@ -21,13 +21,13 @@ module.exports = function(app, express){
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit', organizationController.editProfile);
 	app.post('/api/organization/delete', organizationController.deleteOrganization);
-	app.post('/api/organization/closeOpportunity/:id', organizationController.closeOpportunity);
 	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/signedin', organizationController.checkAuth);
 	app.post('/api/organization/reopenOpportunity/:id', organizationController.reopenOpportunity);
 
 	// Opportunities routes goes here
 	app.post('/api/opportunity/addOpportunity', opportunityController.addOpportunity);
+	app.post('/api/opportunity/closeOpportunity/:id', opportunityController.closeOpportunity);
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunities/addOpening/:id', opportunityController.addOpening);
 	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);

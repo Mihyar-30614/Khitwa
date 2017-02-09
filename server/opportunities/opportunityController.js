@@ -62,6 +62,43 @@ module.exports = {
 		}
 	},
 
+	closeOpportunity : function (req, res) {
+
+		var token = req.headers['x-access-token'];
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			var organization = jwt.decode(token, 'secret');
+			var id = req.params.id;
+			Opportunity.findOne({_id : id})
+			.exec(function (error, found) {
+				if (found) {
+					found.status='Closed';
+					found.save(function (error, saved) {
+						if (saved) {
+							console.log('Changed to Closed');
+						}
+					})
+				}else{
+					helpers.errorHandler('Opportunity Not Found', req, res);
+				}
+			})
+			Organization.findOne({name : organization.name})
+			.exec(function (error, org) {
+			 	if (org) {
+					var index = org.currentOpportunities.indexOf(id.toString());
+					var toClose = org.currentOpportunities.splice(index,1);
+					org.pastOpportunities.push(toClose);
+					org.save(function (error, savedOrg) {
+						if (savedOrg) {
+							res.status(201).send('Opportunity Closed');
+						}
+					})
+				}
+			})
+		}
+	},
+
 	addOpening: function (req, res) {
 
 		var token = req.headers['x-access-token'];
