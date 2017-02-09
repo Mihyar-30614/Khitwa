@@ -59,7 +59,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return an array of organization', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/getall')
+				.get('/api/opportunity/getall')
 				.end(function (error, res) {
 					expect(Array.isArray(res.body)).to.be.equal(true);
 					expect(res.body.length).to.be.equal(1);
@@ -136,7 +136,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should be able to modify an opportunity', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/getall')
+				.get('/api/opportunity/getall')
 				.end(function (error, res) {
 					var id = res.body[0]._id;
 
@@ -232,7 +232,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return an opportunity', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/getall')
+				.get('/api/opportunity/getall')
 				.end(function (error, res) {
 					var id = res.body[0]._id;
 
@@ -380,7 +380,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Opportunity Not Found if id is incorrect', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/organization/somethingnotright')
+				.get('/api/opportunity/organization/somethingnotright')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Opportunity Not Found');
@@ -390,7 +390,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return Opportunity', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/organization/KhitwaOrg')
+				.get('/api/opportunity/organization/KhitwaOrg')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
 					expect(res.body[0]._organizer).to.be.equal('KhitwaOrg');

@@ -93,7 +93,7 @@ describe('Openings DataBase', function (done) {
 
 		it('Should add new opening', function (done) {
 			chai.request(server)
-				.get('/api/opportunities/getall')
+				.get('/api/opportunity/getall')
 				.end(function (error, res) {
 					var id = res.body[0]._id;
 

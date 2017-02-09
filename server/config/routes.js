@@ -28,12 +28,12 @@ module.exports = function(app, express){
 	app.post('/api/opportunity/addOpportunity', opportunityController.addOpportunity);
 	app.post('/api/opportunity/closeOpportunity/:id', opportunityController.closeOpportunity);
 	app.post('/api/opportunity/reopenOpportunity/:id', opportunityController.reopenOpportunity);
-	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
+	app.get('/api/opportunity/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);
 	app.get('/api/opportunity/currentopenings/:id', opportunityController.getCurrOpenings);
 	app.get('/api/opportunity/closedopenings/:id', opportunityController.getClosedOpenings);
 	app.get('/api/opportunity/get/:id', opportunityController.getOpportunity);
-	app.get('/api/opportunities/organization/:name', opportunityController.getOpportunityByOrgId);
+	app.get('/api/opportunity/organization/:name', opportunityController.getOpportunityByOrgId);
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
 
 	// Openings routes goes here
