@@ -188,9 +188,7 @@ module.exports = {
       var user = jwt.decode(token,'secret');
       User.findOne({username : user.username})
       .exec(function (error, user) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (user) {
+        if (user) {
           Opening.findOne({ _id : id})
           .exec(function (error, opening) {
             if (error) {
