@@ -157,9 +157,7 @@ module.exports = {
     } else {
       Opening.findOne({ _id : id })
       .exec(function (error, opening) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (opening) {
+        if (opening) {
           opening.title = req.body.title || opening.title;
           opening.numberOfVolunteers = req.body.numberOfVolunteers || opening.numberOfVolunteers;
           opening.location = req.body.location || opening.location;
