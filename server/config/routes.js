@@ -23,11 +23,11 @@ module.exports = function(app, express){
 	app.post('/api/organization/delete', organizationController.deleteOrganization);
 	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/signedin', organizationController.checkAuth);
-	app.post('/api/organization/reopenOpportunity/:id', organizationController.reopenOpportunity);
 
 	// Opportunities routes goes here
 	app.post('/api/opportunity/addOpportunity', opportunityController.addOpportunity);
 	app.post('/api/opportunity/closeOpportunity/:id', opportunityController.closeOpportunity);
+	app.post('/api/opportunity/reopenOpportunity/:id', opportunityController.reopenOpportunity);
 	app.get('/api/opportunities/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunities/addOpening/:id', opportunityController.addOpening);
 	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);
@@ -36,7 +36,6 @@ module.exports = function(app, express){
 	app.get('/api/opportunity/get/:id', opportunityController.getOpportunity);
 	app.get('/api/opportunities/organization/:name', opportunityController.getOpportunityByOrgId);
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
-	// app.post('/api/opportunity/empty/:id',opportunityController.empty);
 
 	// Openings routes goes here
 	app.get('/api/opening/getall',openingController.allOpenings );

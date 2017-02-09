@@ -99,6 +99,44 @@ module.exports = {
 		}
 	},
 
+	reopenOpportunity : function (req, res) {
+		
+		var token = req.headers['x-access-token'];
+		var id = req. params.id.toString();
+
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			Opportunity.findOne({_id : id})
+			.exec(function (error, opportunity) {
+				if (opportunity) {
+					opportunity.status='Active';
+					var org = jwt.decode(token, 'secret');
+					Organization.findOne({name : org.name})
+					.exec(function (error, organization) {
+						if (organization) {
+							var index = organization.pastOpportunities.indexOf(id);
+							organization.pastOpportunities.splice(index,1);
+							organization.currentOpportunities.push(id);
+							organization.save(function (error, saved) {
+								if (saved) {
+									console.log('Moved to open opportunity array');
+								}
+							})
+						}
+					})
+					opportunity.save(function (error,saved) {
+						if (saved) {
+							res.status(201).send('Opportunity Reopened');
+						}
+					})
+				} else {
+					helpers.errorHandler('Opportunity Not Found', req, res);
+				}
+			})
+		}
+	},
+
 	addOpening: function (req, res) {
 
 		var token = req.headers['x-access-token'];
