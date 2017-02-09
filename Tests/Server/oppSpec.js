@@ -12,8 +12,6 @@ var Organization = require('../../server/organizations/organizationModel');
 var organizationController = require('../../server/organizations/organizationController');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
-// var Opening = require('../../server/openings/openingModel');
-// var openingController = require('../../server/openings/openingController');
 
 describe('Opportunity Test DataBase', function (done) {
 	
