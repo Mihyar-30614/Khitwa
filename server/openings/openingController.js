@@ -53,9 +53,7 @@ module.exports = {
 
     Opening.find({})
     .exec(function (error, openings) {
-      if (error) {
-        helpers.errorHandler(error, req, res);
-      } else if (openings.length>0) {
+      if (openings.length>0) {
         res.status(200).send(openings);
       } else{
         helpers.errorHandler('No Openings', req, res);
