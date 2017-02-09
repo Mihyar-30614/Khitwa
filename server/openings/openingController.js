@@ -119,15 +119,10 @@ module.exports = {
       Opening.findOne({ _id : id}).remove()
           .exec(function (error, open) {
             if (open.result.n) {
-              console.log(oppId);
               Opportunity.findOne({ _id : oppId})
               .exec(function (error, opportunity) {
-                console.log(error)
-                console.log(opportunity)
-                if (error) {
-                  helpers.errorHandler(error, req, res);
-                } else if (opportunity) {
-                  if(opportunity.currOpenings.indexOf(id)>0){
+                if (opportunity.currOpenings.indexOf(id)>-1 || opportunity.closedOpenings.indexOf(id)>-1) {
+                  if(opportunity.currOpenings.indexOf(id)>-1){
                     var index = opportunity.currOpenings.indexOf(id);
                     opportunity.currOpenings.splice(index,1);
                   }else{
