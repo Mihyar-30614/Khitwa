@@ -155,12 +155,12 @@ describe('User Test Database', function (done) {
 	describe('Check Auth in User Controller', function (done) {
 		var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
 		
-		it('Should return 500 ERROR if there was no token', function (done) {
+		it('Should return 500 ERROR if there was Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.get('/api/users/signedin')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				})
 		});
@@ -229,12 +229,12 @@ describe('User Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 No Token if the user was not signed in', function (done) {
+		it('Should return 500 Please Sign In if the user was not signed in', function (done) {
 			chai.request(server)
 				.post('/api/user/edit')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -292,12 +292,12 @@ describe('User Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 No Token when not signed in', function (done) {
+		it('Should return 500 Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.post('/api/user/delete')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});

@@ -23,7 +23,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		}else{
 			var organization = jwt.decode(token,'secret');
 			var organizer = organization.name;
@@ -66,7 +66,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var organization = jwt.decode(token, 'secret');
 			var id = req.params.id;
@@ -105,7 +105,7 @@ module.exports = {
 		var id = req. params.id.toString();
 
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
@@ -141,7 +141,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var id = req.params.id.toString();
 			Opportunity.findOne({_id : id})
@@ -178,7 +178,7 @@ module.exports = {
   		var token = req.headers['x-access-token'];
 
   		if (!token) {
-  			helpers.errorHandler('No Token', req, res);
+  			helpers.errorHandler('Please Sign In', req, res);
   		} else {
   			Opportunity.findOne({_id : id})
   			.exec(function (error, opportunity) {
@@ -213,7 +213,7 @@ module.exports = {
 		var id = req.params.id;
 
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 
 			Opportunity.findOne({_id : id})
@@ -271,7 +271,7 @@ module.exports = {
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var org = jwt.decode(token, 'secret');
 			Organization.findOne({name : org.name})

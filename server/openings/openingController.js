@@ -13,7 +13,7 @@ module.exports = {
 
     var token = req.headers['x-access-token'];
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
 
       var opportunityId = req.params.id.toString();
@@ -68,7 +68,7 @@ module.exports = {
     var opportunitId;
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       Opening.findOne({_id : id})
       .exec(function (error, opening) {
@@ -109,7 +109,7 @@ module.exports = {
     var id = req.params.id.toString();
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       Opening.findOne({ _id:id})
       .exec(function (error, opening) {
@@ -153,7 +153,7 @@ module.exports = {
     var token = req.headers['x-access-token'];
     var id = req.params.id.toString();
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       Opening.findOne({ _id : id })
       .exec(function (error, opening) {
@@ -183,7 +183,7 @@ module.exports = {
     var id = req.params.id.toString();
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       var user = jwt.decode(token,'secret');
       User.findOne({username : user.username})
@@ -226,7 +226,7 @@ module.exports = {
     var applicantId = req.body.applicantId;
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
@@ -261,7 +261,7 @@ module.exports = {
     var applicantId = req.body.applicantId;
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
       var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
@@ -305,13 +305,13 @@ module.exports = {
       }
     })
   }, 
-  
+
   reopenOpening : function (req, res) {
     var token = req.headers['x-access-token'];
     var id = req.params.id.toString();
 
     if (!token) {
-      helpers.errorHandler('No Token', req, res);
+      helpers.errorHandler('Please Sign In', req, res);
     } else {
 
       Opening.findOne({_id : id})

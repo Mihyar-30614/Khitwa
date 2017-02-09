@@ -75,7 +75,7 @@ describe('Openings DataBase', function (done) {
 				.post('/api/opening/addOpening/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});

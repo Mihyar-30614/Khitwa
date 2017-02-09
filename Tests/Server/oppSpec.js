@@ -74,12 +74,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR 500 No Token if not signed in', function (done) {
+		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/addOpportunity')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -111,12 +111,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR 500 No Token if not signed in', function (done) {
+		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/edit/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -160,12 +160,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return 500 ERROR No Token when not signed in', function (done) {
+		it('Should return 500 ERROR Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.get('/api/opportunity/currentopenings/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -189,12 +189,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR 500 No Token when not signed in', function (done) {
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.get('/api/opportunity/closedopenings/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -252,12 +252,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR 500 No Token if not signed in', function (done) {
+		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/closeOpportunity/581a85af49be4b14f4c45555')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -311,12 +311,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR 500 No Token when not signed in', function (done) {
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/reopenOpportunity/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -404,12 +404,12 @@ describe('Opportunity Test DataBase', function (done) {
 			done();
 		});
 
-		it('Should return ERROR No Token when not signed in', function (done) {
+		it('Should return ERROR Please Sign In when not signed in', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/delete/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});

@@ -124,12 +124,12 @@ describe('Organization Test Database', function (done) {
 			done();
 		});
 
-		it('Should return ERROR No Token if not signed in', function (done) {
+		it('Should return ERROR Please Sign In if not signed in', function (done) {
 			 chai.request(server)
 			 	.get('/api/organization/signedin')
 			 	.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				})
 		});
@@ -200,12 +200,12 @@ describe('Organization Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 No Token when not signedin', function (done) {
+		it('Should return 500 Please Sign In when not signedin', function (done) {
 			chai.request(server)
 				.post('/api/organization/edit')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});
@@ -262,12 +262,12 @@ describe('Organization Test Database', function (done) {
 			done();
 		});
 		
-		it('Should return ERROR 500 No Token when not signedin', function (done) {
+		it('Should return ERROR 500 Please Sign In when not signedin', function (done) {
 			chai.request(server)
 				.post('/api/organization/delete')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
+					expect(res.text).to.be.equal('Please Sign In');
 					done();
 				});
 		});

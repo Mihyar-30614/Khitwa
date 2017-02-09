@@ -59,7 +59,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		}else{
 			var organization = jwt.decode(token,'secret');
 			Organization.findOne({name : organization.name})
@@ -99,7 +99,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var org = jwt.decode(token,'secret');
 
@@ -137,7 +137,7 @@ module.exports = {
 
 		var token = req.headers['x-access-token'];
 		if (!token) {
-			helpers.errorHandler('No Token', req, res);
+			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			org = jwt.decode(token, 'secret');
 			Organization.findOne({ name: org.name}).remove()
