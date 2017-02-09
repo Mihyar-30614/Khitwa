@@ -117,4 +117,12 @@ describe('Openings DataBase', function (done) {
 				});
 		});
 	});
+
+	xdescribe('All Openings', function (done) {
+		
+		it('Should have a method called allOpenings',function (done) {
+			expect(typeof openingController.allOpenings).to.be.equal('function');
+			done();
+		});
+	})
 });
