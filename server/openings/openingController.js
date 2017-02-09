@@ -266,14 +266,10 @@ module.exports = {
       var user = jwt.decode(token,'secret');
       Organization.findOne({ name : user.name})
       .exec(function (error, org) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (org) {
+        if (org) {
           Opening.findOne({ _id : openingId })
           .exec(function (error, opening) {
-            if (error) {
-              helpers.errorHandler(error, req, res);
-            } else if (opening) {
+            if (opening) {
               var index = opening.pendingApps.indexOf(applicantId);
               if (index>0) {
                 opening.pendingApps.splice(index,1);
