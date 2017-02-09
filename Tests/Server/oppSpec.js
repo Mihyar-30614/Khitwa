@@ -106,61 +106,6 @@ describe('Opportunity Test DataBase', function (done) {
 		});
 	});
 
-	describe('Add Opening', function (done) {
-
-		it('Should have a method called addOpening', function (done) {
-			expect(typeof opportunityController.addOpening).to.be.equal('function');
-			done();
-		});
-		
-		it('Should return ERROR 500 if you not signed in', function (done) {
-			chai.request(server)
-				.post('/api/opportunities/addOpening/something')
-				.end(function (error, res) {
-					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Token');
-					done();
-				});
-		});
-
-		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect', function (done) {
-			chai.request(server)
-				.post('/api/opportunities/addOpening/somethingnotright')
-				.set('x-access-token',token)
-				.end(function (error, res) {
-					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('Opportunity Not Found');
-					done();
-				});
-		});
-
-		it('Should add new opening', function (done) {
-			chai.request(server)
-				.get('/api/opportunities/getall')
-				.end(function (error, res) {
-					var id = res.body[0]._id;
-
-					chai.request(server)
-						.post('/api/opportunities/addOpening/'+id)
-						.set('x-access-token',token)
-						.send({
-							"title":"First Opening",
-							"numberOfVolunteers":12,
-							"location":"Jordan",
-							"description":"This is the first opening in this website",
-							"skillsRequired":"English",
-							"resources":"buses",
-							"status":"Active"
-						})
-						.end(function (error, res) {
-							expect(res.status).to.be.equal(201);
-							expect(res.text).to.be.equal('Opening Added');
-							done();
-						});
-				});
-		});
-	});
-
 	describe('Edit Opportunity', function (done) {
 		
 		it('Should have a method called editOpportunity', function (done) {
@@ -501,7 +446,7 @@ describe('Opportunity Test DataBase', function (done) {
 							var id = res.body.currentOpportunities[0];
 							
 							chai.request(server)
-								.post('/api/organization/closeOpportunity/'+id)
+								.post('/api/opportunity/closeOpportunity/'+id)
 								.set('x-access-token', token)
 								.end(function (error, res) {
 									chai.request(server)

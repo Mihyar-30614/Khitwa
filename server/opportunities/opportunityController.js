@@ -137,46 +137,6 @@ module.exports = {
 		}
 	},
 
-	addOpening: function (req, res) {
-
-		var token = req.headers['x-access-token'];
-		if (!token) {
-			helpers.errorHandler('No Token', req, res);
-		} else {
-
-			var opportunityId = req.params.id.toString();
-			var newOpening = new Opening({
-				title : req.body.title,
-				_opportunity : opportunityId,
-				numberOfVolunteers : req.body.numberOfVolunteers,
-				location : req.body.location,
-				description : req.body.description,
-				skillsRequired : req.body.skillsRequired,
-				resources : req.body.resources,
-				status : req.body.status
-			})
-
-			Opportunity.findOne({_id : opportunityId})
-			.exec(function (error, opportunity) {
-				if (opportunity) {
-						newOpening.save(function (error, saved) {
-						if (saved) {
-
-							opportunity.currOpenings.push(saved._id);
-							opportunity.save(function (error, oppSaved) {
-								if (oppSaved) {
-									res.status(201).send('Opening Added');
-								}
-							})
-						}
-					})
-				}else{
-					helpers.errorHandler('Opportunity Not Found', req, res);
-				}
-			})
-		}
-	},
-
 	editOpportunity : function (req,res) {
 
 		var token = req.headers['x-access-token'];
