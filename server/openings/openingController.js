@@ -72,9 +72,7 @@ module.exports = {
     } else {
       Opening.findOne({_id : id})
       .exec(function (error, opening) {
-        if (error) {
-          helpers.errorHandler(error, req, res);
-        } else if (opening) {
+        if (opening) {
           opportunitId = opening._opportunity;
           opening.status = 'Closed';
           opening.save(function (error,saved) {
@@ -85,9 +83,7 @@ module.exports = {
 
           Opportunity.findOne({_id : opportunitId})
           .exec(function (error, opportunity) {
-            if (error) {
-              helpers.errorHandler(error, req, res);
-            } else if (opportunity) {
+            if (opportunity) {
               var index = opportunity.currOpenings.indexOf(id);
               opportunity.currOpenings.splice(index,1);
               opportunity.closedOpenings.push(id);
