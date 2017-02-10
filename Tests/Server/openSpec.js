@@ -118,11 +118,33 @@ describe('Openings DataBase', function (done) {
 		});
 	});
 
-	xdescribe('All Openings', function (done) {
+	describe('All Openings', function (done) {
 		
 		it('Should have a method called allOpenings',function (done) {
 			expect(typeof openingController.allOpenings).to.be.equal('function');
 			done();
+		});
+
+		it('Should return an array of openings', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(200);
+					expect(Array.isArray(res.body)).to.be.true;
+					expect(res.body[0].title).to.be.equal('First Opening');
+					done();
+				});
+		});
+
+		it('Should return No Openings when there is no openings', function (done) {
+			Opening.collection.drop();
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Openings');
+					done();
+				});
 		});
 	})
 });
