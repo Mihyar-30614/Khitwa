@@ -89,6 +89,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
+					"password":"1234",
 					"title":"AHR",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
@@ -254,7 +255,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/closeOpportunity/581a85af49be4b14f4c45555')
+				.post('/api/opportunity/closeOpportunity/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -278,6 +279,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
+					"password":"1234",
 					"title":"AHR",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
@@ -337,6 +339,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
+					"password":"1234",
 					"title":"AHR",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
@@ -430,6 +433,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
+					"password":"1234",
 					"title":"AHR",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
@@ -465,6 +469,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.post('/api/opportunity/addOpportunity')
 				.set('x-access-token', token)
 				.send({
+					"password":"1234",
 					"title":"AHR",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
