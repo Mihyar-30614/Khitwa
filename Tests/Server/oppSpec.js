@@ -359,11 +359,17 @@ describe('Opportunity Test DataBase', function (done) {
 							chai.request(server)
 								.post('/api/opportunity/closeOpportunity/'+id)
 								.set('x-access-token', token)
+								.send({
+									"password":"1234"
+								})
 								.end(function (error, res) {
 
 									chai.request(server)
 										.post('/api/opportunity/reopenOpportunity/'+id)
 										.set('x-access-token', token)
+										.send({
+											"password":"1234"
+										})
 										.end(function (error, res) {
 											expect(res.status).to.be.equal(201);
 											expect(res.text).to.be.equal('Opportunity Reopened');

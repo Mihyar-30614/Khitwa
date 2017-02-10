@@ -93,13 +93,17 @@ module.exports = {
 										opp.save(function (error, saved) {
 											if (saved) {								
 												var index = org.currentOpportunities.indexOf(id);
-												var toClose = org.currentOpportunities.splice(index,1);
-												org.pastOpportunities.push(toClose);
-												org.save(function (error, savedOrg) {
-													if (savedOrg) {
-														res.status(201).send('Opportunity Closed');
-													}
-												})
+												if (index > -1) {
+													var toClose = org.currentOpportunities.splice(index,1);
+													org.pastOpportunities.push(toClose);
+													org.save(function (error, savedOrg) {
+														if (savedOrg) {
+															res.status(201).send('Opportunity Closed');
+														}
+													})
+												} else {
+													helpers.errorHandler('Opportunity Already Closed', req, res);
+												}
 											}
 										});
 									}
@@ -126,31 +130,47 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
-			Opportunity.findOne({_id : id})
-			.exec(function (error, opportunity) {
-				if (opportunity) {
-					opportunity.status='Active';
-					var org = jwt.decode(token, 'secret');
-					Organization.findOne({name : org.name})
-					.exec(function (error, organization) {
-						if (organization) {
-							var index = organization.pastOpportunities.indexOf(id);
-							organization.pastOpportunities.splice(index,1);
-							organization.currentOpportunities.push(id);
-							organization.save(function (error, saved) {
-								if (saved) {
-									console.log('Moved to open opportunity array');
-								}
-							})
-						}
-					})
-					opportunity.save(function (error,saved) {
-						if (saved) {
-							res.status(201).send('Opportunity Reopened');
+
+			var password = req.body.password;
+			var org = jwt.decode(token,'secret');
+
+			Organization.findOne({name : org.name})
+			.exec(function (error, organization) {
+				if (organization) {
+					Opportunity.findOne({_id : id})
+					.exec(function (error, opportunity) {
+						if (opportunity) {
+							if (opportunity._organizer === org.name) {
+								Organization.comparePassword(password, organization.password, res, function (match) {
+									if (match) {
+										opportunity.status = 'Active';
+										opportunity.save(function (error, saved) {
+											if (saved) {
+												var index = organization.pastOpportunities.indexOf(id);
+												if (index > -1) {
+													organization.pastOpportunities.splice(index,1);
+													organization.currentOpportunities.push(id);
+													organization.save(function (error, oppSaved) {
+														if (oppSaved) {
+															res.status(201).send('Opportunity Reopened');
+														}
+													})
+												} else {
+													helpers.errorHandler('Opportunity Already Open', req, res);
+												}
+											}
+										})
+									}
+								})
+							} else {
+								helpers.errorHandler('Can Not Modify Others', req, res);
+							}
+						} else {
+							helpers.errorHandler('Opportunity Not Found', req, res);
 						}
 					})
 				} else {
-					helpers.errorHandler('Opportunity Not Found', req, res);
+					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
