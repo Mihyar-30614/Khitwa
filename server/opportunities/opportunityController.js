@@ -75,32 +75,44 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
+
 			var organization = jwt.decode(token, 'secret');
 			var id = req.params.id;
-			Opportunity.findOne({_id : id})
-			.exec(function (error, found) {
-				if (found) {
-					found.status='Closed';
-					found.save(function (error, saved) {
-						if (saved) {
-							console.log('Changed to Closed');
-						}
-					})
-				}else{
-					helpers.errorHandler('Opportunity Not Found', req, res);
-				}
-			})
+			var password = req.body.password;
+
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
-			 	if (org) {
-					var index = org.currentOpportunities.indexOf(id.toString());
-					var toClose = org.currentOpportunities.splice(index,1);
-					org.pastOpportunities.push(toClose);
-					org.save(function (error, savedOrg) {
-						if (savedOrg) {
-							res.status(201).send('Opportunity Closed');
+				if (org) {
+					Opportunity.findOne({_id : id})
+					.exec(function (error, opp) {
+						if (opp) {
+							if (opp._organizer === organization.name) {
+								Organization.comparePassword(password, org.password, res, function (match) {
+									if (match) {								
+										opp.status = 'Closed';
+										opp.save(function (error, saved) {
+											if (saved) {								
+												var index = org.currentOpportunities.indexOf(id);
+												var toClose = org.currentOpportunities.splice(index,1);
+												org.pastOpportunities.push(toClose);
+												org.save(function (error, savedOrg) {
+													if (savedOrg) {
+														res.status(201).send('Opportunity Closed');
+													}
+												})
+											}
+										});
+									}
+								})
+							} else {
+								helpers.errorHandler('Can Not Modify Others', req, res)
+							}
+						} else {
+							helpers.errorHandler('Opportunity Not Found', req, res);
 						}
 					})
+				} else {
+					helpers.errorHandler('Organization Not Found', req, res);
 				}
 			})
 		}
