@@ -136,18 +136,31 @@ module.exports = {
 	deleteOrganization : function (req, res ) {
 
 		var token = req.headers['x-access-token'];
+		var password = req.body.password;
+
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			org = jwt.decode(token, 'secret');
-			Organization.findOne({ name: org.name}).remove()
-			.exec(function (error, organization){
-				if(organization.result.n){
-					res.status(201).send('Organization Deleted');
-				}else{
-					helpers.errorHandler(error, req, res);
+			Organization.findOne({name : org.name})
+			.exec(function (error, orga) {
+				if (orga) {
+					Organization.comparePassword(password, orga.password, res, function (found) {
+						if (found) {
+							Organization.findOne({ name: org.name}).remove()
+							.exec(function (error, organization){
+								if(organization.result.n){
+									res.status(201).send('Organization Deleted');
+								}else{
+									helpers.errorHandler(error, req, res);
+								}
+							});
+						}
+					})
+				} else {
+					helpers.errorHandler('Organization Not Found', req, res);
 				}
-			});
+			})
 		}
 	}
 };

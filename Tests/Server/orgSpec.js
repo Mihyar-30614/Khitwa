@@ -276,6 +276,9 @@ describe('Organization Test Database', function (done) {
 			chai.request(server)
 				.post('/api/organization/delete')
 				.set('x-access-token', token)
+				.send({
+					"password":"1234"
+				})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(201);
 					expect(res.text).to.be.equal('Organization Deleted');
