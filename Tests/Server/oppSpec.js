@@ -267,6 +267,9 @@ describe('Opportunity Test DataBase', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/closeOpportunity/something')
 				.set('x-access-token', token)
+				.send({
+					"password":"1234"
+				})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Opportunity Not Found');
@@ -430,6 +433,9 @@ describe('Opportunity Test DataBase', function (done) {
 			chai.request(server)
 				.post('/api/opportunity/delete/somethingnotright')
 				.set('x-access-token', token)
+				.send({
+					"password":"1234"
+				})
 				.end(function (error ,res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Wrong ID');
@@ -459,10 +465,17 @@ describe('Opportunity Test DataBase', function (done) {
 							chai.request(server)
 								.post('/api/opportunity/closeOpportunity/'+id)
 								.set('x-access-token', token)
+								.send({
+									"password":"1234"
+								})
 								.end(function (error, res) {
+							
 									chai.request(server)
 										.post('/api/opportunity/delete/'+id)
 										.set('x-access-token', token)
+										.send({
+											"password":"1234"
+										})
 										.end(function (error, res) {
 											expect(res.status).to.be.equal(201);
 											expect(res.text).to.be.equal('Opportunity Deleted');
@@ -494,6 +507,9 @@ describe('Opportunity Test DataBase', function (done) {
 							chai.request(server)
 								.post('/api/opportunity/delete/'+id)
 								.set('x-access-token', token)
+								.send({
+									"password":"1234"
+								})
 								.end(function (error, res) {
 									expect(res.status).to.be.equal(201);
 									expect(res.text).to.be.equal('Opportunity Deleted');

@@ -83,12 +83,12 @@ module.exports = {
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
 				if (org) {
+								Organization.comparePassword(password, org.password, res, function (match) {
+									if (match) {								
 					Opportunity.findOne({_id : id})
 					.exec(function (error, opp) {
 						if (opp) {
 							if (opp._organizer === organization.name) {
-								Organization.comparePassword(password, org.password, res, function (match) {
-									if (match) {								
 										opp.status = 'Closed';
 										opp.save(function (error, saved) {
 											if (saved) {								
@@ -106,8 +106,6 @@ module.exports = {
 												}
 											}
 										});
-									}
-								})
 							} else {
 								helpers.errorHandler('Can Not Modify Others', req, res)
 							}
@@ -115,6 +113,8 @@ module.exports = {
 							helpers.errorHandler('Opportunity Not Found', req, res);
 						}
 					})
+									}
+								})
 				} else {
 					helpers.errorHandler('Organization Not Found', req, res);
 				}
@@ -307,40 +307,46 @@ module.exports = {
 	},
 
 	deleteOne : function(req,res){
+
 		var token = req.headers['x-access-token'];
 		var id = req.params.id;
+		var password = req.body.password;
+
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
+
 			var org = jwt.decode(token, 'secret');
 			Organization.findOne({name : org.name})
 			.exec(function (error, organization) {
 				if (organization) {
-					if(organization.pastOpportunities.indexOf(id)>-1 || organization.currentOpportunities.indexOf(id)>-1){
-						if (organization.pastOpportunities.indexOf(id)>-1) {
-							var index = organization.pastOpportunities.indexOf(id);
-							organization.pastOpportunities.splice(index, 1);
-						} else {
-							var index = organization.currentOpportunities.indexOf(id);
-							organization.currentOpportunities.splice(index, 1);
-						}	
-						organization.save(function (error,saved) {
-							if (saved) {
-								console.log('Removed from Organization');
-							}
-						})
-
-						Opportunity.findOne({_id : id}).remove()
-						.exec(function (error, opportunity) {
-							if (opportunity.result.n) {
-								res.status(201).send('Opportunity Deleted');
+					Organization.comparePassword(password, organization.password, res, function (found) {
+						if(found){
+							if(organization.pastOpportunities.indexOf(id)>-1 || organization.currentOpportunities.indexOf(id)>-1){
+								if (organization.pastOpportunities.indexOf(id)>-1) {
+									var index = organization.pastOpportunities.indexOf(id);
+									organization.pastOpportunities.splice(index, 1);
+								} else {
+									var index = organization.currentOpportunities.indexOf(id);
+									organization.currentOpportunities.splice(index, 1);
+								}	
+								organization.save(function (error,saved) {
+									if (saved) {
+										Opportunity.findOne({_id : id}).remove()
+										.exec(function (error, opportunity) {
+											if (opportunity.result.n) {
+												res.status(201).send('Opportunity Deleted');
+											}else{
+												helpers.errorHandler(error, req, res);
+											}
+										})
+									}
+								})
 							}else{
-								helpers.errorHandler(error, req, res);
-							}
-						})
-					}else{
-						helpers.errorHandler('Wrong ID', req, res);
-					}
+								helpers.errorHandler('Wrong ID', req, res);
+							}	
+						}
+					})
 				}else{
 					helpers.errorHandler('Organization Not Found', req, res);
 				}
