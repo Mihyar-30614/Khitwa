@@ -16,7 +16,7 @@ module.exports = {
       helpers.errorHandler('Please Sign In', req, res);
     } else {
 
-      var opportunityId = req.params.id.toString();
+      var opportunityId = req.params.id;
       var newOpening = new Opening({
         title : req.body.title,
         _opportunity : opportunityId,
@@ -28,23 +28,34 @@ module.exports = {
         status : req.body.status
       })
 
-      Opportunity.findOne({_id : opportunityId})
-      .exec(function (error, opportunity) {
-        if (opportunity) {
-            newOpening.save(function (error, saved) {
-            if (saved) {
-
-              opportunity.currOpenings.push(saved._id);
-              opportunity.save(function (error, oppSaved) {
-                if (oppSaved) {
-                  res.status(201).send('Opening Added');
-                }
-              })
-            }
-          })
-        }else{
-          helpers.errorHandler('Opportunity Not Found', req, res);
-        }
+      var organization = jwt.decode(token,'secret');
+      Organization.findOne({name : organization.name})
+      .exec(function (error, org) {
+      	if (org) {
+      		Opportunity.findOne({_id : opportunityId})
+      		.exec(function (error, opp) {
+      			if (opp) {
+      				if (org.name === opp._organizer) {
+      					newOpening.save(function (error, saved) {
+      						if (saved) {
+      							opp.currOpenings.push(saved._id);
+      							opp.save(function (error, oppSaved) {
+      								if (oppSaved) {
+      									res.status(201).send('Opening Added');
+      								}
+      							})
+      						}
+      					})
+      				} else {
+      					helpers.errorHandler('Can Not Modify Others', req, res);
+      				}
+      			} else {
+      				helpers.errorHandler('Opportunity Not Found', req, res);
+      			}
+      		})
+      	} else {
+      		helpers.errorHandler('Organization Not Found', req, res);
+      	}
       })
     }
   },
