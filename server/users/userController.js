@@ -162,18 +162,26 @@ module.exports = {
 	deleteUser : function (req, res) {
 		
 		var token = req.headers['x-access-token'];
+		var password = req.body.password;
 		
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var user = jwt.decode(token,'secret');
-			User.findOne({username: user.username}).remove()
-			.exec(function (error, deleted) {
-				if (deleted.result.n) {
-					res.status(201).send('User Deleted');
-				} else {
-					helpers.errorHandler(error, req, res);
-				}
+			User.findOne({username: user.username})
+			.exec(function (error, user) {
+				User.comparePassword(password, user.password, res, function (found) {
+					if (found) {
+						User.findOne({username: user.username}).remove()
+						.exec(function (error, deleted) {
+							if(deleted.result.n){
+								res.status(201).send('User Deleted');
+							}else{
+								helpers.errorHandler(error, req, res);
+							}
+						})
+					}
+				})
 			})
 		}
 	}
