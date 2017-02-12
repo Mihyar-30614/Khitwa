@@ -30,29 +30,35 @@ describe('Openings DataBase', function (done) {
 			'missionStatement':'A step in the right direction',
 			'contactInfo':'Khitwa@khitwa.org'
 		})
-		newOrg.save();
-		var newOpp = new Opportunity({
-			"title":"AHR",
-			"_organizer":"KhitwaOrg",
-			"startDate":"25-NOV-2016",
-			"endDate":"26-NOV-2016",
-			"location":"Halifax",
-			"causesArea":"Education",
-			"description":"Education changes the world!"
-		})
-		newOpp.save();
-		newOpen = new Opening({
-			"title":"First Opening",
-			"_opportunity":"AHR",
-			"numberOfVolunteers":12,
-			"location":"Jordan",
-			"description":"This is the first opening in this website",
-			"skillsRequired":"English",
-			"resources":"buses",
-			"status":"Active"
-		})
-		newOpen.save(function (error, saved) {
-			done();
+		newOrg.save(function (error, saved) {
+			if (saved) {
+				var newOpp = new Opportunity({
+					"title":"AHR",
+					"_organizer":"KhitwaOrg",
+					"startDate":"25-NOV-2016",
+					"endDate":"26-NOV-2016",
+					"location":"Halifax",
+					"causesArea":"Education",
+					"description":"Education changes the world!"
+				})
+				newOpp.save(function (error, saved) {
+					if(saved){
+						newOpen = new Opening({
+							"title":"First Opening",
+							"_opportunity":saved._id,
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						newOpen.save(function (error, saved) {
+							done();
+						});
+					}
+				});
+			}
 		});
 	});
 
@@ -193,4 +199,112 @@ describe('Openings DataBase', function (done) {
 				});
 		});
 	});
+
+	describe('Delete One', function (done) {
+		
+		it('Should have a method called deleteOne', function (done) {
+			expect(typeof openingController.deleteOne).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/delete/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opening Not Found when ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/delete/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error,res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should delete when the opening is closed ', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/getall')
+				.end(function (error, res) {
+					var oid = res.body[0]._id;
+
+					chai.request(server)
+						.post('/api/opening/addOpening/'+oid)
+						.set('x-access-token',token)
+						.send({
+							"title":"First Opening",
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						.end(function (error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var id = res.body[1]._id;
+
+									chai.request(server)
+										.post('/api/opening/closeOpening/'+id)
+										.set('x-access-token', token)
+										.end(function (error, res) {									
+											chai.request(server)
+												.post('/api/opening/delete/'+id)
+												.set('x-access-token', token)
+												.end(function (error, res) {
+													expect(res.status).to.be.equal(201);
+													expect(res.text).to.be.equal('Opening Deleted');
+													done();
+												});
+										});
+								});
+						});
+				});			
+		})
+
+		it('Should delete an opening', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/getall')
+				.end(function (error, res) {
+					var oid = res.body[0]._id;
+
+					chai.request(server)
+						.post('/api/opening/addOpening/'+oid)
+						.set('x-access-token',token)
+						.send({
+							"title":"First Opening",
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						.end(function (error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var id = res.body[1]._id;
+
+									chai.request(server)
+										.post('/api/opening/delete/'+id)
+										.set('x-access-token', token)
+										.end(function (error, res) {
+											expect(res.status).to.be.equal(201);
+											expect(res.text).to.be.equal('Opening Deleted');
+											done();
+										});
+								});
+						});
+				});
+		});
+	})
 });

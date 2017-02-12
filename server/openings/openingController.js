@@ -89,7 +89,7 @@ module.exports = {
 				   		if (saved) {
 				    		console.log('Opening Closed');   
 
-							Opportunity.findOne({title : opening._opportunity})
+							Opportunity.findOne({_id : opening._opportunity})
 							.exec(function (error, opp) {
 						    	if (opp) {
 						    		var index = opp.currOpenings.indexOf(id);
@@ -117,7 +117,7 @@ module.exports = {
 	deleteOne : function(req, res){
     
 	    var token = req.headers['x-access-token'];
-	    var id = req.params.id.toString();
+	    var id = req.params.id;
 
 	    if (!token) {
 	    	helpers.errorHandler('Please Sign In', req, res);
