@@ -146,5 +146,51 @@ describe('Openings DataBase', function (done) {
 					done();
 				});
 		});
-	})
+	});
+
+	describe('Close Opening', function (done) {
+		
+		it('Should have a method called closeOpening', function (done) {
+			expect(typeof openingController.closeOpening).to.be.equal('function');
+			done();
+		});
+
+		it('Should retrun ERROR 500 Please Sign In when not signed in',function (done) {
+			chai.request(server)
+				.post('/api/opening/closeOpening/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 No Opening Found when ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/closeOpening/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('No Opening Found');
+					done();
+				});
+		});
+
+		it('Should close opening', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+
+					chai.request(server)
+						.post('/api/opening/closeOpening/'+id)
+						.set('x-access-token', token)
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('Opening Closed');
+							done();
+						});
+				});
+		});
+	});
 });
