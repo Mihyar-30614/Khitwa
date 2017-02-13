@@ -399,6 +399,6 @@ describe('Openings DataBase', function (done) {
 								});
 						});
 				});
-		})
-	})
+		});
+	});
 });
