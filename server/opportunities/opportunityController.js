@@ -83,38 +83,38 @@ module.exports = {
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
 				if (org) {
-						Organization.comparePassword(password, org.password, res, function (match) {
-							if (match) {								
-								Opportunity.findOne({_id : id})
-								.exec(function (error, opp) {
-									if (opp) {
-										if (opp._organizer === organization.name) {
-													opp.status = 'Closed';
-													opp.save(function (error, saved) {
-														if (saved) {								
-															var index = org.currentOpportunities.indexOf(id);
-															if (index > -1) {
-																var toClose = org.currentOpportunities.splice(index,1);
-																org.pastOpportunities.push(toClose);
-																org.save(function (error, savedOrg) {
-																	if (savedOrg) {
-																		res.status(201).send('Opportunity Closed');
-																	}
-																})
-															} else {
-																helpers.errorHandler('Opportunity Already Closed', req, res);
+					Organization.comparePassword(password, org.password, res, function (match) {
+						if (match) {								
+							Opportunity.findOne({_id : id})
+							.exec(function (error, opp) {
+								if (opp) {
+									if (opp._organizer === organization.name) {
+											opp.status = 'Closed';
+											opp.save(function (error, saved) {
+												if (saved) {								
+													var index = org.currentOpportunities.indexOf(id);
+													if (index > -1) {
+														var toClose = org.currentOpportunities.splice(index,1);
+														org.pastOpportunities.push(toClose);
+														org.save(function (error, savedOrg) {
+															if (savedOrg) {
+																res.status(201).send('Opportunity Closed');
 															}
-														}
-													});
-										} else {
-											helpers.errorHandler('Can Not Modify Others', req, res)
-										}
+														})
+													} else {
+														helpers.errorHandler('Opportunity Already Closed', req, res);
+													}
+												}
+											});
 									} else {
-										helpers.errorHandler('Opportunity Not Found', req, res);
+										helpers.errorHandler('Can Not Modify Others', req, res)
 									}
-								})
-							}
-						})
+								} else {
+									helpers.errorHandler('Opportunity Not Found', req, res);
+								}
+							})
+						}
+					})
 				} else {
 					helpers.errorHandler('Organization Not Found', req, res);
 				}
