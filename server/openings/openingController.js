@@ -205,9 +205,7 @@ module.exports = {
 	        	if (user) {
 		        	Opening.findOne({ _id : id})
 		        	.exec(function (error, opening) {
-		            	if (error) {
-		            		helpers.errorHandler(error, req, res);
-		            	} else if (opening) {
+		        		if (opening) {
 		            		if (opening.pendingApps.indexOf(user.username) === -1) {
 		                		opening.pendingApps.push(user.username);
 		                		opening.save(function (error, saved) {
