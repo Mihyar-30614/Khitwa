@@ -235,7 +235,7 @@ module.exports = {
 
     	var token = req.headers['x-access-token'];
     	var openingId = req.params.id.toString();
-    	var applicantId = req.body.applicantId;
+    	var appName = req.body.appName;
 
     	if (!token) {
     		helpers.errorHandler('Please Sign In', req, res);
@@ -247,9 +247,9 @@ module.exports = {
           			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-							var index = opening.pendingApps.indexOf(applicantId);
+							var index = opening.pendingApps.indexOf(appName);
 							opening.pendingApps.splice(index,1);
-							opening.volunteers.push(applicantId);
+							opening.volunteers.push(appName);
 							opening.save(function (error, saved) {
                 				if (saved) {
                 					res.status(201).send('User Approved');
@@ -270,7 +270,7 @@ module.exports = {
 
     	var token = req.headers['x-access-token'];
     	var openingId = req.params.id.toString();
-    	var applicantId = req.body.applicantId;
+    	var appName = req.body.appName;
 
     	if (!token) {
     		helpers.errorHandler('Please Sign In', req, res);
@@ -282,10 +282,10 @@ module.exports = {
         			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-            				var index = opening.pendingApps.indexOf(applicantId);
+            				var index = opening.pendingApps.indexOf(appName);
             				if (index>0) {
 				                opening.pendingApps.splice(index,1);
-				                opening.rejectedApps.push(applicantId);
+				                opening.rejectedApps.push(appName);
 				                opening.save(function (error, saved) {
                 					if (saved) {
                     					res.status(201).send('User Rejected');
