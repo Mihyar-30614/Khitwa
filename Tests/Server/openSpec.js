@@ -8,10 +8,10 @@ var chai = require('chai')
 chai.use(chaiHttp);
 
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
+var userToken ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGExZjRhYTg0MWFkZjEzNjQyMDBjNWMiLCJzYWx0IjoiJDJhJDEwJHpqUllFcVJiZGozUVhiUHRmUUEudy4iLCJ1c2VybmFtZSI6Ik1paHlhcjMiLCJwYXNzd29yZCI6IiQyYSQxMCR6alJZRXFSYmRqM1FYYlB0ZlFBLncuUktxL29PVTByeG9CYTJ2eWpvOXRyTmxCMnJRclFQdSIsImZpcnN0TmFtZSI6Ik1paHlhciIsImxhc3ROYW1lIjoiQWxtYXNhbG1hIiwiZW1haWwiOiJtaWh5YXJAa2hpdHdhLm9yZyIsImRhdGVPZkJpcnRoIjoiMDgtbWFyLTE5ODkiLCJnZW5kZXIiOiJNYWxlIiwicGhvbmVOdW1iZXIiOiIyMDQ0MDU1NzA3IiwiX192IjowLCJjYXVzZXMiOlsiTWVkaWNhbCJdLCJza2lsbHMiOlsiRW5nbGlzaCIsIkNvZGluZyJdfQ.3-EVxcLqJwbpiuuXnXrESnFYI05ItS2OERF36e-3kmY';
+var User = require('../../server/users/userModel');
 var Organization = require('../../server/organizations/organizationModel');
-var organizationController = require('../../server/organizations/organizationController');
 var Opportunity = require('../../server/opportunities/opportunityModel');
-var opportunityController = require('../../server/opportunities/opportunityController');
 var Opening = require('../../server/openings/openingModel');
 var openingController = require('../../server/openings/openingController');
 
@@ -22,6 +22,19 @@ describe('Openings DataBase', function (done) {
 	Opening.collection.drop();
 
 	beforeEach(function (done) {
+		var newUser = new User({
+			"username":"Mihyar3",
+			"password":"1234",
+			"firstName":"Mihyar",
+			"lastName":"Almasalma",
+			"email":"mihyar@khitwa.org",
+			"dateOfBirth":"08-mar-1989",
+			"gender":"Male",
+			"phoneNumber":"2044055707",
+			"skills":["English","Coding"],
+			"causes":["Medical"]
+		})
+		newUser.save();
 		var newOrg = new Organization({
 			'name':'KhitwaOrg',
 			'password':'1234',
@@ -30,22 +43,22 @@ describe('Openings DataBase', function (done) {
 			'missionStatement':'A step in the right direction',
 			'contactInfo':'Khitwa@khitwa.org'
 		})
-		newOrg.save(function (error, saved) {
-			if (saved) {
+		newOrg.save(function (error, orgsaved) {
+			if (orgsaved) {
 				var newOpp = new Opportunity({
 					"title":"AHR",
-					"_organizer":"KhitwaOrg",
+					"_organizer":orgsaved.name,
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
 					"location":"Halifax",
 					"causesArea":"Education",
 					"description":"Education changes the world!"
 				})
-				newOpp.save(function (error, saved) {
-					if(saved){
+				newOpp.save(function (error, oppsaved) {
+					if(oppsaved){
 						newOpen = new Opening({
 							"title":"First Opening",
-							"_opportunity":saved._id,
+							"_opportunity":oppsaved._id,
 							"numberOfVolunteers":12,
 							"location":"Jordan",
 							"description":"This is the first opening in this website",
@@ -54,7 +67,14 @@ describe('Openings DataBase', function (done) {
 							"status":"Active"
 						})
 						newOpen.save(function (error, saved) {
-							done();
+							if (saved) {
+								newOpp.currOpenings.push(saved._id);
+								newOpp.save(function (error, osaved) {
+									if (osaved) {
+										done();
+									}
+								});
+							}
 						});
 					}
 				});
@@ -230,79 +250,39 @@ describe('Openings DataBase', function (done) {
 
 		it('Should delete when the opening is closed ', function (done) {
 			chai.request(server)
-				.get('/api/opportunity/getall')
+				.get('/api/opening/getall')
 				.end(function (error, res) {
-					var oid = res.body[0]._id;
+					var id = res.body[0]._id;
 
 					chai.request(server)
-						.post('/api/opening/addOpening/'+oid)
-						.set('x-access-token',token)
-						.send({
-							"title":"First Opening",
-							"numberOfVolunteers":12,
-							"location":"Jordan",
-							"description":"This is the first opening in this website",
-							"skillsRequired":"English",
-							"resources":"buses",
-							"status":"Active"
-						})
-						.end(function (error, res) {
+						.post('/api/opening/closeOpening/'+id)
+						.set('x-access-token', token)
+						.end(function (error, res) {									
 							chai.request(server)
-								.get('/api/opening/getall')
+								.post('/api/opening/delete/'+id)
+								.set('x-access-token', token)
 								.end(function (error, res) {
-									var id = res.body[1]._id;
-
-									chai.request(server)
-										.post('/api/opening/closeOpening/'+id)
-										.set('x-access-token', token)
-										.end(function (error, res) {									
-											chai.request(server)
-												.post('/api/opening/delete/'+id)
-												.set('x-access-token', token)
-												.end(function (error, res) {
-													expect(res.status).to.be.equal(201);
-													expect(res.text).to.be.equal('Opening Deleted');
-													done();
-												});
-										});
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Opening Deleted');
+									done();
 								});
 						});
-				});			
-		})
+				});
+		});
 
 		it('Should delete an opening', function (done) {
 			chai.request(server)
-				.get('/api/opportunity/getall')
+				.get('/api/opening/getall')
 				.end(function (error, res) {
-					var oid = res.body[0]._id;
+					var id = res.body[0]._id;
 
 					chai.request(server)
-						.post('/api/opening/addOpening/'+oid)
-						.set('x-access-token',token)
-						.send({
-							"title":"First Opening",
-							"numberOfVolunteers":12,
-							"location":"Jordan",
-							"description":"This is the first opening in this website",
-							"skillsRequired":"English",
-							"resources":"buses",
-							"status":"Active"
-						})
+						.post('/api/opening/delete/'+id)
+						.set('x-access-token', token)
 						.end(function (error, res) {
-							chai.request(server)
-								.get('/api/opening/getall')
-								.end(function (error, res) {
-									var id = res.body[1]._id;
-
-									chai.request(server)
-										.post('/api/opening/delete/'+id)
-										.set('x-access-token', token)
-										.end(function (error, res) {
-											expect(res.status).to.be.equal(201);
-											expect(res.text).to.be.equal('Opening Deleted');
-											done();
-										});
-								});
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('Opening Deleted');
+							done();
 						});
 				});
 		});
@@ -351,8 +331,74 @@ describe('Openings DataBase', function (done) {
 							expect(res.status).to.be.equal(201);
 							expect(res.body.numberOfVolunteers).to.be.equal(10);
 							done();
-						})
-				})
+						});
+				});
+		});
+	});
+
+	describe('Apply To Opening', function (done) {
+		
+		it('Should have a method called applyToOpening', function (done) {
+			expect(typeof openingController.applyToOpening).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/apply/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opening Not Found when ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/apply/somethingnotright')
+				.set('x-access-token', userToken)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should Apply to opening', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('User Applied');
+							done();
+						});
+				});
+		});
+
+		it('Should cancel the application if called again', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							chai.request(server)
+								.post('/api/opening/apply/'+id)
+								.set('x-access-token', userToken)
+								.end(function(error, res) {
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Application Cancelled');
+									done();
+								});
+						});
+				});
 		})
 	})
 });
