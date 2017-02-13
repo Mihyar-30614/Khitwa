@@ -206,7 +206,8 @@ module.exports = {
 		        	Opening.findOne({ _id : id})
 		        	.exec(function (error, opening) {
 		        		if (opening) {
-		            		if (opening.pendingApps.indexOf(user.username) === -1) {
+		                	var index = opening.pendingApps.indexOf(user.username);
+		            		if (index === -1) {
 		                		opening.pendingApps.push(user.username);
 		                		opening.save(function (error, saved) {
 		                    		if (saved) {
@@ -214,7 +215,6 @@ module.exports = {
 		                    		}
 		                  		})
 		              		} else {
-		                		var index = opening.pendingApps.indexOf(user.username);
 		                		opening.pendingApps.splice(index,1);
 		                		opening.save(function (error, saved) {
 		                  			res.status(201).send('Application Cancelled');
@@ -332,32 +332,28 @@ module.exports = {
 	    	.exec(function (error, opening) {
 	        	if (opening) {
 	          		var opportunityId = opening._opportunity;
-	          		opening.status= 'Active';
-
+	          		opening.status = 'Active';
 	        		opening.save(function (error, saved) {
 	            		if (saved) {
-	            			console.log('Changed to Active');
-	            		}
-	        		})
-
-	        		Opportunity.findOne({_id : opportunityId})
-	        		.exec(function (error, opportunity) {
-	            		if (opportunity) {
-	            			if (opportunity.closedOpenings.indexOf(id)>0) {
-	                			var index = opportunity.closedOpenings.indexOf(id);
-	                			opportunity.closedOpenings.splice(index,1);
-	                			opportunity.currOpenings.push(id);
-	            			}else{
-	                			helpers.errorHandler('No Such Opening Closed', req, res);
-	            			}
-
-	            			opportunity.save(function (error, saved) {
-		                		if (saved) {
-		                			res.status(201).send('Opening reopened');
-		                		}
-	            			})
-	            		} else {
-	            			helpers.errorHandler('Opportunit Not Found', req, res);
+			        		Opportunity.findOne({_id : opportunityId})
+			        		.exec(function (error, opportunity) {
+			            		if (opportunity) {
+			                		var index = opportunity.closedOpenings.indexOf(id);
+			            			if (index > -1) {
+			                			opportunity.closedOpenings.splice(index,1);
+			                			opportunity.currOpenings.push(id);
+				            			opportunity.save(function (error, saved) {
+					                		if (saved) {
+					                			res.status(201).send('Opening reopened');
+					                		}
+				            			})
+			            			}else{
+			                			helpers.errorHandler('No Such Opening Closed', req, res);
+			            			}
+			            		} else {
+			            			helpers.errorHandler('Opportunit Not Found', req, res);
+			            		}
+			        		})
 	            		}
 	        		})
 	        	} else {
