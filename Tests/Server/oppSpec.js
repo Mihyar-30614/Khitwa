@@ -9,7 +9,6 @@ chai.use(chaiHttp);
 
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
 var Organization = require('../../server/organizations/organizationModel');
-var organizationController = require('../../server/organizations/organizationController');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
 
@@ -27,19 +26,23 @@ describe('Opportunity Test DataBase', function (done) {
 			'missionStatement':'A step in the right direction',
 			'contactInfo':'Khitwa@khitwa.org'
 		})
-		newOrg.save();
-		var newOpp = new Opportunity({
-			"title":"AHR",
-			"_organizer":"KhitwaOrg",
-			"startDate":"25-NOV-2016",
-			"endDate":"26-NOV-2016",
-			"location":"Halifax",
-			"causesArea":"Education",
-			"description":"Education changes the world!"
-		})
-		newOpp.save(function (error, saved) {
-			done();
-		})
+		newOrg.save(function (error, orgsaved) {
+			var newOpp = new Opportunity({
+				"title":"AHR",
+				"_organizer":orgsaved.name,
+				"startDate":"25-NOV-2016",
+				"endDate":"26-NOV-2016",
+				"location":"Halifax",
+				"causesArea":"Education",
+				"description":"Education changes the world!"
+			})
+			newOpp.save(function (error, saved) {
+				newOrg.currentOpportunities.push(saved._id);
+				newOrg.save(function (error, saved2) {
+					done();
+				})
+			});
+		});
 	});
 
 	afterEach(function (done) {
@@ -90,7 +93,7 @@ describe('Opportunity Test DataBase', function (done) {
 				.set('x-access-token', token)
 				.send({
 					"password":"1234",
-					"title":"AHR",
+					"title":"AHR2",
 					"startDate":"25-NOV-2016",
 					"endDate":"26-NOV-2016",
 					"location":"Halifax",
@@ -279,34 +282,20 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should Close Opportunity', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
-				.set('x-access-token', token)
-				.send({
-					"password":"1234",
-					"title":"AHR",
-					"startDate":"25-NOV-2016",
-					"endDate":"26-NOV-2016",
-					"location":"Halifax",
-					"causesArea":"Education",
-					"description":"Education changes the world!"
-				})
+				.get('/api/organization/getByName/KhitwaOrg')
 				.end(function (error, res) {
+					var id = res.body.currentOpportunities[0];
+					
 					chai.request(server)
-						.get('/api/organization/getByName/KhitwaOrg')
+						.post('/api/opportunity/closeOpportunity/'+id)
+						.set('x-access-token', token)
+						.send({
+							"password":"1234"
+						})
 						.end(function (error, res) {
-							var id = res.body.currentOpportunities[0];
-							
-							chai.request(server)
-								.post('/api/opportunity/closeOpportunity/'+id)
-								.set('x-access-token', token)
-								.send({
-									"password":"1234"
-								})
-								.end(function (error, res) {
-									expect(res.status).to.be.equal(201);
-									expect(res.text).to.be.equal('Opportunity Closed');
-									done();
-								});
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('Opportunity Closed');
+							done();
 						});
 				});
 		});
@@ -342,42 +331,28 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should Reopen closed Opportunity', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
-				.set('x-access-token', token)
-				.send({
-					"password":"1234",
-					"title":"AHR",
-					"startDate":"25-NOV-2016",
-					"endDate":"26-NOV-2016",
-					"location":"Halifax",
-					"causesArea":"Education",
-					"description":"Education changes the world!"
-				})
+				.get('/api/organization/getByName/KhitwaOrg')
 				.end(function (error, res) {
+					var id = res.body.currentOpportunities[0];
+					
 					chai.request(server)
-						.get('/api/organization/getByName/KhitwaOrg')
+						.post('/api/opportunity/closeOpportunity/'+id)
+						.set('x-access-token', token)
+						.send({
+							"password":"1234"
+						})
 						.end(function (error, res) {
-							var id = res.body.currentOpportunities[0];
-							
+
 							chai.request(server)
-								.post('/api/opportunity/closeOpportunity/'+id)
+								.post('/api/opportunity/reopenOpportunity/'+id)
 								.set('x-access-token', token)
 								.send({
 									"password":"1234"
 								})
 								.end(function (error, res) {
-
-									chai.request(server)
-										.post('/api/opportunity/reopenOpportunity/'+id)
-										.set('x-access-token', token)
-										.send({
-											"password":"1234"
-										})
-										.end(function (error, res) {
-											expect(res.status).to.be.equal(201);
-											expect(res.text).to.be.equal('Opportunity Reopened');
-											done();
-										});
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Opportunity Reopened');
+									done();
 								});
 						});
 				});
@@ -445,65 +420,18 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should delete it if it was in past opportunities', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
-				.set('x-access-token', token)
-				.send({
-					"password":"1234",
-					"title":"AHR",
-					"startDate":"25-NOV-2016",
-					"endDate":"26-NOV-2016",
-					"location":"Halifax",
-					"causesArea":"Education",
-					"description":"Education changes the world!"
-				})
+				.get('/api/organization/getByName/KhitwaOrg')
 				.end(function (error, res) {
+					var id = res.body.currentOpportunities[0];
+					
 					chai.request(server)
-						.get('/api/organization/getByName/KhitwaOrg')
+						.post('/api/opportunity/closeOpportunity/'+id)
+						.set('x-access-token', token)
+						.send({
+							"password":"1234"
+						})
 						.end(function (error, res) {
-							var id = res.body.currentOpportunities[0];
-							
-							chai.request(server)
-								.post('/api/opportunity/closeOpportunity/'+id)
-								.set('x-access-token', token)
-								.send({
-									"password":"1234"
-								})
-								.end(function (error, res) {
-							
-									chai.request(server)
-										.post('/api/opportunity/delete/'+id)
-										.set('x-access-token', token)
-										.send({
-											"password":"1234"
-										})
-										.end(function (error, res) {
-											expect(res.status).to.be.equal(201);
-											expect(res.text).to.be.equal('Opportunity Deleted');
-											done();
-										});
-								});
-						});
-				});
-		});
-
-		it('Should delete an opportunity', function (done) {
-			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
-				.set('x-access-token', token)
-				.send({
-					"password":"1234",
-					"title":"AHR",
-					"startDate":"25-NOV-2016",
-					"endDate":"26-NOV-2016",
-					"location":"Halifax",
-					"causesArea":"Education",
-					"description":"Education changes the world!"
-				})
-				.end(function (error, res) {
-					chai.request(server)
-						.get('/api/organization/getByName/KhitwaOrg')
-						.end(function (error, res) {
-							var id = res.body.currentOpportunities[0];
+					
 							chai.request(server)
 								.post('/api/opportunity/delete/'+id)
 								.set('x-access-token', token)
@@ -515,7 +443,26 @@ describe('Opportunity Test DataBase', function (done) {
 									expect(res.text).to.be.equal('Opportunity Deleted');
 									done();
 								});
-					});
+						});
+				});
+		});
+
+		it('Should delete an opportunity', function (done) {
+			chai.request(server)
+				.get('/api/organization/getByName/KhitwaOrg')
+				.end(function (error, res) {
+					var id = res.body.currentOpportunities[0];
+					chai.request(server)
+						.post('/api/opportunity/delete/'+id)
+						.set('x-access-token', token)
+						.send({
+							"password":"1234"
+						})
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.text).to.be.equal('Opportunity Deleted');
+							done();
+						});
 				});
 		});
 	});
