@@ -181,7 +181,7 @@ module.exports = {
 
 					opening.save(function (error,saved) {
 						if (saved) {
-							res.status(201).send('Opening Edited');
+							res.status(201).send(saved);
 						}
 					})
 				} else {

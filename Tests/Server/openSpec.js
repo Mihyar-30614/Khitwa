@@ -306,5 +306,53 @@ describe('Openings DataBase', function (done) {
 						});
 				});
 		});
+	});
+
+	describe('Edit Opening', function (done) {
+		
+		it('Should have a method called editOpening', function (done) {
+			expect(typeof openingController.editOpening).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/edit/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR Opening Not Found when id is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/edit/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should Edit Opening', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/edit/'+id)
+						.set('x-access-token', token)
+						.send({
+							"numberOfVolunteers":10
+						})
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(201);
+							expect(res.body.numberOfVolunteers).to.be.equal(10);
+							done();
+						})
+				})
+		})
 	})
 });
