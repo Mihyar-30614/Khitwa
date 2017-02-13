@@ -2,7 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 
 // Change between two databases for testing 
-var dbc = process.env.NODE_ENV === 'test'? 'mongodb://localhost/Khitwa-test' : 'mongodb://localhost/Khitwa';
+var dbc = process.env.NODE_ENV === 'test'? 'mongodb://127.0.0.1/Khitwa-test' : 'mongodb://127.0.0.1/Khitwa';
 // var dbc = 'mongodb://localhost/Khitwa-test';
 var mongoURI =  process.env.MONGODB_URI || dbc;
 
