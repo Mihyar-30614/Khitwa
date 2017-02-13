@@ -248,13 +248,15 @@ module.exports = {
         			.exec(function (error, opening) {
             			if (opening) {
 							var index = opening.pendingApps.indexOf(appName);
-							opening.pendingApps.splice(index,1);
-							opening.volunteers.push(appName);
-							opening.save(function (error, saved) {
-                				if (saved) {
-                					res.status(201).send('User Approved');
-                				}
-              				})
+            				if (index > -1) {        					
+								opening.pendingApps.splice(index,1);
+								opening.volunteers.push(appName);
+								opening.save(function (error, saved) {
+	                				if (saved) {
+	                					res.status(201).send('User Approved');
+	                				}
+	              				})
+            				}
             			} else {
             				helpers.errorHandler('Opening Not Found', req, res);
             			}
@@ -283,7 +285,7 @@ module.exports = {
         			.exec(function (error, opening) {
             			if (opening) {
             				var index = opening.pendingApps.indexOf(appName);
-            				if (index>0) {
+            				if (index>-1) {
 				                opening.pendingApps.splice(index,1);
 				                opening.rejectedApps.push(appName);
 				                opening.save(function (error, saved) {
