@@ -44,41 +44,33 @@ describe('Openings DataBase', function (done) {
 			'contactInfo':'Khitwa@khitwa.org'
 		})
 		newOrg.save(function (error, orgsaved) {
-			if (orgsaved) {
-				var newOpp = new Opportunity({
-					"title":"AHR",
-					"_organizer":orgsaved.name,
-					"startDate":"25-NOV-2016",
-					"endDate":"26-NOV-2016",
-					"location":"Halifax",
-					"causesArea":"Education",
-					"description":"Education changes the world!"
+			var newOpp = new Opportunity({
+				"title":"AHR",
+				"_organizer":orgsaved.name,
+				"startDate":"25-NOV-2016",
+				"endDate":"26-NOV-2016",
+				"location":"Halifax",
+				"causesArea":"Education",
+				"description":"Education changes the world!"
+			})
+			newOpp.save(function (error, oppsaved) {
+				newOpen = new Opening({
+					"title":"First Opening",
+					"_opportunity":oppsaved._id,
+					"numberOfVolunteers":12,
+					"location":"Jordan",
+					"description":"This is the first opening in this website",
+					"skillsRequired":"English",
+					"resources":"buses",
+					"status":"Active"
 				})
-				newOpp.save(function (error, oppsaved) {
-					if(oppsaved){
-						newOpen = new Opening({
-							"title":"First Opening",
-							"_opportunity":oppsaved._id,
-							"numberOfVolunteers":12,
-							"location":"Jordan",
-							"description":"This is the first opening in this website",
-							"skillsRequired":"English",
-							"resources":"buses",
-							"status":"Active"
-						})
-						newOpen.save(function (error, saved) {
-							if (saved) {
-								newOpp.currOpenings.push(saved._id);
-								newOpp.save(function (error, osaved) {
-									if (osaved) {
-										done();
-									}
-								});
-							}
-						});
-					}
+				newOpen.save(function (error, saved) {
+					newOpp.currOpenings.push(saved._id);
+					newOpp.save(function (error, osaved) {
+						done();
+					});
 				});
-			}
+			});
 		});
 	});
 
@@ -396,6 +388,65 @@ describe('Openings DataBase', function (done) {
 									expect(res.status).to.be.equal(201);
 									expect(res.text).to.be.equal('Application Cancelled');
 									done();
+								});
+						});
+				});
+		});
+	});
+
+	describe('Approve Volunteer', function (done) {
+		
+		it('Should have a method called approveVolunteer', function (done) {
+			expect(typeof openingController.approveVolunteer).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/approve/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should ERROR 500 Opening Not Found if ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/approve/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should approve an application', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var appName = res.body[0].pendingApps[0];
+
+									chai.request(server)
+										.post('/api/opening/approve/'+id)
+										.set('x-access-token', token)
+										.send({
+											"appName" : appName
+										})
+										.end(function (error, res) {
+											expect(res.status).to.be.equal(201);
+											expect(res.text).to.be.equal('User Approved');
+											done();
+										});
 								});
 						});
 				});
