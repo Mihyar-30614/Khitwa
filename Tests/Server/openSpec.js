@@ -451,5 +451,174 @@ describe('Openings DataBase', function (done) {
 						});
 				});
 		});
+
+		it('Should approve rejected application', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var appName = res.body[0].pendingApps[0];
+
+									chai.request(server)
+										.post('/api/opening/reject/'+id)
+										.set('x-access-token', token)
+										.send({
+											"appName" : appName
+										})
+										.end(function (error, res) {
+											chai.request(server)
+												.post('/api/opening/approve/'+id)
+												.set('x-access-token', token)
+												.send({
+													"appName" : appName
+												})
+												.end(function (error, res) {
+													expect(res.status).to.be.equal(201);
+													expect(res.text).to.be.equal('User Approved');
+													done();
+												});
+										});
+								});
+						});
+				});
+		})
+	});
+
+	describe('Reject Volunteer', function (done) {
+		
+		it('Should have a method called rejectVolunteer', function (done) {
+			expect(typeof openingController.rejectVolunteer).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/reject/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should ERROR 500 Opening Not Found if ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/reject/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should reject an application', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var appName = res.body[0].pendingApps[0];
+
+									chai.request(server)
+										.post('/api/opening/reject/'+id)
+										.set('x-access-token', token)
+										.send({
+											"appName" : appName
+										})
+										.end(function (error, res) {
+											expect(res.status).to.be.equal(201);
+											expect(res.text).to.be.equal('User Rejected');
+											done();
+										});
+								});
+						});
+				});
+		});
+
+		it('Should reject approved application', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/apply/'+id)
+						.set('x-access-token', userToken)
+						.end(function(error, res) {
+							chai.request(server)
+								.get('/api/opening/getall')
+								.end(function (error, res) {
+									var appName = res.body[0].pendingApps[0];
+
+									chai.request(server)
+										.post('/api/opening/approve/'+id)
+										.set('x-access-token', token)
+										.send({
+											"appName" : appName
+										})
+										.end(function (error, res) {
+											chai.request(server)
+												.post('/api/opening/reject/'+id)
+												.set('x-access-token', token)
+												.send({
+													"appName" : appName
+												})
+												.end(function (error, res) {
+													expect(res.status).to.be.equal(201);
+													expect(res.text).to.be.equal('User Rejected');
+													done();
+												});
+										});
+								});
+						});
+				});	
+		})
+	});
+
+	describe('Get Opening', function (done) {
+		
+		it('Should have a method called getOpening', function (done) {
+			expect(typeof openingController.getOpening).to.be.equal('function');
+			done();
+		});
+
+		it('Should return an ERROR 500 Opening Not Found if id is incorrect', function (done) {
+			chai.request(server)
+				.get('/api/opening/getOne/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should return an opening', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+
+					chai.request(server)
+						.get('/api/opening/getOne/'+id)
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(200);
+							expect(res.body.title).to.be.equal('First Opening');
+							done();
+						});
+				});
+		});
 	});
 });
