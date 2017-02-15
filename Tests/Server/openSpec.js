@@ -90,7 +90,7 @@ describe('Openings DataBase', function (done) {
 		
 		it('Should return ERROR 500 if you not signed in', function (done) {
 			chai.request(server)
-				.post('/api/opening/addOpening/something')
+				.post('/api/opening/add/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -100,7 +100,7 @@ describe('Openings DataBase', function (done) {
 
 		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect', function (done) {
 			chai.request(server)
-				.post('/api/opening/addOpening/somethingnotright')
+				.post('/api/opening/add/somethingnotright')
 				.set('x-access-token',token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
@@ -116,7 +116,7 @@ describe('Openings DataBase', function (done) {
 					var id = res.body[0]._id;
 
 					chai.request(server)
-						.post('/api/opening/addOpening/'+id)
+						.post('/api/opening/add/'+id)
 						.set('x-access-token',token)
 						.send({
 							"title":"First Opening",
@@ -175,7 +175,7 @@ describe('Openings DataBase', function (done) {
 
 		it('Should retrun ERROR 500 Please Sign In when not signed in',function (done) {
 			chai.request(server)
-				.post('/api/opening/closeOpening/something')
+				.post('/api/opening/close/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -185,7 +185,7 @@ describe('Openings DataBase', function (done) {
 
 		it('Should return ERROR 500 No Opening Found when ID is incorrect', function (done) {
 			chai.request(server)
-				.post('/api/opening/closeOpening/somethingnotright')
+				.post('/api/opening/close/somethingnotright')
 				.set('x-access-token', token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
@@ -201,7 +201,7 @@ describe('Openings DataBase', function (done) {
 					var id = res.body[0]._id;
 
 					chai.request(server)
-						.post('/api/opening/closeOpening/'+id)
+						.post('/api/opening/close/'+id)
 						.set('x-access-token', token)
 						.end(function (error, res) {
 							expect(res.status).to.be.equal(201);
@@ -247,7 +247,7 @@ describe('Openings DataBase', function (done) {
 					var id = res.body[0]._id;
 
 					chai.request(server)
-						.post('/api/opening/closeOpening/'+id)
+						.post('/api/opening/close/'+id)
 						.set('x-access-token', token)
 						.end(function (error, res) {									
 							chai.request(server)
@@ -617,6 +617,72 @@ describe('Openings DataBase', function (done) {
 							expect(res.status).to.be.equal(200);
 							expect(res.body.title).to.be.equal('First Opening');
 							done();
+						});
+				});
+		});
+	});
+
+	describe('Reopen Opening', function (done) {
+		
+		it('Should have a method called reopenOpening', function (done) {
+			expect(typeof openingController.reopenOpening).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
+			chai.request(server)
+				.post('/api/opening/reopen/something')
+				.end(function (eror,res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Opening Not Found if id is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/opening/reopen/somethingnotright')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Opening Not Found');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 No Such Opening Closed if it is not closed', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/reopen/'+id)
+						.set('x-access-token',token)
+						.end(function (error, res) {
+							expect(res.status).to.be.equal(500);
+							expect(res.text).to.be.equal('No Such Opening Closed');
+							done();
+						});
+				});
+		});
+
+		it('Should reopen opening', function (done) {
+			chai.request(server)
+				.get('/api/opening/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/close/'+id)
+						.set('x-access-token',token)
+						.end(function (error, res) {
+							chai.request(server)
+								.post('/api/opening/reopen/'+id)
+								.set('x-access-token', token)
+								.end(function (error, res) {
+									expect(res.status).to.be.equal(201);
+									expect(res.text).to.be.equal('Opening Reopened');
+									done();
+								});
 						});
 				});
 		});

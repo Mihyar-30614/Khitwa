@@ -352,7 +352,7 @@ module.exports = {
 			                			opportunity.currOpenings.push(id);
 				            			opportunity.save(function (error, saved) {
 					                		if (saved) {
-					                			res.status(201).send('Opening reopened');
+					                			res.status(201).send('Opening Reopened');
 					                		}
 				            			})
 			            			}else{

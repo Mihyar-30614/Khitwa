@@ -37,14 +37,14 @@ module.exports = function(app, express){
 	app.post('/api/opportunity/delete/:id', opportunityController.deleteOne);
 
 	// Openings routes goes here
-	app.post('/api/opening/addOpening/:id', openingController.addOpening);
+	app.post('/api/opening/add/:id', openingController.addOpening);
 	app.get('/api/opening/getall',openingController.allOpenings );
-	app.post('/api/opening/closeOpening/:id', openingController.closeOpening);
+	app.post('/api/opening/close/:id', openingController.closeOpening);
 	app.post('/api/opening/delete/:id',openingController.deleteOne);
 	app.post('/api/opening/edit/:id', openingController.editOpening);
 	app.post('/api/opening/apply/:id', openingController.applyToOpening);
 	app.post('/api/opening/approve/:id', openingController.approveVolunteer);
 	app.post('/api/opening/reject/:id', openingController.rejectVolunteer);
 	app.get('/api/opening/getOne/:id', openingController.getOpening);
-	app.post('/api/opening/reopenOpening/:id',openingController.reopenOpening);
+	app.post('/api/opening/reopen/:id',openingController.reopenOpening);
 };
