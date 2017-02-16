@@ -336,37 +336,43 @@ module.exports = {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
 
+	    	var org = jwt.decode(token, 'secret');
 	    	Opening.findOne({_id : id})
 	    	.exec(function (error, opening) {
-	        	if (opening) {
-	          		var opportunityId = opening._opportunity;
-	          		opening.status = 'Active';
-	        		opening.save(function (error, saved) {
-	            		if (saved) {
-			        		Opportunity.findOne({_id : opportunityId})
-			        		.exec(function (error, opportunity) {
-			            		if (opportunity) {
-			                		var index = opportunity.closedOpenings.indexOf(id);
-			            			if (index > -1) {
-			                			opportunity.closedOpenings.splice(index,1);
-			                			opportunity.currOpenings.push(id);
-				            			opportunity.save(function (error, saved) {
-					                		if (saved) {
-					                			res.status(201).send('Opening Reopened');
-					                		}
-				            			})
-			            			}else{
-			                			helpers.errorHandler('No Such Opening Closed', req, res);
-			            			}
-			            		} else {
-			            			helpers.errorHandler('Opportunit Not Found', req, res);
-			            		}
-			        		})
-	            		}
-	        		})
-	        	} else {
-	        		helpers.errorHandler('Opening Not Found', req, res);
-	        	}
+	    		if (opening) {
+	    			var oppID = opening._opportunity;
+
+	    			Opportunity.findOne({_id : oppID})
+	    			.exec(function (error, opportunity) {
+	    				if (opportunity) {
+	    					if (opportunity._organizer === org.name) {
+	    						var index = opportunity.closedOpenings.indexOf(id);
+	    						if (index > -1) {
+	    							opportunity.closedOpenings.splice(index,1);
+	    							opportunity.currOpenings.push(id);
+	    							opening.status = 'Active';
+	    							opportunity.save(function (error, saved) {
+	    								if (saved) {
+	    									opening.save(function (error, openSaved) {
+	    										if (openSaved) {
+	    											res.status(201).send('Opening Reopened');
+	    										}
+	    									})
+	    								}
+	    							})
+	    						} else {
+	    							helpers.errorHandler('No Such Opening Closed', req, res);
+	    						}
+	    					} else {
+	    						helpers.errorHandler('Can Not Modify Others', req, res);
+	    					}
+	    				} else {
+	    					helpers.errorHandler('Opportunity Not Found', req, res);
+	    				}
+	    			})
+	    		} else {
+	    			helpers.errorHandler('Opening Not Found', req, res);
+	    		}
 	    	})
 	    }
 	}
