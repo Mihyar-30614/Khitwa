@@ -81,34 +81,37 @@ module.exports = {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
 
+			var org = jwt.decode(token, 'secret');
+
 			Opening.findOne({_id : id})
 			.exec(function (error, opening) {
 				if (opening) {
-					opening.status = 'Closed';
-					opening.save(function (error,saved) {
-				   		if (saved) {
-				    		console.log('Opening Closed');   
-
-							Opportunity.findOne({_id : opening._opportunity})
-							.exec(function (error, opp) {
-						    	if (opp) {
-						    		var index = opp.currOpenings.indexOf(id);
-						    		opp.currOpenings.splice(index,1);
-						    		opp.closedOpenings.push(id);
-						    		opp.save(function (error,saved) {
-						        		if (saved) {
-						          			res.status(201).send('Opening Closed');
-						        		}
-						      		})
-						    	} else {
-						      		helpers.errorHandler('Opportunity Not Found', req, res);
-						    	}
-							})
-				    	}
+					Opportunity.findOne({_id : opening._opportunity})
+					.exec(function (error, opportunity) {
+						if (opportunity) {
+							if (opportunity._organizer === org.name) {
+								var index = opportunity.currOpenings.indexOf(id);
+								if (index > -1) {
+									opportunity.currOpenings.splice(index, 1);
+									opportunity.closedOpenings.push(id);
+									opportunity.save(function (error, saved) {
+										opening.status = 'Closed';
+										opening.save(function (error, openSaved) {
+											res.status(201).send('Opening Closed');
+										})
+									})
+								} else {
+									helpers.errorHandler('Opening is Already Closed', req, res);
+								}
+							} else {
+								helpers.errorHandler('Can Not Modify Others', req, res);
+							}
+						} else {
+							helpers.errorHandler('Opportunity Not Found', req, res);
+						}
 					})
-
 				} else {
-				  helpers.errorHandler('No Opening Found', req, res);
+					helpers.errorHandler('Opening Not Found', req, res);
 				}
 			})
 		}
@@ -329,6 +332,7 @@ module.exports = {
 	}, 
 
 	reopenOpening : function (req, res) {
+
 	    var token = req.headers['x-access-token'];
 	    var id = req.params.id.toString();
 
@@ -337,6 +341,7 @@ module.exports = {
 	    } else {
 
 	    	var org = jwt.decode(token, 'secret');
+	    	
 	    	Opening.findOne({_id : id})
 	    	.exec(function (error, opening) {
 	    		if (opening) {

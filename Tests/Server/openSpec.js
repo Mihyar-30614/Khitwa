@@ -189,7 +189,7 @@ describe('Openings DataBase', function (done) {
 				.set('x-access-token', token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('No Opening Found');
+					expect(res.text).to.be.equal('Opening Not Found');
 					done();
 				});
 		});
