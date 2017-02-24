@@ -306,21 +306,25 @@ module.exports = {
         			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-            				var index = opening.pendingApps.indexOf(appName);
-            				var index2 = opening.volunteers.indexOf(appName);
-            				if (index>-1) {
-				                opening.pendingApps.splice(index,1);
-            				}else if (index2>-1) {
-            					opening.volunteers.splice(index2,1);
+            				if (opening._organizer === user.name) {
+	            				var index = opening.pendingApps.indexOf(appName);
+	            				var index2 = opening.volunteers.indexOf(appName);
+	            				if (index>-1) {
+					                opening.pendingApps.splice(index,1);
+	            				}else if (index2>-1) {
+	            					opening.volunteers.splice(index2,1);
+	            				} else {
+	                				helpers.errorHandler('User Not Found', req, res);
+	            				}
+				                opening.rejectedApps.push(appName);
+				                opening.save(function (error, saved) {
+	            					if (saved) {
+	                					res.status(201).send('User Rejected');
+	            					}
+	            				})
             				} else {
-                				helpers.errorHandler('User Not Found', req, res);
+            					helpers.errorHandler('Can Not Modify Others', req, res);
             				}
-			                opening.rejectedApps.push(appName);
-			                opening.save(function (error, saved) {
-            					if (saved) {
-                					res.status(201).send('User Rejected');
-            					}
-            				})
             			} else {
             				helpers.errorHandler('Opening Not Found', req, res);
             			}
