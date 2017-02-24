@@ -57,6 +57,7 @@ describe('Openings DataBase', function (done) {
 				newOpen = new Opening({
 					"title":"First Opening",
 					"_opportunity":oppsaved._id,
+					"_organizer" : newOrg.name,
 					"numberOfVolunteers":12,
 					"location":"Jordan",
 					"description":"This is the first opening in this website",

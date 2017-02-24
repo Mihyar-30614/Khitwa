@@ -3,10 +3,8 @@ var Schema = mongoose.Schema;
 
 var openingSchema = new Schema({
 	title : { type : String, required : true},
-	_opportunity: {
-		type : String,
-		required : true
-	},
+	_opportunity: { type : String, required : true },
+	_organizer : { type : String, required : true },
 	numberOfVolunteers: Number,
 	location : String,
 	description : String, 

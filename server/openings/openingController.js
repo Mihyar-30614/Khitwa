@@ -17,9 +17,11 @@ module.exports = {
 	    } else {
 
 	    	var opportunityId = req.params.id;
+	    	var organization = jwt.decode(token,'secret');
 			var newOpening = new Opening({
 				title : req.body.title,
 				_opportunity : opportunityId,
+				_organizer : organization.name,
 				numberOfVolunteers : req.body.numberOfVolunteers,
 				location : req.body.location,
 				description : req.body.description,
@@ -28,7 +30,6 @@ module.exports = {
 				status : req.body.status
 			})
 
-	    	var organization = jwt.decode(token,'secret');
 	    	Organization.findOne({name : organization.name})
 	    	.exec(function (error, org) {
 	      		if (org) {
@@ -172,24 +173,29 @@ module.exports = {
 	    if (!token) {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
+	    	var organization = jwt.decode(token, 'secret');
 	    	Opening.findOne({ _id : id })
 	    	.exec(function (error, opening) {
-	        	if (opening) {
-					opening.title = req.body.title || opening.title;
-					opening.numberOfVolunteers = req.body.numberOfVolunteers || opening.numberOfVolunteers;
-					opening.location = req.body.location || opening.location;
-					opening.description = req.body.description || opening.description;
-					opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
-					opening.resources = req.body.resources || opening.resources;
+		        if (opening) {
+	    			if (opening._organizer === organization.name) {
+						opening.title = req.body.title || opening.title;
+						opening.numberOfVolunteers = req.body.numberOfVolunteers || opening.numberOfVolunteers;
+						opening.location = req.body.location || opening.location;
+						opening.description = req.body.description || opening.description;
+						opening.skillsRequired = req.body.skillsrequired || opening.skillsrequired;
+						opening.resources = req.body.resources || opening.resources;
 
-					opening.save(function (error,saved) {
-						if (saved) {
-							res.status(201).send(saved);
-						}
-					})
-				} else {
+						opening.save(function (error,saved) {
+							if (saved) {
+								res.status(201).send(saved);
+							}
+						})
+					} else {
+	    				helpers.errorHandler('Can Not Modify Others', req, res);
+					}
+	    		} else {
 					helpers.errorHandler('Opening Not Found', req, res);
-				}
+	    		}
 	    	})
 	    }
 	},
