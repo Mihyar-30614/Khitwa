@@ -210,29 +210,33 @@ module.exports = {
 	    } else {
 	    	var user = jwt.decode(token,'secret');
 	    	User.findOne({username : user.username})
-	    	.exec(function (error, user) {
-	        	if (user) {
-		        	Opening.findOne({ _id : id})
-		        	.exec(function (error, opening) {
-		        		if (opening) {
-		                	var index = opening.pendingApps.indexOf(user.username);
-		            		if (index === -1) {
-		                		opening.pendingApps.push(user.username);
-		                		opening.save(function (error, saved) {
-		                    		if (saved) {
-		                    			res.status(201).send('User Applied');
-		                    		}
-		                  		})
-		              		} else {
-		                		opening.pendingApps.splice(index,1);
-		                		opening.save(function (error, saved) {
-		                  			res.status(201).send('Application Cancelled');
-		                		})
-		            		}
-		            	} else {
-		            		helpers.errorHandler('Opening Not Found', req, res);
-		            	}
-		        	})
+	    	.exec(function (error, usr) {
+	        	if (usr) {
+	        		if (usr.username === user.username) {
+			        	Opening.findOne({ _id : id})
+			        	.exec(function (error, opening) {
+			        		if (opening) {
+			                	var index = opening.pendingApps.indexOf(user.username);
+			            		if (index === -1) {
+			                		opening.pendingApps.push(user.username);
+			                		opening.save(function (error, saved) {
+			                    		if (saved) {
+			                    			res.status(201).send('User Applied');
+			                    		}
+			                  		})
+			              		} else {
+			                		opening.pendingApps.splice(index,1);
+			                		opening.save(function (error, saved) {
+			                  			res.status(201).send('Application Cancelled');
+			                		})
+			            		}
+			            	} else {
+			            		helpers.errorHandler('Opening Not Found', req, res);
+			            	}
+			        	})
+	        		} else {
+	        			helpers.errorHandler('Can Not Modify Others', req, res);
+	        		}
 	        	} else {
 	        		helpers.errorHandler('User Not Found', req, res);
 	        	}
