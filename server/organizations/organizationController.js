@@ -13,24 +13,32 @@ module.exports = {
 			if (found) {
 				helpers.errorHandler('Name Already Exists', req, res);
 			}else {
-				 var newOrg = Organization({
-				 name : req.body.name,
-				 password : req.body.password,
-				 causes_area : req.body.causes_area,
-				 locations : req.body.locations,
-				 missionStatement : req.body.missionStatement,
-				 contactInfo : req.body.contactInfo,
-				 rate : req.body.rate,
-				 picture : req.body.picture,
-				 currentOpportunities : req.body.currentOpportunities,
-				 pastOpportunities : req.body.pastOpportunities
-				});
+				Organization.findOne({email:req.body.email})
+				.exec(function (error, org) {
+					if (org) {
+						helpers.errorHandler('Email Already Used', req, res);
+					} else {				
+						var newOrg = Organization({
+							name : req.body.name,
+							password : req.body.password,
+							causes_area : req.body.causes_area,
+							locations : req.body.locations,
+							missionStatement : req.body.missionStatement,
+							email : req.body.email,
+							contactInfo : req.body.contactInfo,
+							rate : req.body.rate,
+							picture : req.body.picture,
+							currentOpportunities : req.body.currentOpportunities,
+							pastOpportunities : req.body.pastOpportunities
+						});
 
-				newOrg.save( function (error, saved){
-					if (saved) {
-						res.status(201).send('Organization Created');
+						newOrg.save( function (error, saved){
+							if (saved) {
+								res.status(201).send('Organization Created');
+							}
+						});
 					}
-				});
+				})
 			}
 		});
 	},

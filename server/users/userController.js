@@ -36,26 +36,33 @@ module.exports = {
 			if (user) {
 				helpers.errorHandler('Account Already exists', req, res);
 			}else{
-				var newUser = new User({
-					username : req.body.username,
-					password : req.body.password,
-					firstName : req.body.firstName,
-					lastName : req.body.lastName,
-					email : req.body.email,
-					dateOfBirth : req.body.dateOfBirth,
-					gender : req.body.gender,
-					phoneNumber : req.body.phoneNumber,
-					skills : req.body.skills,
-					causes : req.body.causes,
-					picture : req.body.picture
-				});
-				newUser.save(function (error ,saved) {
-					if (saved) {
-						res.status(201).send('User Created');
-					}else{
-						helpers.errorHandler(error, req, res);
+				User.findOne({email:req.body.email})
+				.exec(function (error, usr) {
+					if (usr) {
+						helpers.errorHandler('Email Already Used',req, res);
+					} else {				
+						var newUser = new User({
+							username : req.body.username,
+							password : req.body.password,
+							firstName : req.body.firstName,
+							lastName : req.body.lastName,
+							email : req.body.email,
+							dateOfBirth : req.body.dateOfBirth,
+							gender : req.body.gender,
+							phoneNumber : req.body.phoneNumber,
+							skills : req.body.skills,
+							causes : req.body.causes,
+							picture : req.body.picture
+						});
+						newUser.save(function (error ,saved) {
+							if (saved) {
+								res.status(201).send('User Created');
+							}else{
+								helpers.errorHandler(error, req, res);
+							}
+						});
 					}
-				});
+				})
 			}
 		});
 	},

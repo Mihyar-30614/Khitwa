@@ -24,7 +24,7 @@ describe('Opportunity Test DataBase', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'contactInfo':'Khitwa@khitwa.org'
+			'email':'Khitwa@khitwa.org'
 		})
 		newOrg.save(function (error, orgsaved) {
 			var newOpp = new Opportunity({

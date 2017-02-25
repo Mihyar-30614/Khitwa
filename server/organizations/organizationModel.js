@@ -8,10 +8,11 @@ var SALT_WORK_FACTOR = 10;
 var OrganizationSchema = new Schema({
   name: {type: String, required: true, unique: true},
   password: {type: String, required: true},
+  email : { type:String, required:true, unique:true },
   causes_area: [String],
   locations: [String],
   missionStatement: String,
-  contactInfo : Object,
+  contactInfo : String,
   raters : [{name:{type:String}, value:{type:Number}, review:{type:String}}],
   rate: {type:Number, default:0},
   logo: String,

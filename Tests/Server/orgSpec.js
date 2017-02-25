@@ -33,10 +33,11 @@ describe('Organization Test Database', function (done) {
 		var newOrg = new Organization({
 			'name':'KhitwaOrg',
 			'password':'1234',
+			'email':'Khitwa@khitwa.org',
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'contactInfo':'Khitwa@khitwa.org'
+			'contactInfo':'Some Info about the organization'
 		})
 		newOrg.save(function (error,saved) {
 			done();
@@ -72,7 +73,8 @@ describe('Organization Test Database', function (done) {
 				.post('/api/organization/signup')
 				.send({
 					'name':'newOrg',
-					'password': 'newPassword'
+					'password': 'newPassword',
+					'email':'newOrganization@organization.org'
 				})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(201);

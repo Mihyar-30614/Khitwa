@@ -24,7 +24,7 @@ describe('User Test Database', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'contactInfo':'Khitwa@khitwa.org'
+			'email':'Khitwa@khitwa.org'
 		})
 		newOrg.save();
 		var newOrg2 = new Organization({
@@ -33,7 +33,7 @@ describe('User Test Database', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'contactInfo':'Khitwa@khitwa.org'
+			'email':'Khitwa2@khitwa.org'
 		})
 		newOrg2.save();
 		var newUser = new User ({
@@ -124,7 +124,7 @@ describe('User Test Database', function (done) {
 					'password':'1234',
 					'firstName':'Mihyar',
 					'lastName':'Almasalma',
-					'email':'mihyar@khitwa.org',
+					'email':'mihyar2@khitwa.org',
 					'dateOfBirth':'08-mar-1989',
 					'gender':'Male',
 					'phoneNumber':'2044055707',
