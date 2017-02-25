@@ -12,8 +12,9 @@ var OrganizationSchema = new Schema({
   locations: [String],
   missionStatement: String,
   contactInfo : Object,
-  rate: Number,
-  picture: String,
+  raters : [{name:{type:String}, value:{type:Number}, review:{type:String}}],
+  rate: {type:Number, default:0},
+  logo: String,
   currentOpportunities : [String],
   pastOpportunities : [String],
   salt : String

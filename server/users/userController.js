@@ -1,3 +1,4 @@
+var Organization = require('../organizations/organizationModel.js');
 var User = require('./userModel.js');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
@@ -182,6 +183,54 @@ module.exports = {
 						})
 					}
 				})
+			})
+		}
+	}, 
+
+	rateOrganization : function (req, res) {
+		
+		var token = req.headers['x-access-token'];
+		var organization = req.params.id;
+
+		if (!token) {
+			helpers.errorHandler('Please Sign In', req, res);
+		} else {
+			var user = jwt.decode( token, 'secret');
+			User.findOne({ username : user.username})
+			.exec(function (error, usr) {
+				if (usr) {
+					Organization.findOne({name : organization})
+					.exec(function (error, org) {
+						if (org) {
+							var worked = usr.awards.map(function (award) {
+								if (award.organization === org.name)
+									return true;
+								return false;
+							}).indexOf(true);
+							if (worked > -1) {
+								var x = {
+									name : usr.username,
+									value : req.body.value,
+									review : req.body.review
+								};
+								org.raters.push(x);
+								var score = org.raters.reduce(function (acc , val) {return acc + val.value},0);
+								org.rate = Math.round((score/org.raters.length)*10)/10;
+								org.save(function (error, saved) {
+									if (saved) {
+										res.status(201).send('Organization Rated');
+									}
+								})
+							} else {
+								helpers.errorHandler('You Have Not Worked With Them', req, res);
+							}
+						} else {
+							helpers.errorHandler('Organization Not Found', req, res);
+						}
+					})
+				} else {
+					helpers.errorHandler('User Not Found', req, res);
+				}
 			})
 		}
 	}

@@ -7,6 +7,7 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
+var Organization = require('../../server/organizations/organizationModel');
 var User = require('../../server/users/userModel');
 var userController = require('../../server/users/userController');
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
@@ -14,8 +15,27 @@ var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYT
 describe('User Test Database', function (done) {
 	
 	User.collection.drop();
+	Organization.collection.drop();
 
 	beforeEach(function(done) {
+		var newOrg = new Organization({
+			'name':'KhitwaOrg',
+			'password':'1234',
+			'cause_area':'volunteering',
+			'locations':'Canada',
+			'missionStatement':'A step in the right direction',
+			'contactInfo':'Khitwa@khitwa.org'
+		})
+		newOrg.save();
+		var newOrg2 = new Organization({
+			'name':'Khitwa',
+			'password':'1234',
+			'cause_area':'volunteering',
+			'locations':'Canada',
+			'missionStatement':'A step in the right direction',
+			'contactInfo':'Khitwa@khitwa.org'
+		})
+		newOrg2.save();
 		var newUser = new User ({
 			'username':'Mihyar',
 			'password':'1234',
@@ -26,7 +46,7 @@ describe('User Test Database', function (done) {
 			'gender':'Male',
 			'phoneNumber':'2044055707',
 			'skills':['English','Coding'],
-			'causes':['Medical']
+			'awards':[{"organization":"Khitwa"}]
 		})
 		newUser.save(function (err, savedUSer) {
 			done();
@@ -35,6 +55,7 @@ describe('User Test Database', function (done) {
 
 	afterEach(function (done) {
 		User.collection.drop();
+		Organization.collection.drop();
 		done();
 	});
 
@@ -285,7 +306,7 @@ describe('User Test Database', function (done) {
 
 	describe('Delete User', function (done) {
 
-		it('Should have a methid called deleteUser', function (done) {
+		it('Should have a method called deleteUser', function (done) {
 			expect(typeof userController.deleteUser).to.be.equal('function');
 			done();
 		});
@@ -310,6 +331,61 @@ describe('User Test Database', function (done) {
 				.end(function (error,res) {
 					expect(res.status).to.be.equal(201);
 					expect(res.text).to.be.equal('User Deleted');
+					done();
+				});
+		});
+	});
+
+	describe('Rate Organization', function (done) {
+		
+		it('Should have a method called rateOrganization', function (done) {
+			expect(typeof userController.rateOrganization).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
+			chai.request(server)
+				.post('/api/user/rate/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 Organization Not Found if ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/user/rate/somethingWrong')
+				.set('x-access-token',token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Organization Not Found');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 You Have Not Worked With Them',function (done) {
+			chai.request(server)
+				.post('/api/user/rate/KhitwaOrg')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('You Have Not Worked With Them');
+					done();
+				});
+		});
+
+		it('Should rate an organization', function (done) {
+			chai.request(server)
+				.post('/api/user/rate/Khitwa')
+				.set('x-access-token',token)
+				.send({
+					'value': '4',
+					'review' : 'Best Organization Ever'
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Organization Rated');
 					done();
 				});
 		});

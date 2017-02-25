@@ -6,30 +6,18 @@ var SALT_WORK_FACTOR = 10;
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-	username: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  firstName: {
-  	type: String,
-  	required: true
-  },
-  lastName: {
-  	type: String,
-  	required: true
-  },
+	username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String,	required: true },
+  bio : String,
   email: String,
   dateOfBirth: String,
   gender: String,
   phoneNumber: String,
   skills: [String],
-  causes: [String],
-  rate: Number,
+  awards: [{ organization:String, rate:Number, review:String}],
+  rate: {type:Number, default:0},
   picture: String,
   salt: String
 });

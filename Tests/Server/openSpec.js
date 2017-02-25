@@ -31,8 +31,7 @@ describe('Openings DataBase', function (done) {
 			"dateOfBirth":"08-mar-1989",
 			"gender":"Male",
 			"phoneNumber":"2044055707",
-			"skills":["English","Coding"],
-			"causes":["Medical"]
+			"skills":["English","Coding"]
 		})
 		newUser.save();
 		var newOrg = new Organization({

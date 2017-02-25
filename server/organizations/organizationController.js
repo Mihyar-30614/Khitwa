@@ -1,4 +1,5 @@
 var Organization = require('./organizationModel.js');
+var User = require('../users/userModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
@@ -106,15 +107,12 @@ module.exports = {
 			Organization.findOne({ name: org.name})
 			.exec( function (error, organization){
 
-
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
 		        organization.locations = req.body.locations || organization.locations;
 		        organization.missionStatement = req.body.missionStatement || organization.missionStatement;
 		        organization.contactInfo = req.body.contactInfo || organization.contactInfo;
 		        organization.rate = req.body.rate || organization.rate;
 		        organization.picture = req.body.picture || organization.picture;
-		        // organization.currentOpportunities = req.body.currentOpportunities || organization.currentOpportunities;
-		        // organization.pastOpportunities = req.body.pastOpportunities || organization.pastOpportunities;
 		        if(req.body.oldPassword){
 						Organization.comparePassword(req.body.oldPassword , organization.password , res , function(){
 								organization.password = req.body.password;
@@ -157,6 +155,54 @@ module.exports = {
 							});
 						}
 					})
+				} else {
+					helpers.errorHandler('Organization Not Found', req, res);
+				}
+			})
+		}
+	}, 
+
+	awardCertificate : function (req, res) {
+		
+		var token = req.headers['x-access-token'];
+		var username = req.params.id;
+
+		if (!token) {
+			helpers.errorHandler('Please Sign In', req, res);
+		} else {
+			var organization = jwt.decode(token, 'secret');
+			Organization.findOne({ name : organization.name })
+			.exec(function (error, org) {
+				if (org) {
+					if (org.name === organization.name) {
+						var award = {
+							organization : org.name,
+							opporutnity : req.body.opporutnity,
+							opening : req.body.opening,
+							startDate : req.body.startDate,
+							endDate : req.body.endDate,
+							logo : org.logo,
+							rate : req.body.rate,
+							review : req.body.review
+						};
+						User.findOne({ username : username})
+						.exec(function (error, user) {
+							if (user) {
+								user.awards.push(award);
+								var score = user.awards.reduce(function (acc , val) {return acc + val.rate},0);
+								user.rate = Math.round((score/user.awards.length)*10)/10;
+								user.save(function (error, saved) {
+									if (saved) {
+										res.status(201).send('User Rated');
+									}
+								})
+							} else {
+								helpers.errorHandler('User Not Found',req, res);
+							}
+						})
+					} else {
+						helpers.errorHandler('Can Not Modify Others', req, res);
+					}
 				} else {
 					helpers.errorHandler('Organization Not Found', req, res);
 				}

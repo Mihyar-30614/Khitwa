@@ -10,12 +10,26 @@ chai.use(chaiHttp);
 var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
 var Organization = require('../../server/organizations/organizationModel');
 var organizationController = require('../../server/organizations/organizationController');
+var User = require('../../server/users/userModel');
 
 describe('Organization Test Database', function (done) {
 	
 	Organization.collection.drop();
+	User.collection.drop();
 
 	beforeEach(function (done) {
+		var newUser = new User ({
+			'username':'Mihyar',
+			'password':'1234',
+			'firstName':'Mihyar',
+			'lastName':'Almasalma',
+			'email':'mihyar@khitwa.org',
+			'dateOfBirth':'08-mar-1989',
+			'gender':'Male',
+			'phoneNumber':'2044055707',
+			'skills':['English','Coding']
+		})
+		newUser.save();
 		var newOrg = new Organization({
 			'name':'KhitwaOrg',
 			'password':'1234',
@@ -31,6 +45,7 @@ describe('Organization Test Database', function (done) {
 
 	afterEach(function (done) {
 		Organization.collection.drop();
+		User.collection.drop();
 		done();
 	});
 
@@ -282,6 +297,51 @@ describe('Organization Test Database', function (done) {
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(201);
 					expect(res.text).to.be.equal('Organization Deleted');
+					done();
+				});
+		});
+	});
+
+	describe('Award Certificate', function (done) {
+		
+		it('Should have a method called awardCertificate',function (done) {
+			expect(typeof organizationController.awardCertificate).to.be.equal('function');
+			done();
+		});
+
+		it('Should return ERROR 500 Please Sign In when not signedin', function (done) {
+			chai.request(server)
+				.post('/api/organization/award/something')
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('Please Sign In');
+					done();
+				});
+		});
+
+		it('Should return ERROR 500 User Not Found when ID is incorrect', function (done) {
+			chai.request(server)
+				.post('/api/organization/award/Someone')
+				.set('x-access-token', token)
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(500);
+					expect(res.text).to.be.equal('User Not Found');
+					done();
+				});
+		});
+
+		it('Should Rate User', function (done) {
+			chai.request(server)
+				.post('/api/organization/award/Mihyar')
+				.set('x-access-token', token)
+				.send({
+					'opportunity':'Something Cool',
+					'opening':'Being Cool',
+					'rate':'5',
+				})
+				.end(function (error, res) {
+					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('User Rated');
 					done();
 				});
 		});
