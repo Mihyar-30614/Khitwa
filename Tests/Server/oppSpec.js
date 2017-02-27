@@ -225,6 +225,7 @@ describe('Opportunity Test DataBase', function (done) {
 										.end(function (error, res) {
 											expect(res.status).to.be.equal(200);
 											expect(res.body[0].title).to.be.equal('First Opening');
+											expect(res.body[0].status).to.be.equal('Active')
 											expect(res.body.length).to.be.equal(1)
 											done();
 										})
@@ -261,6 +262,52 @@ describe('Opportunity Test DataBase', function (done) {
 					done();
 				});
 		});
+
+		it('Should return Current Opened Openings', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/add/'+id)
+						.set('x-access-token',token)
+						.send({
+							"title":"First Opening",
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						.end(function (error, res) {
+							chai.request(server)
+								.post('/api/opening/add/'+id)
+								.set('x-access-token',token)
+								.send({
+									"title":"First Closed Opening",
+									"numberOfVolunteers":12,
+									"location":"Jordan",
+									"description":"This is the first opening in this website",
+									"skillsRequired":"English",
+									"resources":"buses",
+									"status":"Closed"
+								})
+								.end(function (error, res) {
+									chai.request(server)
+										.get('/api/opportunity/closedopenings/'+id)
+										.set('x-access-token', token)
+										.end(function (error, res) {
+											expect(res.status).to.be.equal(200);
+											expect(res.body[0].title).to.be.equal('First Closed Opening');
+											expect(res.body[0].status).to.be.equal('Closed')
+											expect(res.body.length).to.be.equal(1)
+											done();
+										})
+								});
+						});
+				})
+		})
 	});
 
 	describe('Get Opportunity', function (done) {
