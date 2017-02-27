@@ -11,11 +11,13 @@ var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYz
 var Organization = require('../../server/organizations/organizationModel');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
+var Opening = require('../../server/openings/openingModel');
 
 describe('Opportunity Test DataBase', function (done) {
 	
 	Organization.collection.drop();
 	Opportunity.collection.drop();
+	Opening.collection.drop();
 
 	beforeEach(function (done) {
 		var newOrg = new Organization({
@@ -48,6 +50,7 @@ describe('Opportunity Test DataBase', function (done) {
 	afterEach(function (done) {
 		Organization.collection.drop();
 		Opportunity.collection.drop();
+		Opening.collection.drop();
 		done();
 	});
 
@@ -184,6 +187,51 @@ describe('Opportunity Test DataBase', function (done) {
 					done();
 				});
 		});
+
+		it('Should return Current Opened Openings', function (done) {
+			chai.request(server)
+				.get('/api/opportunity/getall')
+				.end(function (error, res) {
+					var id = res.body[0]._id;
+					chai.request(server)
+						.post('/api/opening/add/'+id)
+						.set('x-access-token',token)
+						.send({
+							"title":"First Opening",
+							"numberOfVolunteers":12,
+							"location":"Jordan",
+							"description":"This is the first opening in this website",
+							"skillsRequired":"English",
+							"resources":"buses",
+							"status":"Active"
+						})
+						.end(function (error, res) {
+							chai.request(server)
+								.post('/api/opening/add/'+id)
+								.set('x-access-token',token)
+								.send({
+									"title":"First Closed Opening",
+									"numberOfVolunteers":12,
+									"location":"Jordan",
+									"description":"This is the first opening in this website",
+									"skillsRequired":"English",
+									"resources":"buses",
+									"status":"Closed"
+								})
+								.end(function (error, res) {
+									chai.request(server)
+										.get('/api/opportunity/currentopenings/'+id)
+										.set('x-access-token', token)
+										.end(function (error, res) {
+											expect(res.status).to.be.equal(200);
+											expect(res.body[0].title).to.be.equal('First Opening');
+											expect(res.body.length).to.be.equal(1)
+											done();
+										})
+								});
+						});
+				})
+		})
 	});
 
 	describe('Get Closed Openings', function (done) {

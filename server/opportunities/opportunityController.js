@@ -219,30 +219,14 @@ module.exports = {
   		if (!token) {
   			helpers.errorHandler('Please Sign In', req, res);
   		} else {
-  			Opportunity.findOne({_id : id})
-  			.exec(function (error, opportunity) {
-				if(opportunity){
-  					for (var i = 0; i < opportunity.currOpenings.length; i++) {
-  						Opening.find({_id: opportunity.currOpenings[i]})
-  						.exec(function (error,opening) {
-  							if (opening) {
-	  							opportunity.fullCurrent.push(opening)
-		  						opportunity.save()
-		  					}
-	  					}).then(function () {
-	  						res.status(200).send(opportunity.fullCurrent);
-		  					opportunity.fullCurrent=[];
-		  					opportunity.save(function (error, emptyed) {
-		  						if (emptyed) {
-		  							console.log('Emptyed');
-		  						}
-		  					})
-	  					})
-  					}
-  				}else{
-  					helpers.errorHandler('Opportunity Not Found', req, res);
-  				}
-  			})
+	  		Opening.find({_opportunity: id, status:'Active'})
+	  		.exec(function (error, opportunity) {
+	  			if (opportunity.length>0) {
+	  				res.status(200).send(opportunity);
+	  			} else {
+	  				helpers.errorHandler('Opportunity Not Found', req, res);
+	  			}
+	  		})
   		}
 	},
 
