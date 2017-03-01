@@ -260,22 +260,44 @@ module.exports = {
           			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-            				if (opening._organizer === user.name) {
-								var index = opening.pendingApps.indexOf(appName);
-								var index2 = opening.rejectedApps.indexOf(appName);
-	            				if (index > -1) {        					
-									opening.pendingApps.splice(index,1);
-	            				} else if(index2 > -1){
-	            					opening.rejectedApps.splice(index2,1);
-	            				}else{
-	            					helpers.errorHandler('User Not Found', req, res);
-	            				}
-								opening.volunteers.push(appName);
-								opening.save(function (error, saved) {
-	                				if (saved) {
-	                					res.status(201).send('User Approved');
-	                				}
-	              				})
+            				if (opening._organizer === user.name && opening.status === 'Active') {
+            					if (opening.numberOfVolunteers> opening.volunteers.length) {
+									var index = opening.pendingApps.indexOf(appName);
+									var index2 = opening.rejectedApps.indexOf(appName);
+		            				if (index > -1) {        					
+										opening.pendingApps.splice(index,1);
+		            				} else if(index2 > -1){
+		            					opening.rejectedApps.splice(index2,1);
+		            				}else{
+		            					helpers.errorHandler('User Not Found', req, res);
+		            				}
+									opening.volunteers.push(appName);
+									if (opening.volunteers.length === opening.numberOfVolunteers) {
+										opening.status = 'Closed';
+										Opportunity.findOne({_id : opening._opportunity})
+										.exec(function (error, opportunity) {
+											if (opportunity) {
+												var index = opportunity.currOpenings.indexOf(opening._id);
+												if (index > -1) {
+													opportunity.currOpenings.splice(index, 1);
+													opportunity.closedOpenings.push(opening._id);
+													opportunity.save();
+												} else {
+													helpers.errorHandler('Opening is Already Closed', req, res);
+												}
+											} else {
+												helpers.errorHandler('Opportunity Not Found', req, res);
+											}
+										})
+									}
+									opening.save(function (error, saved) {
+		                				if (saved) {
+		                					res.status(201).send('User Approved');
+		                				}
+		              				})
+            					} else {
+            						helpers.errorHandler('All Slots Already Filled', req, res);
+            					}
             				} else {
             					helpers.errorHandler('Can Not Modify Others', req, res);
             				}

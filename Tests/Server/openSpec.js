@@ -57,7 +57,7 @@ describe('Openings DataBase', function (done) {
 					"title":"First Opening",
 					"_opportunity":oppsaved._id,
 					"_organizer" : newOrg.name,
-					"numberOfVolunteers":12,
+					"numberOfVolunteers":1,
 					"location":"Jordan",
 					"description":"This is the first opening in this website",
 					"skillsRequired":"English",
@@ -422,7 +422,7 @@ describe('Openings DataBase', function (done) {
 				});
 		});
 
-		it('Should approve an application', function (done) {
+		it('Should approve an application and close it if reached the number of volunteers', function (done) {
 			chai.request(server)
 				.get('/api/opening/getall')
 				.end(function (error, res) {
@@ -445,7 +445,12 @@ describe('Openings DataBase', function (done) {
 										.end(function (error, res) {
 											expect(res.status).to.be.equal(201);
 											expect(res.text).to.be.equal('User Approved');
-											done();
+											chai.request(server)
+												.get('/api/opening/getall')
+												.end(function (error, res) {
+													expect(res.body[0].status).to.be.equal('Closed');
+													done();
+												})
 										});
 								});
 						});
