@@ -171,8 +171,44 @@ module.exports = {
 		}
 	},
 
-	requestNewPass : function (req, res){
-		// to work on later
+	forgotPwd : function (req, res) {
+		var email = req.body.email;
+		User.findOne({email : email})
+		.exec(function (error, user) {
+			if (user) {
+				var token = jwt.encode(user, 'secret');
+				var body = helpers.pwdResetTemplate(user.firstName, user.lastName, token);
+				helpers.email('eng.mihyear@gmail.com', 'Password Reset', body, function () {
+					res.status(200).send('Please Check Your Email For Reset Link');
+				})
+			} else {
+				helpers.errorHandler('User Not Found', req, res)
+			}
+		})
+	},
+
+	pwdReset : function (req, res){
+		var token = req.params.token;
+		var password = req.body.newPassword;
+
+		if (!token) {
+			helpers.errorHandler('Token Not Found', req, res)
+		} else {
+			var user = jwt.decode(token, 'secret');
+			User.findOne({username : user.username})
+			.exec(function (error, user) {
+				if (user) {					
+					user.password = password;
+					user.save(function (error, saved) {
+						if (saved) {
+							res.status(201).send('Passord Updated');
+						}
+					})
+				} else {
+					helpers.errorHandler('User Not Found', req, res);
+				}
+			})
+		}
 	},
 
 	deleteUser : function (req, res) {
