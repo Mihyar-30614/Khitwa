@@ -34,7 +34,11 @@ module.exports = {
 
 						newOrg.save( function (error, saved){
 							if (saved) {
-								res.status(201).send('Organization Created');
+								var org = jwt.encode(saved, 'secret');
+								var body = helpers.activateTemplate(saved.name, '', org, 'organization');
+								helpers.email(saved.email, 'Account Activation', body, function () {
+									res.status(201).send('Organization Created');
+								})
 							}
 						});
 					}
@@ -51,13 +55,17 @@ module.exports = {
 		Organization.findOne({name : name})
 		.exec(function (error, organization) {
 			if (organization) {
-				Organization.comparePassword(password, organization.password, res, function (found) {
-					if (found) {
-						var token = jwt.encode(organization,'secret');
-						res.setHeader('x-access-token',token);
-						res.json({ token : token, name : organization.name });
-					}
-				})
+				if (organization.active) {	
+					Organization.comparePassword(password, organization.password, res, function (found) {
+						if (found) {
+							var token = jwt.encode(organization,'secret');
+							res.setHeader('x-access-token',token);
+							res.json({ token : token, name : organization.name });
+						}
+					})
+				} else {
+					helpers.errorHandler('Please Activate Your Account', req, res);
+				}
 			}else{
 				helpers.errorHandler('User Does Not Exists', req, res);
 			}
@@ -216,5 +224,24 @@ module.exports = {
 				}
 			})
 		}
+	},
+
+	activate : function (req, res) {
+		
+		var token = jwt.decode(req.params.token, 'secret');
+
+		Organization.findOne({name : token.name})
+		.exec(function (error, organization) {
+			if (organization) {
+				organization.active = true;
+				organization.save(function (error, saved) {
+					if (saved) {
+						res.status(201).send('Organization Acitvated');
+					}
+				})
+			} else {
+				helpers.errorHandler('Organization Not Found', req, res);
+			}
+		})
 	}
 };

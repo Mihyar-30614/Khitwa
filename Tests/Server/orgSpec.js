@@ -27,7 +27,8 @@ describe('Organization Test Database', function (done) {
 			'dateOfBirth':'08-mar-1989',
 			'gender':'Male',
 			'phoneNumber':'2044055707',
-			'skills':['English','Coding']
+			'skills':['English','Coding'],
+			'active' : true
 		})
 		newUser.save();
 		var newOrg = new Organization({
@@ -37,7 +38,8 @@ describe('Organization Test Database', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'contactInfo':'Some Info about the organization'
+			'contactInfo':'Some Info about the organization',
+			'active' : true
 		})
 		newOrg.save(function (error,saved) {
 			done();

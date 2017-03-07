@@ -19,6 +19,7 @@ var UserSchema = new Schema({
   awards: [{ organization:String, rate:Number, review:String}],
   rate: {type:Number, default:0},
   picture: String,
+  active: {type: Boolean, default: false},
   salt: String
 });
 

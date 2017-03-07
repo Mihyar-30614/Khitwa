@@ -46,7 +46,8 @@ describe('User Test Database', function (done) {
 			'gender':'Male',
 			'phoneNumber':'2044055707',
 			'skills':['English','Coding'],
-			'awards':[{"organization":"Khitwa"}]
+			'awards':[{"organization":"Khitwa"}],
+			'active' : true
 		})
 		newUser.save(function (err, savedUSer) {
 			done();

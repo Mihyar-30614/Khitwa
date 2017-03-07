@@ -14,13 +14,17 @@ module.exports = {
 		User.findOne({username : username})
 		.exec(function (error, user){
 			if (user) {
-				User.comparePassword(password, user.password, res, function (found){
-					if (found) {
-						var token = jwt.encode(user, 'secret');
-						res.setHeader('x-access-token', token);
-						res.json({token : token, username: user.username});
-					}
-				});
+				if (user.active) {				
+					User.comparePassword(password, user.password, res, function (found){
+						if (found) {
+							var token = jwt.encode(user, 'secret');
+							res.setHeader('x-access-token', token);
+							res.json({token : token, username: user.username});
+						}
+					});
+				} else {
+					helpers.errorHandler('Please Activate Your Account', req, res);
+				}
 			}else {
 				helpers.errorHandler('User does not exist', req, res);
 			}
@@ -56,7 +60,11 @@ module.exports = {
 						});
 						newUser.save(function (error ,saved) {
 							if (saved) {
-								res.status(201).send('User Created');
+								var user = jwt.encode(saved,'secret');
+								var body = helpers.activateTemplate(saved.firstName, saved.lastName, user);
+								helpers.email(saved.email, 'Account Activation', body, function () {
+									res.status(201).send('User Created');
+								});
 							}else{
 								helpers.errorHandler(error, req, res);
 							}
@@ -240,5 +248,24 @@ module.exports = {
 				}
 			})
 		}
+	},
+
+	activate : function (req, res) {
+
+		var token = jwt.decode(req.params.token, 'secret') ;
+		
+		User.findOne({username : token.username})
+		.exec(function (error,user) {
+			if (user) {
+				user.active = true;
+				user.save(function (error, saved) {
+					if(saved){
+						res.status(201).send('Account Activated');
+					}
+				})
+			} else {
+				helpers.errorHandler('User Not Found', req, res);
+			}
+		})
 	}
 };

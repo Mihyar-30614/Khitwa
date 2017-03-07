@@ -18,6 +18,7 @@ var OrganizationSchema = new Schema({
   logo: String,
   currentOpportunities : [String],
   pastOpportunities : [String],
+  active : {type : Boolean, default : false},
   salt : String
 });
 
