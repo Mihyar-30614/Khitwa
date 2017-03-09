@@ -20,6 +20,9 @@ var UserSchema = new Schema({
   rate: {type:Number, default:0},
   picture: String,
   active: {type: Boolean, default: false},
+  pwdResetToken : String, 
+  pwdResetExpire : Date,
+  resetable : {type : Boolean, default: false},
   salt: String
 });
 

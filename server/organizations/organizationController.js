@@ -3,10 +3,11 @@ var User = require('../users/userModel.js');
 var Q = require('q');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
+var crypto = require('crypto');
 
 module.exports = {
 
-	createOrganization : function (req, res) {
+	signup : function (req, res) {
 
 		Organization.findOne({name: req.body.name})
 		.exec( function (error, found){
@@ -243,5 +244,68 @@ module.exports = {
 				helpers.errorHandler('Organization Not Found', req, res);
 			}
 		})
+	}, 
+
+	forgotPwd : function (req, res) {
+		var email = req.body.email;
+		Organization.findOne({email : email})
+		.exec(function (error, organization) {
+			if (organization) {
+					crypto.randomBytes(20, function(err, buf) {
+		        		var token = buf.toString('hex');
+						var body = helpers.pwdResetTemplate(organization.name, '', token, 'organization');
+						helpers.email('eng.mihyear@gmail.com', 'Password Reset', body, function () {
+							organization.pwdResetToken = token;
+							organization.pwdResetExpire = Date.now() + 36000000;
+							organization.save();
+							res.status(200).send('Please Check Your Email For Reset Link');
+						})
+					});
+			} else {
+				helpers.errorHandler('Organization Not Found', req, res);
+			}
+		})
+	},
+
+	chckToken : function (req, res) {
+		Organization.findOne({pwdResetToken : req.params.token, pwdResetExpire: { $gt: Date.now() }})
+		.exec(function (error, org) {
+			if (org) {
+				org.resetable = true;
+				org.save(function (error, saved) {
+					if (saved) {
+						res.status(201).send('Token Still Alive');
+					}
+				})
+			} else {
+				helpers.errorHandler('Linked Expired', req, res)
+			}
+		})
+	},
+
+	pwdReset : function (req, res) {
+		var token = req.params.token;
+		var password = req.body.password;
+
+		if (!token) {
+			helpers.errorHandler('No Token', req, res);
+		} else {
+			Organization.findOne({pwdResetToken : token, resetable : true})
+			.exec(function (error, org) {
+				if (org) {
+					org.password = password;
+					org.pwdResetToken = undefined;
+					org.pwdResetExpire = undefined;
+					org.resetable = false;
+					org.save(function (error, saved) {
+						if (saved) {
+							res.status(201).send('Password Changed');
+						}
+					})
+				} else {
+					helpers.errorHandler('Organization Not Found', req, res);
+				}
+			})
+		}
 	}
 };

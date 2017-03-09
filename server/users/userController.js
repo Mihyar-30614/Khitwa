@@ -3,6 +3,7 @@ var User = require('./userModel.js');
 var jwt = require('jwt-simple');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
+var crypto = require('crypto');
 
 module.exports = {
 
@@ -176,13 +177,34 @@ module.exports = {
 		User.findOne({email : email})
 		.exec(function (error, user) {
 			if (user) {
-				var token = jwt.encode(user, 'secret');
-				var body = helpers.pwdResetTemplate(user.firstName, user.lastName, token);
-				helpers.email('eng.mihyear@gmail.com', 'Password Reset', body, function () {
-					res.status(200).send('Please Check Your Email For Reset Link');
-				})
+				crypto.randomBytes(20, function(err, buf) {
+	        		var token = buf.toString('hex');
+					var body = helpers.pwdResetTemplate(user.firstName, user.lastName, token);
+					helpers.email(user.email, 'Password Reset', body, function () {
+						user.pwdResetToken = token;
+						user.pwdResetExpire = Date.now() + 36000000;
+						user.save();
+						res.status(200).send('Please Check Your Email For Reset Link');
+					})
+	    		});
 			} else {
 				helpers.errorHandler('User Not Found', req, res)
+			}
+		})
+	},
+
+	chckToken : function (req, res) {
+		User.findOne({ pwdResetToken: req.params.token, pwdResetExpire: { $gt: Date.now() } })
+		.exec(function (error, user) {
+			if (user) {
+				user.resetable = true;
+				user.save(function (error, saved) {
+					if(saved){
+						res.status(200).send('Token Still Alive');
+					}
+				})
+			} else {
+				helpers.errorHandler('Link Expired', req, res);
 			}
 		})
 	},
@@ -194,14 +216,16 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Token Not Found', req, res)
 		} else {
-			var user = jwt.decode(token, 'secret');
-			User.findOne({username : user.username})
+			User.findOne({pwdResetToken : token, resetable : true})
 			.exec(function (error, user) {
 				if (user) {					
 					user.password = password;
+					user.resetable = false;
+					user.pwdResetToken = undefined;
+					user.pwdResetExpire = undefined;
 					user.save(function (error, saved) {
 						if (saved) {
-							res.status(201).send('Passord Updated');
+							res.status(201).send('Password Changed');
 						}
 					})
 				} else {

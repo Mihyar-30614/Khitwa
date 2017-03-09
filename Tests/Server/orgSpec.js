@@ -54,8 +54,8 @@ describe('Organization Test Database', function (done) {
 
 	describe('Create Organization', function (done) {
 		
-		it('Should have a function called createOrganization', function (done) {
-			expect(typeof organizationController.createOrganization).to.be.equal('function');
+		it('Should have a function called signup', function (done) {
+			expect(typeof organizationController.signup).to.be.equal('function');
 			done();
 		});
 

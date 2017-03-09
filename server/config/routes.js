@@ -17,10 +17,11 @@ module.exports = function(app, express){
 	app.post('/api/user/rate/:id',userController.rateOrganization);
 	app.get('/api/user/activate/:token',userController.activate);
 	app.post('/api/user/forgot', userController.forgotPwd);
+	app.get('/api/user/chck/:token', userController.chckToken);
 	app.post('/api/user/reset/:token', userController.pwdReset);
 
 	// Organization routes goes here
-	app.post('/api/organization/signup', organizationController.createOrganization);
+	app.post('/api/organization/signup', organizationController.signup);
 	app.get('/api/organization/getByName/:name', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit', organizationController.editProfile);
@@ -29,6 +30,9 @@ module.exports = function(app, express){
 	app.get('/api/organization/signedin', organizationController.checkAuth);
 	app.post('/api/organization/award/:id', organizationController.awardCertificate);
 	app.get('/api/organization/activate/:token', organizationController.activate);
+	app.post('/api/organization/forgot', organizationController.forgotPwd);
+	app.get('/api/organization/chck/:token', organizationController.chckToken);
+	app.post('/api/organization/reset/:token', organizationController.pwdReset);
 
 	// Opportunities routes goes here
 	app.post('/api/opportunity/addOpportunity', opportunityController.addOpportunity);

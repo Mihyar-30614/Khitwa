@@ -19,6 +19,9 @@ var OrganizationSchema = new Schema({
   currentOpportunities : [String],
   pastOpportunities : [String],
   active : {type : Boolean, default : false},
+  pwdResetToken : String,
+  pwdResetExpire : String,
+  resetable : {type : Boolean, default : false},
   salt : String
 });
 
