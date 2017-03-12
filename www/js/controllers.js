@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('Khitwa.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
 
