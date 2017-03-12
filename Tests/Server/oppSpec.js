@@ -82,7 +82,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
+				.post('/api/opportunity/add')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -92,7 +92,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should create Opportunity', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/addOpportunity')
+				.post('/api/opportunity/add')
 				.set('x-access-token', token)
 				.send({
 					"password":"1234",
@@ -353,7 +353,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Please Sign In if not signed in', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/closeOpportunity/something')
+				.post('/api/opportunity/close/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -363,7 +363,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect',function (done) {
 			chai.request(server)
-				.post('/api/opportunity/closeOpportunity/something')
+				.post('/api/opportunity/close/something')
 				.set('x-access-token', token)
 				.send({
 					"password":"1234"
@@ -382,7 +382,7 @@ describe('Opportunity Test DataBase', function (done) {
 					var id = res.body.currentOpportunities[0];
 					
 					chai.request(server)
-						.post('/api/opportunity/closeOpportunity/'+id)
+						.post('/api/opportunity/close/'+id)
 						.set('x-access-token', token)
 						.send({
 							"password":"1234"
@@ -405,7 +405,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Please Sign In when not signed in', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/reopenOpportunity/something')
+				.post('/api/opportunity/reopen/something')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -415,7 +415,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return ERROR 500 Opportunity Not Found if the id is incorrect', function (done) {
 			chai.request(server)
-				.post('/api/opportunity/reopenOpportunity/something')
+				.post('/api/opportunity/reopen/something')
 				.set('x-access-token', token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
@@ -431,7 +431,7 @@ describe('Opportunity Test DataBase', function (done) {
 					var id = res.body.currentOpportunities[0];
 					
 					chai.request(server)
-						.post('/api/opportunity/closeOpportunity/'+id)
+						.post('/api/opportunity/close/'+id)
 						.set('x-access-token', token)
 						.send({
 							"password":"1234"
@@ -439,7 +439,7 @@ describe('Opportunity Test DataBase', function (done) {
 						.end(function (error, res) {
 
 							chai.request(server)
-								.post('/api/opportunity/reopenOpportunity/'+id)
+								.post('/api/opportunity/reopen/'+id)
 								.set('x-access-token', token)
 								.send({
 									"password":"1234"
