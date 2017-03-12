@@ -7,11 +7,11 @@ var openingController = require('../openings/openingController.js')
 module.exports = function(app, express){
 	
 	// User routes goes here
-	app.post('/api/users/signin', userController.signin);
-	app.post('/api/users/signup', userController.signup);
-	app.get('/api/users/getall', userController.getAll);
-	app.get('/api/users/getUser/:username', userController.getUser);
-	app.get('/api/users/signedin', userController.checkAuth);
+	app.post('/api/user/signin', userController.signin);
+	app.post('/api/user/signup', userController.signup);
+	app.get('/api/user/getall', userController.getAll);
+	app.get('/api/user/getUser/:username', userController.getUser);
+	app.get('/api/user/signedin', userController.checkAuth);
 	app.post('/api/user/edit', userController.editUser);
 	app.post('/api/user/delete', userController.deleteUser);
 	app.post('/api/user/rate/:id',userController.rateOrganization);
@@ -22,11 +22,11 @@ module.exports = function(app, express){
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.signup);
+	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/getByName/:name', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit', organizationController.editProfile);
 	app.post('/api/organization/delete', organizationController.deleteOrganization);
-	app.post('/api/organization/signin', organizationController.signin);
 	app.get('/api/organization/signedin', organizationController.checkAuth);
 	app.post('/api/organization/award/:id', organizationController.awardCertificate);
 	app.get('/api/organization/activate/:token', organizationController.activate);
