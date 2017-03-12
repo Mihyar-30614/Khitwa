@@ -82,7 +82,7 @@ module.exports = {
 			var organization = jwt.decode(token,'secret');
 			Organization.findOne({name : organization.name})
 			.exec(function (error, org) {
-				if(org){
+				if(org && org.active){
 					res.status(200).send('Authorized');
 				}else{
 					helpers.errorHandler('Organization Not Found', req, res);
