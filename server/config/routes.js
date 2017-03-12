@@ -35,9 +35,9 @@ module.exports = function(app, express){
 	app.post('/api/organization/reset/:token', organizationController.pwdReset);
 
 	// Opportunities routes goes here
-	app.post('/api/opportunity/addOpportunity', opportunityController.addOpportunity);
-	app.post('/api/opportunity/closeOpportunity/:id', opportunityController.closeOpportunity);
-	app.post('/api/opportunity/reopenOpportunity/:id', opportunityController.reopenOpportunity);
+	app.post('/api/opportunity/add', opportunityController.addOpportunity);
+	app.post('/api/opportunity/close/:id', opportunityController.closeOpportunity);
+	app.post('/api/opportunity/reopen/:id', opportunityController.reopenOpportunity);
 	app.get('/api/opportunity/getall', opportunityController.allOpportunities);
 	app.post('/api/opportunity/edit/:id',opportunityController.editOpportunity);
 	app.get('/api/opportunity/currentopenings/:id', opportunityController.getCurrOpenings);
