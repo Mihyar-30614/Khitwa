@@ -69,7 +69,7 @@ describe('User Test Database', function (done) {
 
 		it('Should response 500 ERROR if user is not available', function (done) {
 			chai.request(server)
-				.post('/api/users/signin')
+				.post('/api/user/signin')
 				.send({
 					'username':'Stupied'
 				})
@@ -83,7 +83,7 @@ describe('User Test Database', function (done) {
 
 		it('Should give access token when signin', function (done) {
 			chai.request(server)
-				.post('/api/users/signin')
+				.post('/api/user/signin')
 				.send({
 					'username':'Mihyar',
 					'password':'1234'
@@ -98,7 +98,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 500 ERROR if password is incorrect', function (done) {
 			chai.request(server)
-				.post('/api/users/signin')
+				.post('/api/user/signin')
 				.send({
 					'username':'Mihyar',
 					'password':'wrongpassword'
@@ -119,7 +119,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 500 ERROR if username already exists', function (done) {
 			chai.request(server)
-				.post('/api/users/signup')
+				.post('/api/user/signup')
 				.send({
 					'username':'Mihyar',
 					'password':'1234',
@@ -152,7 +152,7 @@ describe('User Test Database', function (done) {
 			})
 			
 			chai.request(server)
-				.post('/api/users/signup')
+				.post('/api/user/signup')
 				.send(extraUser)
 				.end(function (err, res) {
 					expect(err).to.be.equal(null);
@@ -167,7 +167,7 @@ describe('User Test Database', function (done) {
 				'password':'newpassword'
 			})
 			chai.request(server)
-				.post('/api/users/signup')
+				.post('/api/user/signup')
 				.send(extraUser)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
@@ -180,7 +180,7 @@ describe('User Test Database', function (done) {
 		
 		it('Should return 500 ERROR if there was Please Sign In when not signed in', function (done) {
 			chai.request(server)
-				.get('/api/users/signedin')
+				.get('/api/user/signedin')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('Please Sign In');
@@ -190,7 +190,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 200 if the user is logged in', function (done) {
 			chai.request(server)
-				.get('/api/users/signedin')
+				.get('/api/user/signedin')
 				.set('x-access-token', token)
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
@@ -204,7 +204,7 @@ describe('User Test Database', function (done) {
 		
 		it('Should return 500 ERROR if user was not found', function (done) {
 			chai.request(server)
-				.get('/api/users/getUser/Someone')
+				.get('/api/user/getUser/Someone')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
 					expect(res.text).to.be.equal('User Not Found');
@@ -214,7 +214,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 200 and User', function (done) {
 			chai.request(server)
-				.get('/api/users/getUser/Mihyar')
+				.get('/api/user/getUser/Mihyar')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
 					expect(res.body).to.be.a('object');
@@ -235,7 +235,7 @@ describe('User Test Database', function (done) {
 
 		it('Should return 200 and Users', function (done) {
 			chai.request(server)
-				.get('/api/users/getall')
+				.get('/api/user/getall')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
 					expect(res.body).to.be.a('array');
