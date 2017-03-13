@@ -1,6 +1,6 @@
-angular.module('Khitwa.services', [])
 var link = 'http://127.0.0.1:8000';
 // var link = 'http://khitwaorg.herokuapp.com';
+angular.module('Khitwa.services', [])
 .factory('User', function($http, $window, $location) {
     var singin = function (user) {
         return $http({
@@ -149,7 +149,7 @@ var link = 'http://127.0.0.1:8000';
         checkToken : checkToken, 
         reset : reset
     };
-});
+})
 .factory('Organization', function($http, $window, $location){
     var signin = function (data) {
         return $http ({
@@ -298,7 +298,7 @@ var link = 'http://127.0.0.1:8000';
         checkToken : checkToken,
         reset : reset
     }
-};
+})
 .factory('Opportunity', function($http, $window, $location){
     var add = function (data) {
         return $http({
@@ -425,7 +425,7 @@ var link = 'http://127.0.0.1:8000';
         byOrgID : byOrgID,
         remove : remove
     };
-};
+})
 .factory('Opening', function($http, $window, $location){
     var add = function (id, data) {
         return $http({
@@ -561,4 +561,4 @@ var link = 'http://127.0.0.1:8000';
         getone : getone,
         reopen : reopen
     };
-};
+})
