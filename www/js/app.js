@@ -26,6 +26,16 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl : 'js/templates/loginOrg.html',
         controller : 'OrganizationController'
     })
+    .state('userSignup',{
+        url : '/signup',
+        templateUrl : 'js/templates/userSignup.html',
+        controller : 'UserController'
+    })
+    .state('signupOrganization', {
+        url : '/signupOrg',
+        templateUrl : 'js/templates/signupOrg.html',
+        controller : 'OrganizationController'
+    })
 
     $urlRouterProvider.otherwise('/');
     $httpProvider.defaults.transformRequest = function(data) {
