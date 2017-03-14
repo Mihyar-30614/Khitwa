@@ -14,6 +14,13 @@ angular.module('Khitwa.controllers', [])
 				$location.path('/');
 			}
 		})
+	};
+	$scope.signout = function () {
+		User.signout();
+		$scope.user = {};
+	}
+	$scope.signup = function () {
+		User.signup({})
 	}
 })
 
