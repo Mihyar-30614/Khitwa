@@ -2,10 +2,10 @@ var link = 'http://127.0.0.1:8000';
 // var link = 'http://khitwaorg.herokuapp.com';
 angular.module('Khitwa.services', [])
 .factory('User', function($http, $window, $location) {
-    var singin = function (user) {
+    var signin = function (user) {
         return $http({
             method : 'POST',
-            url : link + '/api/user/singin',
+            url : link + '/api/user/signin',
             data : user
         })
         .then(function (resp) {
