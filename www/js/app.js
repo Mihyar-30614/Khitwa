@@ -28,7 +28,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     })
     .state('userSignup',{
         url : '/signup',
-        templateUrl : 'js/templates/userSignup.html',
+        templateUrl : 'js/templates/signup.html',
         controller : 'UserController'
     })
     .state('signupOrganization', {

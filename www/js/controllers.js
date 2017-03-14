@@ -2,6 +2,7 @@ angular.module('Khitwa.controllers', [])
 
 .controller('UserController', function($scope, User, $window, $location) {
 	$scope.user = {};
+	$scope.newUser = {};
 	$scope.res = {};
 	$scope.signin = function () {
 		User.signin({username : $scope.user.username, password: $scope.user.password})
@@ -20,7 +21,10 @@ angular.module('Khitwa.controllers', [])
 		$scope.user = {};
 	}
 	$scope.signup = function () {
-		User.signup({})
+		User.signup($scope.newUser)
+		.then(function (resp) {
+			console.log(resp);
+		})
 	}
 })
 
