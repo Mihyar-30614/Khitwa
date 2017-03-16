@@ -6,7 +6,8 @@ var bcrypt = require('bcrypt-nodejs');
 var SALT_WORK_FACTOR = 10;
 
 var OrganizationSchema = new Schema({
-  name: {type: String, required: true, unique: true},
+  username: {type: String, required: true, unique: true},
+  title : {type : String},
   password: {type: String, required: true},
   email : { type:String, required:true, unique:true },
   causes_area: [String],
