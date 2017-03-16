@@ -7,7 +7,7 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
+var token =  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhZTJlNzMwZmY1YTFjYTBmMTBmNDYiLCJzYWx0IjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGUiLCJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsInBhc3N3b3JkIjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGVPLkpjWTNkdjNCcGxRUEt3STFwT1ZVYTBkenpkLmJ1IiwiZW1haWwiOiJraGl0d2FAa2hpdHdhLm9yZyIsIm1pc3Npb25TdGF0ZW1lbnQiOiJBIHN0ZXAgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbiIsImNvbnRhY3RJbmZvIjoiU29tZSBJbmZvIGFib3V0IHRoZSBvcmdhbml6YXRpb24iLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicGFzdE9wcG9ydHVuaXRpZXMiOltdLCJjdXJyZW50T3Bwb3J0dW5pdGllcyI6W10sInJhdGUiOjAsInJhdGVycyI6W10sImxvY2F0aW9ucyI6WyJDYW5hZGEiXSwiY2F1c2VzX2FyZWEiOltdfQ.OuhPydHXueLxSuXMDIkkeXpOzuXXo5k95ARCyxri38E';
 var Organization = require('../../server/organizations/organizationModel');
 var organizationController = require('../../server/organizations/organizationController');
 var User = require('../../server/users/userModel');
@@ -19,22 +19,19 @@ describe('Organization Test Database', function (done) {
 
 	beforeEach(function (done) {
 		var newUser = new User ({
-			'username':'Mihyar',
+			'username':'mihyar',
 			'password':'1234',
 			'firstName':'Mihyar',
 			'lastName':'Almasalma',
 			'email':'mihyar@khitwa.org',
 			'dateOfBirth':'08-mar-1989',
-			'gender':'Male',
-			'phoneNumber':'2044055707',
-			'skills':['English','Coding'],
 			'active' : true
 		})
 		newUser.save();
 		var newOrg = new Organization({
-			'name':'KhitwaOrg',
+			'username':'khitwaorg',
 			'password':'1234',
-			'email':'Khitwa@khitwa.org',
+			'email':'khitwa@khitwa.org',
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
@@ -62,10 +59,10 @@ describe('Organization Test Database', function (done) {
 		it('Should return 500 Name Already Exists if the name is taken', function (done) {
 			chai.request(server)
 				.post('/api/organization/signup')
-				.send({'name':'KhitwaOrg'})
+				.send({'username':'KhitwaOrg', 'email':'something@example.com'})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('Name Already Exists');
+					expect(res.text).to.be.equal('Username Already Exists');
 					done();
 				});
 		});
@@ -74,7 +71,7 @@ describe('Organization Test Database', function (done) {
 			chai.request(server)
 				.post('/api/organization/signup')
 				.send({
-					'name':'newOrg',
+					'username':'newOrg',
 					'password': 'newPassword',
 					'email':'newOrganization@organization.org'
 				})
@@ -97,7 +94,7 @@ describe('Organization Test Database', function (done) {
 			chai.request(server)
 				.post('/api/organization/signin')
 				.send({
-					'name':'Something',
+					'username':'Something',
 					'password':'Something'
 				})
 				.end(function (error, res) {
@@ -111,7 +108,7 @@ describe('Organization Test Database', function (done) {
 			chai.request(server)
 				.post('/api/organization/signin')
 				.send({
-					'name':'KhitwaOrg',
+					'username':'KhitwaOrg',
 					'password':'password'
 				})
 				.end(function (error, res) {
@@ -125,12 +122,12 @@ describe('Organization Test Database', function (done) {
 			chai.request(server)
 				.post('/api/organization/signin')
 				.send({
-					'name':'KhitwaOrg',
+					'username':'KhitwaOrg',
 					'password' : '1234'
 				})
 				.end(function (error, res) {
 					expect(res.body.token).to.not.equal(undefined);
-					expect(res.body.name).to.be.equal('KhitwaOrg');
+					expect(res.body.username).to.be.equal('khitwaorg');
 					done();
 				});
 		});
@@ -187,7 +184,7 @@ describe('Organization Test Database', function (done) {
 				.get('/api/organization/getByName/KhitwaOrg')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
-					expect(res.body.name).to.be.equal('KhitwaOrg');
+					expect(res.body.username).to.be.equal('khitwaorg');
 					done();
 				});
 		});
@@ -205,7 +202,7 @@ describe('Organization Test Database', function (done) {
 				.get('/api/organization/all')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
-					expect(res.body[0].name).to.be.equal('KhitwaOrg');
+					expect(res.body[0].username).to.be.equal('khitwaorg');
 					expect(Array.isArray(res.body)).to.be.equal(true);
 					done();
 				});
