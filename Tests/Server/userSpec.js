@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 var Organization = require('../../server/organizations/organizationModel');
 var User = require('../../server/users/userModel');
 var userController = require('../../server/users/userController');
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODIwMDVkMzlhZjNmYTE2MmMwN2M1NzUiLCJzYWx0IjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmUiLCJ1c2VybmFtZSI6Ik1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJDNFOEhpN0IvVEV3YnVUd1lPdTJWQmVILjdvaWRNdC9pcXUwcVZXR0xpWFl2SXVMYlBOOHguIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsImNhdXNlcyI6WyJNZWRpY2FsIl0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.Ya00dkg3PPPGFfbUEA30yh6X9Wcufm3d1--vNISfU2Y';
+var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNWYiLCJzYWx0IjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy4iLCJ1c2VybmFtZSI6Im1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy5zUURGS3FOVHJnMUoxTE9vSGhHdVkvWE1xLlpqbmRPIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmF0ZSI6MCwiYXdhcmRzIjpbeyJvcmdhbml6YXRpb24iOiJLaGl0d2EiLCJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNjAifV0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.xNjjVfsOCh4DmPB7oIIWxxpkh67Xykfukv_3O4V6quw';
 
 describe('User Test Database', function (done) {
 	
@@ -37,15 +37,12 @@ describe('User Test Database', function (done) {
 		})
 		newOrg2.save();
 		var newUser = new User ({
-			'username':'Mihyar',
+			'username':'mihyar',
 			'password':'1234',
 			'firstName':'Mihyar',
 			'lastName':'Almasalma',
 			'email':'mihyar@khitwa.org',
 			'dateOfBirth':'08-mar-1989',
-			'gender':'Male',
-			'phoneNumber':'2044055707',
-			'skills':['English','Coding'],
 			'awards':[{"organization":"Khitwa"}],
 			'active' : true
 		})
@@ -85,7 +82,7 @@ describe('User Test Database', function (done) {
 			chai.request(server)
 				.post('/api/user/signin')
 				.send({
-					'username':'Mihyar',
+					'username':'mihyar@khitwa.org',
 					'password':'1234'
 				})
 				.end(function (error, res) {
@@ -126,11 +123,7 @@ describe('User Test Database', function (done) {
 					'firstName':'Mihyar',
 					'lastName':'Almasalma',
 					'email':'mihyar2@khitwa.org',
-					'dateOfBirth':'08-mar-1989',
-					'gender':'Male',
-					'phoneNumber':'2044055707',
-					'skills':['English','Coding'],
-					'causes':['Medical']
+					'dateOfBirth':'08-mar-1989'
 				})
 				.end(function (req, res) {
 					expect(res.status).to.be.equal(500);
@@ -146,9 +139,7 @@ describe('User Test Database', function (done) {
 				'firstName':'newbie',
 				'lastName':'user',
 				'email':'newbie@khitwa.org',
-				'dateOfBirth':'01-01-2001',
-				'gender':'Male',
-				'phoneNumber':'123456789'
+				'dateOfBirth':'01-01-2001'
 			})
 			
 			chai.request(server)
