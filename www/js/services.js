@@ -1,5 +1,5 @@
-// var link = 'http://192.168.0.6:8100';
-var link = 'http://khitwaorg.herokuapp.com';
+var link = 'http://127.0.0.1:8000';
+// var link = 'http://khitwaorg.herokuapp.com';
 angular.module('Khitwa.services', [])
 .factory('User', function($http, $window, $location) {
     var signin = function (user) {
