@@ -7,7 +7,7 @@
 <a class="button button-large button-outline button-balanced" href="#/loginOrg">Organization</a>
 </div>
   <div class="form">
-    <p style="color:red;">{{res.data}}</p><br>
+    <p style="color:red;">{{res.fail.data}}</p><br>
     <form class="login-form">
       <input type="text" placeholder="username" ng-model="user.username"/>
       <input type="password" placeholder="password" ng-model="user.password"/>

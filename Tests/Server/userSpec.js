@@ -157,6 +157,7 @@ describe('User Test Database', function (done) {
 				.end(function (err, res) {
 					expect(err).to.be.equal(null);
 					expect(res.status).to.be.equal(201);
+					expect(res.text).to.be.equal('Please Check Your Email for Activation Link');
 					done();
 				});
 		});

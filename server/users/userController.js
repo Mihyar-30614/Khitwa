@@ -64,7 +64,7 @@ module.exports = {
 								var user = jwt.encode(saved,'secret');
 								var body = helpers.activateTemplate(saved.firstName, saved.lastName, user);
 								helpers.email(saved.email, 'Account Activation', body, function () {
-									res.status(201).send('User Created');
+									res.status(201).send('Please Check Your Email for Activation Link');
 								});
 							}else{
 								helpers.errorHandler(error, req, res);

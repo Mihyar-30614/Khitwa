@@ -7,15 +7,17 @@
 <a class="button button-large button-outline button-balanced" href="#/signupOrg">Organization</a>
 </div>
   <div class="form">
+  <p style="color:red;">{{res.fail.data}}</p>
+  <p style="color:green;">{{res.success.data}}</p><br>
     <form>
-      <input type="text" placeholder="username"/>
-      <input type="password" placeholder="password"/>
-      <input type="password" placeholder="confirm password"/>
-      <input type="text" placeholder="email address"/>
-      <input type="text" placeholder="first name"/>
-      <input type="text" placeholder="last name"/>
-      <input type="date" placeholder="date of birth"/>
-      <button class="icon icon-left ion-clipboard"> Create</button>
+      <input type="text" placeholder="username" ng-model="newUser.username"/>
+      <input type="password" placeholder="password" ng-model="newUser.password"/>
+      <input type="password" placeholder="confirm password" ng-model="newUser.confirm"/>
+      <input type="text" placeholder="email address" ng-model="newUser.email"/>
+      <input type="text" placeholder="first name" ng-model="newUser.firstName"/>
+      <input type="text" placeholder="last name" ng-model="newUser.lastName"/>
+      <input type="date" placeholder="date of birth" ng-model="dateOfBirth"/>
+      <button class="icon icon-left ion-clipboard" ng-click="signup()"> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
   </div>

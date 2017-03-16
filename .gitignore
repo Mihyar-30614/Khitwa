@@ -9,3 +9,4 @@ www/lib
 db/
 npm-debug.log
 coverage/
+resources/
