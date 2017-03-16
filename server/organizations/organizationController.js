@@ -9,34 +9,29 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		Organization.findOne({name: req.body.name})
+		var username = req.body.username.toLowerCase();
+		var email = req.body.email.toLowerCase();
+
+		Organization.findOne({username: username})
 		.exec( function (error, found){
 			if (found) {
-				helpers.errorHandler('Name Already Exists', req, res);
+				helpers.errorHandler('Username Already Exists', req, res);
 			}else {
-				Organization.findOne({email:req.body.email})
+				Organization.findOne({email:email})
 				.exec(function (error, org) {
 					if (org) {
 						helpers.errorHandler('Email Already Used', req, res);
 					} else {				
 						var newOrg = Organization({
-							name : req.body.name,
+							username : username,
 							password : req.body.password,
-							causes_area : req.body.causes_area,
-							locations : req.body.locations,
-							missionStatement : req.body.missionStatement,
-							email : req.body.email,
-							contactInfo : req.body.contactInfo,
-							rate : req.body.rate,
-							picture : req.body.picture,
-							currentOpportunities : req.body.currentOpportunities,
-							pastOpportunities : req.body.pastOpportunities
+							email : email
 						});
 
 						newOrg.save( function (error, saved){
 							if (saved) {
 								var org = jwt.encode(saved, 'secret');
-								var body = helpers.activateTemplate(saved.name, '', org, 'organization');
+								var body = helpers.activateTemplate(saved.username, '', org, 'organization');
 								helpers.email(saved.email, 'Account Activation', body, function () {
 									res.status(201).send('Organization Created');
 								})
@@ -50,10 +45,10 @@ module.exports = {
 
 	signin : function (req, res) {
 
-		var name =  req.body.name;
+		var username =  req.body.username.toLowerCase();
 		var password = req.body.password;
 
-		Organization.findOne({name : name})
+		Organization.findOne({username : username})
 		.exec(function (error, organization) {
 			if (organization) {
 				if (organization.active) {	
@@ -61,7 +56,7 @@ module.exports = {
 						if (found) {
 							var token = jwt.encode(organization,'secret');
 							res.setHeader('x-access-token',token);
-							res.json({ token : token, name : organization.name });
+							res.json({ token : token, username : organization.username });
 						}
 					})
 				} else {
@@ -80,7 +75,7 @@ module.exports = {
 			helpers.errorHandler('Please Sign In', req, res);
 		}else{
 			var organization = jwt.decode(token,'secret');
-			Organization.findOne({name : organization.name})
+			Organization.findOne({username : organization.username})
 			.exec(function (error, org) {
 				if(org && org.active){
 					res.status(200).send('Authorized');
@@ -93,7 +88,9 @@ module.exports = {
 
 	getByName : function (req, res) {
 
-		Organization.findOne({ name: req.params.name})
+		var username = req.params.username.toLowerCase();
+
+		Organization.findOne({ username: username})
 		.exec(function (error, organization) {
 			if (organization) {
 				res.status(200).send(organization);
@@ -121,7 +118,7 @@ module.exports = {
 		} else {
 			var org = jwt.decode(token,'secret');
 
-			Organization.findOne({ name: org.name})
+			Organization.findOne({ username: org.username})
 			.exec( function (error, organization){
 
 		        organization.causes_area = req.body.causes_area || organization.causes_area;
@@ -157,12 +154,12 @@ module.exports = {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			org = jwt.decode(token, 'secret');
-			Organization.findOne({name : org.name})
+			Organization.findOne({username : org.username})
 			.exec(function (error, orga) {
 				if (orga) {
 					Organization.comparePassword(password, orga.password, res, function (found) {
 						if (found) {
-							Organization.findOne({ name: org.name}).remove()
+							Organization.findOne({ username: org.username}).remove()
 							.exec(function (error, organization){
 								if(organization.result.n){
 									res.status(201).send('Organization Deleted');
@@ -182,18 +179,18 @@ module.exports = {
 	awardCertificate : function (req, res) {
 		
 		var token = req.headers['x-access-token'];
-		var username = req.params.id;
+		var username = req.params.id.toLowerCase();
 
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 			var organization = jwt.decode(token, 'secret');
-			Organization.findOne({ name : organization.name })
+			Organization.findOne({ username : organization.username })
 			.exec(function (error, org) {
 				if (org) {
-					if (org.name === organization.name) {
+					if (org.username === organization.username) {
 						var award = {
-							organization : org.name,
+							organization : org.username,
 							opporutnity : req.body.opporutnity,
 							opening : req.body.opening,
 							startDate : req.body.startDate,
@@ -231,7 +228,7 @@ module.exports = {
 		
 		var token = jwt.decode(req.params.token, 'secret');
 
-		Organization.findOne({name : token.name})
+		Organization.findOne({username : token.username})
 		.exec(function (error, organization) {
 			if (organization) {
 				organization.active = true;
@@ -253,7 +250,7 @@ module.exports = {
 			if (organization) {
 					crypto.randomBytes(20, function(err, buf) {
 		        		var token = buf.toString('hex');
-						var body = helpers.pwdResetTemplate(organization.name, '', token, 'organization');
+						var body = helpers.pwdResetTemplate(organization.username, '', token, 'organization');
 						helpers.email('eng.mihyear@gmail.com', 'Password Reset', body, function () {
 							organization.pwdResetToken = token;
 							organization.pwdResetExpire = Date.now() + 36000000;
