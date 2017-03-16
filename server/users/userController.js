@@ -9,10 +9,10 @@ module.exports = {
 
 	signin: function (req, res) {
 
-		var username = req.body.username;
+		var username = req.body.username.toLowerCase();
 		var password = req.body.password;
 
-		User.findOne({username : username})
+		User.findOne({$or:[{username : username}, {email: username}]})
 		.exec(function (error, user){
 			if (user) {
 				if (user.active) {				
@@ -34,30 +34,26 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		var username = req.body.username;
+		var username = req.body.username.toLowerCase();
+		var email = req.body.email.toLowerCase();
 
 		User.findOne({ username : username})
 		.exec(function(error, user){
 			if (user) {
 				helpers.errorHandler('Account Already exists', req, res);
 			}else{
-				User.findOne({email:req.body.email})
+				User.findOne({email:email})
 				.exec(function (error, usr) {
 					if (usr) {
 						helpers.errorHandler('Email Already Used',req, res);
 					} else {				
 						var newUser = new User({
-							username : req.body.username,
+							username : username,
 							password : req.body.password,
 							firstName : req.body.firstName,
 							lastName : req.body.lastName,
-							email : req.body.email,
-							dateOfBirth : req.body.dateOfBirth,
-							gender : req.body.gender,
-							phoneNumber : req.body.phoneNumber,
-							skills : req.body.skills,
-							causes : req.body.causes,
-							picture : req.body.picture
+							email : email,
+							dateOfBirth : req.body.dateOfBirth
 						});
 						newUser.save(function (error ,saved) {
 							if (saved) {
@@ -95,8 +91,8 @@ module.exports = {
 	},
 
 	getUser : function (req, res){
-
-		User.findOne({ username: req.params.username})
+		var username = req.params.username.toLowerCase();
+		User.findOne({ username: username})
 		.exec(function (error, user) {
 			if (user) {
 				res.status(200).send(user)
