@@ -23,7 +23,7 @@ module.exports = function(app, express){
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.signup);
 	app.post('/api/organization/signin', organizationController.signin);
-	app.get('/api/organization/getByName/:name', organizationController.getByName);
+	app.get('/api/organization/getByName/:username', organizationController.getByName);
 	app.get('/api/organization/all', organizationController.getAll);
 	app.post('/api/organization/edit', organizationController.editProfile);
 	app.post('/api/organization/delete', organizationController.deleteOrganization);
