@@ -28,9 +28,9 @@ module.exports = {
 			helpers.errorHandler('Please Sign In', req, res);
 		}else{
 			var organization = jwt.decode(token,'secret');
-			var organizer = organization.name;
+			var organizer = organization.username;
 
-			Organization.findOne({name : organizer})
+			Organization.findOne({username : organizer})
 			.exec(function (error, org) {
 				if (org) {
 					Organization.comparePassword(password, org.password, res, function (found) {
@@ -80,7 +80,7 @@ module.exports = {
 			var id = req.params.id;
 			var password = req.body.password;
 
-			Organization.findOne({name : organization.name})
+			Organization.findOne({username : organization.username})
 			.exec(function (error, org) {
 				if (org) {
 					Organization.comparePassword(password, org.password, res, function (match) {
@@ -88,7 +88,7 @@ module.exports = {
 							Opportunity.findOne({_id : id})
 							.exec(function (error, opp) {
 								if (opp) {
-									if (opp._organizer === organization.name) {
+									if (opp._organizer === organization.username) {
 											opp.status = 'Closed';
 											opp.save(function (error, saved) {
 												if (saved) {								
@@ -134,13 +134,13 @@ module.exports = {
 			var password = req.body.password;
 			var org = jwt.decode(token,'secret');
 
-			Organization.findOne({name : org.name})
+			Organization.findOne({username : org.username})
 			.exec(function (error, organization) {
 				if (organization) {
 					Opportunity.findOne({_id : id})
 					.exec(function (error, opportunity) {
 						if (opportunity) {
-							if (opportunity._organizer === org.name) {
+							if (opportunity._organizer === org.username) {
 								Organization.comparePassword(password, organization.password, res, function (match) {
 									if (match) {
 										opportunity.status = 'Active';
@@ -187,7 +187,7 @@ module.exports = {
 			.exec(function (error, opportunity) {
 				if (opportunity) {
 					orgna = jwt.decode(token,'secret');
-					if (opportunity._organizer === orgna.name) {
+					if (opportunity._organizer === orgna.username) {
 						opportunity.title = req.body.title || opportunity.title;
 	  					opportunity.startDate = req.body.startDate || opportunity.startDate;
 	  					opportunity.endDate = req.body.endDate || opportunity.endDate;
@@ -284,7 +284,7 @@ module.exports = {
 		} else {
 
 			var org = jwt.decode(token, 'secret');
-			Organization.findOne({name : org.name})
+			Organization.findOne({username : org.username})
 			.exec(function (error, organization) {
 				if (organization) {
 					Organization.comparePassword(password, organization.password, res, function (found) {

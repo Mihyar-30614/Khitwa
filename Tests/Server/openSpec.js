@@ -7,8 +7,8 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
-var userToken ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGExZjRhYTg0MWFkZjEzNjQyMDBjNWMiLCJzYWx0IjoiJDJhJDEwJHpqUllFcVJiZGozUVhiUHRmUUEudy4iLCJ1c2VybmFtZSI6Ik1paHlhcjMiLCJwYXNzd29yZCI6IiQyYSQxMCR6alJZRXFSYmRqM1FYYlB0ZlFBLncuUktxL29PVTByeG9CYTJ2eWpvOXRyTmxCMnJRclFQdSIsImZpcnN0TmFtZSI6Ik1paHlhciIsImxhc3ROYW1lIjoiQWxtYXNhbG1hIiwiZW1haWwiOiJtaWh5YXJAa2hpdHdhLm9yZyIsImRhdGVPZkJpcnRoIjoiMDgtbWFyLTE5ODkiLCJnZW5kZXIiOiJNYWxlIiwicGhvbmVOdW1iZXIiOiIyMDQ0MDU1NzA3IiwiX192IjowLCJjYXVzZXMiOlsiTWVkaWNhbCJdLCJza2lsbHMiOlsiRW5nbGlzaCIsIkNvZGluZyJdfQ.3-EVxcLqJwbpiuuXnXrESnFYI05ItS2OERF36e-3kmY';
+var token =  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhZTJlNzMwZmY1YTFjYTBmMTBmNDYiLCJzYWx0IjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGUiLCJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsInBhc3N3b3JkIjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGVPLkpjWTNkdjNCcGxRUEt3STFwT1ZVYTBkenpkLmJ1IiwiZW1haWwiOiJraGl0d2FAa2hpdHdhLm9yZyIsIm1pc3Npb25TdGF0ZW1lbnQiOiJBIHN0ZXAgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbiIsImNvbnRhY3RJbmZvIjoiU29tZSBJbmZvIGFib3V0IHRoZSBvcmdhbml6YXRpb24iLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicGFzdE9wcG9ydHVuaXRpZXMiOltdLCJjdXJyZW50T3Bwb3J0dW5pdGllcyI6W10sInJhdGUiOjAsInJhdGVycyI6W10sImxvY2F0aW9ucyI6WyJDYW5hZGEiXSwiY2F1c2VzX2FyZWEiOltdfQ.OuhPydHXueLxSuXMDIkkeXpOzuXXo5k95ARCyxri38E';
+var userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNWYiLCJzYWx0IjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy4iLCJ1c2VybmFtZSI6Im1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy5zUURGS3FOVHJnMUoxTE9vSGhHdVkvWE1xLlpqbmRPIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmF0ZSI6MCwiYXdhcmRzIjpbeyJvcmdhbml6YXRpb24iOiJLaGl0d2EiLCJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNjAifV0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.xNjjVfsOCh4DmPB7oIIWxxpkh67Xykfukv_3O4V6quw';
 var User = require('../../server/users/userModel');
 var Organization = require('../../server/organizations/organizationModel');
 var Opportunity = require('../../server/opportunities/opportunityModel');
@@ -20,22 +20,22 @@ describe('Openings DataBase', function (done) {
 	Organization.collection.drop();
 	Opportunity.collection.drop();
 	Opening.collection.drop();
+	User.collection.drop();
 
 	beforeEach(function (done) {
-		var newUser = new User({
-			"username":"Mihyar3",
-			"password":"1234",
-			"firstName":"Mihyar",
-			"lastName":"Almasalma",
-			"email":"mihyar@khitwa.org",
-			"dateOfBirth":"08-mar-1989",
-			"gender":"Male",
-			"phoneNumber":"2044055707",
-			"skills":["English","Coding"]
+		var newUser = new User ({
+			'username':'mihyar',
+			'password':'1234',
+			'firstName':'Mihyar',
+			'lastName':'Almasalma',
+			'email':'mihyar@khitwa.org',
+			'dateOfBirth':'08-mar-1989',
+			'awards':[{"organization":"Khitwa"}],
+			'active' : true
 		})
 		newUser.save();
 		var newOrg = new Organization({
-			'name':'KhitwaOrg',
+			'username':'khitwaorg',
 			'password':'1234',
 			'cause_area':'volunteering',
 			'locations':'Canada',
@@ -45,7 +45,7 @@ describe('Openings DataBase', function (done) {
 		newOrg.save(function (error, orgsaved) {
 			var newOpp = new Opportunity({
 				"title":"AHR",
-				"_organizer":orgsaved.name,
+				"_organizer":orgsaved.username,
 				"startDate":"25-NOV-2016",
 				"endDate":"26-NOV-2016",
 				"location":"Halifax",
@@ -56,7 +56,7 @@ describe('Openings DataBase', function (done) {
 				newOpen = new Opening({
 					"title":"First Opening",
 					"_opportunity":oppsaved._id,
-					"_organizer" : newOrg.name,
+					"_organizer" : newOrg.username,
 					"numberOfVolunteers":1,
 					"location":"Jordan",
 					"description":"This is the first opening in this website",
@@ -78,6 +78,7 @@ describe('Openings DataBase', function (done) {
 		Organization.collection.drop();
 		Opportunity.collection.drop();
 		Opening.collection.drop();
+		User.collection.drop();
 		done();
 	});
 

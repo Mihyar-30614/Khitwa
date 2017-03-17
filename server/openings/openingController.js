@@ -21,7 +21,7 @@ module.exports = {
 			var newOpening = new Opening({
 				title : req.body.title,
 				_opportunity : opportunityId,
-				_organizer : organization.name,
+				_organizer : organization.username,
 				numberOfVolunteers : req.body.numberOfVolunteers,
 				location : req.body.location,
 				description : req.body.description,
@@ -30,13 +30,13 @@ module.exports = {
 				status : req.body.status
 			})
 
-	    	Organization.findOne({name : organization.name})
+	    	Organization.findOne({username : organization.username})
 	    	.exec(function (error, org) {
 	      		if (org) {
 		      		Opportunity.findOne({_id : opportunityId})
 		      		.exec(function (error, opp) {
 		      			if (opp) {
-		      				if (org.name === opp._organizer) {
+		      				if (org.username === opp._organizer) {
 		      					newOpening.save(function (error, saved) {
 		      						if (saved) {
 		      							opp.currOpenings.push(saved._id);
@@ -90,7 +90,7 @@ module.exports = {
 					Opportunity.findOne({_id : opening._opportunity})
 					.exec(function (error, opportunity) {
 						if (opportunity) {
-							if (opportunity._organizer === org.name) {
+							if (opportunity._organizer === org.username) {
 								var index = opportunity.currOpenings.indexOf(id);
 								if (index > -1) {
 									opportunity.currOpenings.splice(index, 1);
@@ -177,7 +177,7 @@ module.exports = {
 	    	Opening.findOne({ _id : id })
 	    	.exec(function (error, opening) {
 		        if (opening) {
-	    			if (opening._organizer === organization.name) {
+	    			if (opening._organizer === organization.username) {
 						opening.title = req.body.title || opening.title;
 						opening.numberOfVolunteers = req.body.numberOfVolunteers || opening.numberOfVolunteers;
 						opening.location = req.body.location || opening.location;
@@ -254,13 +254,13 @@ module.exports = {
     		helpers.errorHandler('Please Sign In', req, res);
     	} else {
     		var user = jwt.decode(token,'secret');
-    		Organization.findOne({ name : user.name})
+    		Organization.findOne({ username : user.username})
     		.exec(function (error, org) {
         		if (org) {
           			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-            				if (opening._organizer === user.name && opening.status === 'Active') {
+            				if (opening._organizer === user.username && opening.status === 'Active') {
             					if (opening.numberOfVolunteers> opening.volunteers.length) {
 									var index = opening.pendingApps.indexOf(appName);
 									var index2 = opening.rejectedApps.indexOf(appName);
@@ -322,13 +322,13 @@ module.exports = {
     		helpers.errorHandler('Please Sign In', req, res);
     	} else {
     		var user = jwt.decode(token,'secret');
-    		Organization.findOne({ name : user.name})
+    		Organization.findOne({ username : user.username})
     		.exec(function (error, org) {
         		if (org) {
         			Opening.findOne({ _id : openingId })
         			.exec(function (error, opening) {
             			if (opening) {
-            				if (opening._organizer === user.name) {
+            				if (opening._organizer === user.username) {
 	            				var index = opening.pendingApps.indexOf(appName);
 	            				var index2 = opening.volunteers.indexOf(appName);
 	            				if (index>-1) {
@@ -390,7 +390,7 @@ module.exports = {
 	    			Opportunity.findOne({_id : oppID})
 	    			.exec(function (error, opportunity) {
 	    				if (opportunity) {
-	    					if (opportunity._organizer === org.name) {
+	    					if (opportunity._organizer === org.username) {
 	    						var index = opportunity.closedOpenings.indexOf(id);
 	    						if (index > -1) {
 	    							opportunity.closedOpenings.splice(index,1);

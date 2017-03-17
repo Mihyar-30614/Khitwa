@@ -7,7 +7,7 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1ODgwM2MwYWEyOGVjYzFlMjBlYjMyZDgiLCJzYWx0IjoiJDJhJDEwJDlYbGVVOGRoN0F1YURVUTJpeW1XUC4iLCJuYW1lIjoiS2hpdHdhT3JnIiwicGFzc3dvcmQiOiIkMmEkMTAkOVhsZVU4ZGg3QXVhRFVRMml5bVdQLnh2eElHMjIxU0dvT1Q0aXVBbExTZkFCdVB4eU5xaGkiLCJtaXNzaW9uU3RhdGVtZW50IjoiQSBzdGVwIGluIHRoZSByaWdodCBkaXJlY3Rpb24iLCJjb250YWN0SW5mbyI6IktoaXR3YUBraGl0d2Eub3JnIiwiX192IjowLCJwYXN0T3Bwb3J0dW5pdGllcyI6W10sImN1cnJlbnRPcHBvcnR1bml0aWVzIjpbXSwibG9jYXRpb25zIjpbIkNhbmFkYSJdLCJjYXVzZXNfYXJlYSI6W119.A1L5jsFf-_PnhogaUYwQUlJFwHm0pmZr4uS4A2-_zxg';
+var token =  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhZTJlNzMwZmY1YTFjYTBmMTBmNDYiLCJzYWx0IjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGUiLCJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsInBhc3N3b3JkIjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGVPLkpjWTNkdjNCcGxRUEt3STFwT1ZVYTBkenpkLmJ1IiwiZW1haWwiOiJraGl0d2FAa2hpdHdhLm9yZyIsIm1pc3Npb25TdGF0ZW1lbnQiOiJBIHN0ZXAgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbiIsImNvbnRhY3RJbmZvIjoiU29tZSBJbmZvIGFib3V0IHRoZSBvcmdhbml6YXRpb24iLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicGFzdE9wcG9ydHVuaXRpZXMiOltdLCJjdXJyZW50T3Bwb3J0dW5pdGllcyI6W10sInJhdGUiOjAsInJhdGVycyI6W10sImxvY2F0aW9ucyI6WyJDYW5hZGEiXSwiY2F1c2VzX2FyZWEiOltdfQ.OuhPydHXueLxSuXMDIkkeXpOzuXXo5k95ARCyxri38E';
 var Organization = require('../../server/organizations/organizationModel');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
@@ -21,7 +21,7 @@ describe('Opportunity Test DataBase', function (done) {
 
 	beforeEach(function (done) {
 		var newOrg = new Organization({
-			'name':'KhitwaOrg',
+			'username':'khitwaorg',
 			'password':'1234',
 			'cause_area':'volunteering',
 			'locations':'Canada',
@@ -31,7 +31,7 @@ describe('Opportunity Test DataBase', function (done) {
 		newOrg.save(function (error, orgsaved) {
 			var newOpp = new Opportunity({
 				"title":"AHR",
-				"_organizer":orgsaved.name,
+				"_organizer":orgsaved.username,
 				"startDate":"25-NOV-2016",
 				"endDate":"26-NOV-2016",
 				"location":"Halifax",
@@ -473,10 +473,10 @@ describe('Opportunity Test DataBase', function (done) {
 
 		it('Should return Opportunity', function (done) {
 			chai.request(server)
-				.get('/api/opportunity/organization/KhitwaOrg')
+				.get('/api/opportunity/organization/khitwaorg')
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(200);
-					expect(res.body[0]._organizer).to.be.equal('KhitwaOrg');
+					expect(res.body[0]._organizer).to.be.equal('khitwaorg');
 					done();
 				});
 		});
