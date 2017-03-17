@@ -48,7 +48,7 @@ module.exports = {
 		var username =  req.body.username.toLowerCase();
 		var password = req.body.password;
 
-		Organization.findOne({username : username})
+		Organization.findOne({$or:[{username : username},{email:username}]})
 		.exec(function (error, organization) {
 			if (organization) {
 				if (organization.active) {	
