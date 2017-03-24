@@ -34,11 +34,11 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		var username = req.body.username.trim();
-		var email = req.body.email.trim();
-		var password = req.body.password.trim();
-		var firstName = req.body.firstName.trim();
-		var lastName = req.body.lastName.trim();
+		var username = req.body.username === undefined? '' : req.body.username.trim();
+		var email = req.body.email === undefined? '' : req.body.email.trim();
+		var password = req.body.password === undefined? '' : req.body.password.trim();
+		var firstName = req.body.firstName === undefined? '' : req.body.firstName.trim();
+		var lastName = req.body.lastName === undefined? '' : req.body.lastName.trim();
 
 		if (username == '' || password == '' || email == '' || firstName == '' || lastName == '') {
 			helpers.errorHandler('Required Feild Missing', req, res);
