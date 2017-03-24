@@ -19,7 +19,7 @@ describe('User Test Database', function (done) {
 
 	beforeEach(function(done) {
 		var newOrg = new Organization({
-			'name':'KhitwaOrg',
+			'username':'KhitwaOrg',
 			'password':'1234',
 			'cause_area':'volunteering',
 			'locations':'Canada',
@@ -28,7 +28,7 @@ describe('User Test Database', function (done) {
 		})
 		newOrg.save();
 		var newOrg2 = new Organization({
-			'name':'Khitwa',
+			'username':'Khitwa',
 			'password':'1234',
 			'cause_area':'volunteering',
 			'locations':'Canada',
@@ -43,10 +43,10 @@ describe('User Test Database', function (done) {
 			'lastName':'Almasalma',
 			'email':'mihyar@khitwa.org',
 			'dateOfBirth':'08-mar-1989',
-			'awards':[{"organization":"Khitwa"}],
+			'awards':[{"organization":"khitwa"}],
 			'active' : true
 		})
-		newUser.save(function (err, savedUSer) {
+		newUser.save(function (err, savedUser) {
 			done();
 		});
 	});
@@ -112,24 +112,6 @@ describe('User Test Database', function (done) {
 		it('Should have a method called signup', function (done) {
 			expect(typeof userController.signup).to.be.equal('function');
 			done();
-		});
-
-		it('Should return 500 ERROR if username already exists', function (done) {
-			chai.request(server)
-				.post('/api/user/signup')
-				.send({
-					'username':'Mihyar',
-					'password':'1234',
-					'firstName':'Mihyar',
-					'lastName':'Almasalma',
-					'email':'mihyar2@khitwa.org',
-					'dateOfBirth':'08-mar-1989'
-				})
-				.end(function (req, res) {
-					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('Account Already exists');
-					done();
-				});
 		});
 
 		it('Should signup a new user', function (done) {
