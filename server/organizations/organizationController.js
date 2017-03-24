@@ -9,8 +9,8 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		var username = req.body.username.toLowerCase();
-		var email = req.body.email.toLowerCase();
+		var username = req.body.username.trim();
+		var email = req.body.email.trim();
 
 		Organization.findOne({username: username})
 		.exec( function (error, found){
@@ -24,7 +24,7 @@ module.exports = {
 					} else {				
 						var newOrg = Organization({
 							username : username,
-							password : req.body.password,
+							password : req.body.password.trim(),
 							email : email
 						});
 
@@ -45,8 +45,8 @@ module.exports = {
 
 	signin : function (req, res) {
 
-		var username =  req.body.username.toLowerCase();
-		var password = req.body.password;
+		var username =  req.body.username.trim();
+		var password = req.body.password.trim();
 
 		Organization.findOne({$or:[{username : username},{email:username}]})
 		.exec(function (error, organization) {
