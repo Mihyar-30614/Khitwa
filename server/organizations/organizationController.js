@@ -9,43 +9,33 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		var username = req.body.username.trim();
-		var email = req.body.email.trim();
-
-		Organization.findOne({username: username})
-		.exec( function (error, found){
-			if (found) {
-				helpers.errorHandler('Username Already Exists', req, res);
-			}else {
-				Organization.findOne({email:email})
-				.exec(function (error, org) {
-					if (org) {
-						helpers.errorHandler('Email Already Used', req, res);
-					} else {				
-						var newOrg = Organization({
-							username : username,
-							password : req.body.password.trim(),
-							email : email
-						});
-
-						newOrg.save( function (error, saved){
-							if (saved) {
-								var org = jwt.encode(saved, 'secret');
-								var body = helpers.activateTemplate(saved.username, '', org, 'organization');
-								helpers.email(saved.email, 'Account Activation', body, function () {
-									res.status(201).send('Organization Created');
-								})
-							}
-						});
-					}
-				})
-			}
-		});
+		var username = req.body.username === undefined? '' : req.body.username.trim();
+		var email = req.body.email === undefined? '' : req.body.email.trim();
+		var password = req.body.password === undefined? '' : req.body.password.trim();
+		if (username == '' || password == '' || email == '') {
+			helpers.errorHandler('Required Feild Missing', req, res);
+		} else {
+			var organization = new Organization();
+			organization.username = username;
+			organization.email = email;
+			organization.password = password;
+			organization.save(function (error, saved) {
+				if (error) {
+					helpers.errorHandler('User Already Exists', req, res);
+				} else {
+					var org = jwt.encode(saved, 'secret');
+					var body = helpers.activateTemplate(saved.username, '', org, 'organization');
+					helpers.email(saved.email, 'Account Activation', body, function () {
+						res.status(201).send('Organization Created');
+					})
+				}
+			})
+		}
 	},
 
 	signin : function (req, res) {
 
-		var username =  req.body.username.trim();
+		var username =  req.body.username.trim().toLowerCase();
 		var password = req.body.password.trim();
 
 		Organization.findOne({$or:[{username : username},{email:username}]})
