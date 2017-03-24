@@ -9,8 +9,10 @@ angular.module('Khitwa.services', [])
             data : user
         })
         .then(function (resp) {
+            console.log('resp')
             return resp;
         }).catch(function (error) {
+            console.log('This is the error')
             return error;
         })
     };

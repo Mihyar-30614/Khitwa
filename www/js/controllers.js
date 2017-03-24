@@ -5,6 +5,7 @@ angular.module('Khitwa.controllers', [])
 	$scope.newUser = {};
 	$scope.res = {};
 	$scope.signin = function () {
+		console.log('This is the function')
 		User.signin({username : $scope.user.username, password: $scope.user.password})
 		.then(function (resp) {
 			if (resp.status !== 200) {
