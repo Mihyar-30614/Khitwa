@@ -56,13 +56,13 @@ describe('Organization Test Database', function (done) {
 			done();
 		});
 
-		it('Should return 500 Name Already Exists if the name is taken', function (done) {
+		it('Should return 500 Required Feild Missing', function (done) {
 			chai.request(server)
 				.post('/api/organization/signup')
 				.send({'username':'KhitwaOrg', 'email':'something@example.com'})
 				.end(function (error, res) {
 					expect(res.status).to.be.equal(500);
-					expect(res.text).to.be.equal('Username Already Exists');
+					expect(res.text).to.be.equal('Required Feild Missing');
 					done();
 				});
 		});
