@@ -9,13 +9,13 @@ module.exports = {
 
 	signin: function (req, res) {
 
-		var username = req.body.username.toLowerCase();
-		var password = req.body.password;
+		var username = req.body.username.trim();
 
 		User.findOne({$or:[{username : username}, {email: username}]})
 		.exec(function (error, user){
 			if (user) {
 				if (user.active) {				
+					var password = req.body.password.trim();
 					User.comparePassword(password, user.password, res, function (found){
 						if (found) {
 							var token = jwt.encode(user, 'secret');
@@ -34,42 +34,34 @@ module.exports = {
 
 	signup : function (req, res) {
 
-		var username = req.body.username.toLowerCase();
-		var email = req.body.email.toLowerCase();
+		var username = req.body.username.trim();
+		var email = req.body.email.trim();
+		var password = req.body.password.trim();
+		var firstName = req.body.firstName.trim();
+		var lastName = req.body.lastName.trim();
 
-		User.findOne({ username : username})
-		.exec(function(error, user){
-			if (user) {
-				helpers.errorHandler('Account Already exists', req, res);
-			}else{
-				User.findOne({email:email})
-				.exec(function (error, usr) {
-					if (usr) {
-						helpers.errorHandler('Email Already Used',req, res);
-					} else {				
-						var newUser = new User({
-							username : username,
-							password : req.body.password,
-							firstName : req.body.firstName,
-							lastName : req.body.lastName,
-							email : email,
-							dateOfBirth : req.body.dateOfBirth
-						});
-						newUser.save(function (error ,saved) {
-							if (saved) {
-								var user = jwt.encode(saved,'secret');
-								var body = helpers.activateTemplate(saved.firstName, saved.lastName, user);
-								helpers.email(saved.email, 'Account Activation', body, function () {
-									res.status(201).send('Please Check Your Email for Activation Link');
-								});
-							}else{
-								helpers.errorHandler(error, req, res);
-							}
-						});
-					}
-				})
-			}
-		});
+		if (username == '' || password == '' || email == '' || firstName == '' || lastName == '') {
+			helpers.errorHandler('Required Feild Missing', req, res);
+		} else {
+			var user = new User();
+			user.username = username;
+			user.password = password;
+			user.email = email;
+			user.firstName = firstName;
+			user.lastName = lastName;
+			user.dateOfBirth = req.body.dateOfBirth;
+			user.save(function (error, saved) {
+				if (saved) {
+					var encoded = jwt.encode(saved,'secret');
+					var body = helpers.activateTemplate(saved.firstName, saved.lastName, encoded);
+					helpers.email(saved.email, 'Account Activation', body, function () {
+						res.status(201).send('Please Check Your Email for Activation Link');
+					});
+				} else {
+					helpers.errorHandler('User Already Exsits', req, res);
+				}
+			})
+		}
 	},
 
 	checkAuth : function (req, res) {
@@ -261,7 +253,7 @@ module.exports = {
 	rateOrganization : function (req, res) {
 		
 		var token = req.headers['x-access-token'];
-		var organization = req.params.id;
+		var organization = req.params.id.toLowerCase();
 
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
@@ -270,11 +262,11 @@ module.exports = {
 			User.findOne({ username : user.username})
 			.exec(function (error, usr) {
 				if (usr) {
-					Organization.findOne({name : organization})
+					Organization.findOne({username : organization})
 					.exec(function (error, org) {
 						if (org) {
 							var worked = usr.awards.map(function (award) {
-								if (award.organization === org.name)
+								if (award.organization === org.username)
 									return true;
 								return false;
 							}).indexOf(true);
