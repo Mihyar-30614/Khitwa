@@ -36,19 +36,23 @@ module.exports = {
 	signin : function (req, res) {
 
 		var username =  req.body.username.trim().toLowerCase();
-		var password = req.body.password.trim();
 
 		Organization.findOne({$or:[{username : username},{email:username}]})
 		.exec(function (error, organization) {
 			if (organization) {
-				if (organization.active) {	
-					Organization.comparePassword(password, organization.password, res, function (found) {
-						if (found) {
-							var token = jwt.encode(organization,'secret');
-							res.setHeader('x-access-token',token);
-							res.json({ token : token, username : organization.username });
-						}
-					})
+				if (organization.active) {
+					if (req.body.password) {
+						var password = req.body.password.trim();
+						Organization.comparePassword(password, organization.password, res, function (found) {
+							if (found) {
+								var token = jwt.encode(organization,'secret');
+								res.setHeader('x-access-token',token);
+								res.json({ token : token, username : organization.username });
+							}
+						})
+					} else {
+						helpers.errorHandler('Password Not Provided', req, res);
+					}
 				} else {
 					helpers.errorHandler('Please Activate Your Account', req, res);
 				}
