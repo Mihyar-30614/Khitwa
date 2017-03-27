@@ -3,7 +3,7 @@ var Opening = require('../openings/openingModel.js');
 var Organization = require('../organizations/organizationModel.js');
 var Q = require('q');
 var helpers = require('../config/helpers.js');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 
 module.exports = {
 	
