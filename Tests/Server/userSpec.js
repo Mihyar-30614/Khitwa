@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 var Organization = require('../../server/organizations/organizationModel');
 var User = require('../../server/users/userModel');
 var userController = require('../../server/users/userController');
-var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNWYiLCJzYWx0IjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy4iLCJ1c2VybmFtZSI6Im1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy5zUURGS3FOVHJnMUoxTE9vSGhHdVkvWE1xLlpqbmRPIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmF0ZSI6MCwiYXdhcmRzIjpbeyJvcmdhbml6YXRpb24iOiJLaGl0d2EiLCJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNjAifV0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.xNjjVfsOCh4DmPB7oIIWxxpkh67Xykfukv_3O4V6quw';
+var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1paHlhciIsImVtYWlsIjoibWloeWFyQGtoaXR3YS5vcmciLCJfaWQiOiI1OGQ4ODIwYTNiZjg4NTAzODA5ODhmYjYiLCJpYXQiOjE0OTA1ODQwNzUsImV4cCI6MTQ5MDU5ODQ3NX0.86DlaP-o8CcBGjf7W0XMy49Zj21o_4nTTe3zAl3_3yY';
 
 describe('User Test Database', function (done) {
 	
@@ -88,7 +88,6 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(res.body.token).to.not.equal(undefined);
 					expect(res.body).to.have.property('token');
-					expect(res.body).to.have.property('username');
 					done();
 				});
 		});
