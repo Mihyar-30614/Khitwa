@@ -1,9 +1,10 @@
 var Organization = require('./organizationModel.js');
 var User = require('../users/userModel.js');
 var Q = require('q');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 var helpers = require('../config/helpers.js');
 var crypto = require('crypto');
+var secret = 'what lies beneath the sea';
 
 module.exports = {
 
@@ -23,7 +24,7 @@ module.exports = {
 				if (error) {
 					helpers.errorHandler('User Already Exists', req, res);
 				} else {
-					var org = jwt.encode(saved, 'secret');
+					var org = jwt.sign({username : saved.username}, secret);
 					var body = helpers.activateTemplate(saved.username, '', org, 'organization');
 					helpers.email(saved.email, 'Account Activation', body, function () {
 						res.status(201).send('Organization Created');
@@ -37,7 +38,7 @@ module.exports = {
 
 		var username =  req.body.username.trim().toLowerCase();
 
-		Organization.findOne({$or:[{username : username},{email:username}]})
+		Organization.findOne({$or:[{username : username},{email:username}]}).select('username password email active')
 		.exec(function (error, organization) {
 			if (organization) {
 				if (organization.active) {
@@ -45,9 +46,9 @@ module.exports = {
 						var password = req.body.password.trim();
 						Organization.comparePassword(password, organization.password, res, function (found) {
 							if (found) {
-								var token = jwt.encode(organization,'secret');
+								var token = jwt.sign({ username : organization.username, email : organization.email, _id : organization._id }, secret, {expiresIn : '4h'});
 								res.setHeader('x-access-token',token);
-								res.json({ token : token, username : organization.username });
+								res.json({ token : token });
 							}
 						})
 					} else {
@@ -68,7 +69,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		}else{
-			var organization = jwt.decode(token,'secret');
+			var organization = jwt.verify(token,secret);
 			Organization.findOne({username : organization.username})
 			.exec(function (error, org) {
 				if(org && org.active){
@@ -96,7 +97,7 @@ module.exports = {
 
 	getAll : function (req, res) {
 
-		Organization.find({})
+		Organization.find({}).select('username email title causes_area locations contactInfo rate logo currentOpportunities')
 		.exec( function (error, organization){
 			if (organization) {
 				res.status(200).send(organization);
@@ -110,7 +111,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
-			var org = jwt.decode(token,'secret');
+			var org = jwt.verify(token,secret);
 
 			Organization.findOne({ username: org.username})
 			.exec( function (error, organization){
@@ -147,7 +148,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
-			org = jwt.decode(token, 'secret');
+			org = jwt.verify(token, secret);
 			Organization.findOne({username : org.username})
 			.exec(function (error, orga) {
 				if (orga) {
@@ -178,7 +179,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
-			var organization = jwt.decode(token, 'secret');
+			var organization = jwt.verify(token, secret);
 			Organization.findOne({ username : organization.username })
 			.exec(function (error, org) {
 				if (org) {
@@ -220,7 +221,7 @@ module.exports = {
 
 	activate : function (req, res) {
 		
-		var token = jwt.decode(req.params.token, 'secret');
+		var token = jwt.verify(req.params.token, secret);
 
 		Organization.findOne({username : token.username})
 		.exec(function (error, organization) {
