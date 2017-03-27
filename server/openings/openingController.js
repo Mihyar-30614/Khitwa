@@ -5,7 +5,7 @@ var User = require('../users/userModel.js');
 
 var helpers = require('../config/helpers.js');
 var Q = require('q');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 
 module.exports = {
 
