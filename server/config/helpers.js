@@ -1,4 +1,4 @@
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 var api_key = 'key-83b88bc4b1957e691b530003038803fc';
 var domain = 'khitwa.org';
 var domainTest = 'sandbox0a8b4d2d75ba45e29cdbcf36dde592d8.mailgun.org';
