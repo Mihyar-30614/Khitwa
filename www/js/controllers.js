@@ -1,7 +1,7 @@
 angular.module('Khitwa.controllers', [])
 
-.controller('UserController', function($scope, User, $window, $location) {
-	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false; 
+.controller('UserController', function($scope, User, $window, $location, $timeout) {
+	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$scope.res = {};
 	$scope.signin = function (data) {
 		User.signin({username : data.username, password: data.password})
@@ -25,16 +25,22 @@ angular.module('Khitwa.controllers', [])
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	};
 	$scope.signup = function (regData) {
+		$scope.loading = true; 
 		if (regData.password !== regData.confirm) {
 			$scope.res.fail = {data : "Password Doesn't match"}
 		} else {
 			User.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
+					$scope.loading = false;
 					$scope.res.fail = resp;
 				} else {
+					$scope.loading = false;
 					$scope.res = {};
 					$scope.res.success = resp;
+					$timeout(function () {
+						$location.path('/main');
+					},2000);
 				}
 			})
 		}
@@ -48,7 +54,6 @@ angular.module('Khitwa.controllers', [])
 		Organization.signin({username : data.username, password : data.password})
 		.then(function (resp) {
 			if (resp.status !== 200) {
-				console.log(resp)
 				$scope.res.fail = resp;
 			} else {
 				$window.localStorage.setItem('com.khitwa',resp.data.token);

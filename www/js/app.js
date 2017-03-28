@@ -1,6 +1,7 @@
 var app = angular.module('Khitwa', [
     'ionic',
     'ionic-material',
+    'ngAnimate',
     'Khitwa.controllers', 
     'Khitwa.services',
     'ui.router'
