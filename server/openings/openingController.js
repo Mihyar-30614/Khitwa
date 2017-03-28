@@ -6,6 +6,7 @@ var User = require('../users/userModel.js');
 var helpers = require('../config/helpers.js');
 var Q = require('q');
 var jwt = require('jsonwebtoken');
+var secret = 'what lies beneath the sea';
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
 	    } else {
 
 	    	var opportunityId = req.params.id;
-	    	var organization = jwt.decode(token,'secret');
+	    	var organization = jwt.verify(token,secret);
 			var newOpening = new Opening({
 				title : req.body.title,
 				_opportunity : opportunityId,
@@ -82,7 +83,7 @@ module.exports = {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
 
-			var org = jwt.decode(token, 'secret');
+			var org = jwt.verify(token, secret);
 
 			Opening.findOne({_id : id})
 			.exec(function (error, opening) {
@@ -173,7 +174,7 @@ module.exports = {
 	    if (!token) {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
-	    	var organization = jwt.decode(token, 'secret');
+	    	var organization = jwt.verify(token, secret);
 	    	Opening.findOne({ _id : id })
 	    	.exec(function (error, opening) {
 		        if (opening) {
@@ -208,7 +209,7 @@ module.exports = {
 	    if (!token) {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
-	    	var user = jwt.decode(token,'secret');
+	    	var user = jwt.verify(token,secret);
 	    	User.findOne({username : user.username})
 	    	.exec(function (error, usr) {
 	        	if (usr) {
@@ -253,7 +254,7 @@ module.exports = {
     	if (!token) {
     		helpers.errorHandler('Please Sign In', req, res);
     	} else {
-    		var user = jwt.decode(token,'secret');
+    		var user = jwt.verify(token,secret);
     		Organization.findOne({ username : user.username})
     		.exec(function (error, org) {
         		if (org) {
@@ -321,7 +322,7 @@ module.exports = {
     	if (!token) {
     		helpers.errorHandler('Please Sign In', req, res);
     	} else {
-    		var user = jwt.decode(token,'secret');
+    		var user = jwt.verify(token,secret);
     		Organization.findOne({ username : user.username})
     		.exec(function (error, org) {
         		if (org) {
@@ -380,7 +381,7 @@ module.exports = {
 	    	helpers.errorHandler('Please Sign In', req, res);
 	    } else {
 
-	    	var org = jwt.decode(token, 'secret');
+	    	var org = jwt.verify(token, secret);
 	    	
 	    	Opening.findOne({_id : id})
 	    	.exec(function (error, opening) {
