@@ -9,10 +9,8 @@ angular.module('Khitwa.services', [])
             data : user
         })
         .then(function (resp) {
-            console.log('resp')
             return resp;
         }).catch(function (error) {
-            console.log('This is the error')
             return error;
         })
     };
@@ -27,11 +25,6 @@ angular.module('Khitwa.services', [])
         }).catch(function (error) {
             return error;
         })
-    };
-    var signout = function () {
-        localStorage.clear();
-        $window.localStorage.clear();
-        $location.path('/');
     };
     var checkAuth = function (token) {
         return $http ({
@@ -140,7 +133,6 @@ angular.module('Khitwa.services', [])
     return {
         signin : signin,
         signup : signup,
-        signout : signout,
         checkAuth : checkAuth,
         getall : getall,
         getUser : getUser,
@@ -235,11 +227,6 @@ angular.module('Khitwa.services', [])
             return error;
         })
     };
-    var signout = function () {
-        localStorage.clear();
-        $window.localStorage.clear();
-        $location.path('/');
-    };
     var award = function (id) {
         return $http ({
             method : 'POST',
@@ -294,7 +281,6 @@ angular.module('Khitwa.services', [])
         edit : edit,
         remove : remove,
         checkAuth : checkAuth,
-        signout : signout,
         award : award,
         forgot: forgot,
         checkToken : checkToken,
