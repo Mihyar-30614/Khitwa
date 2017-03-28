@@ -1,6 +1,4 @@
 <ion-scroll zooming="true" direction="xy">
-<a class="button button-clear button-large icon icon-left ion-home button-dark" href="#/">Khitwa</a>
-<div>
 <div class="login-page">
 <div class="button-bar">
 <a class="button button-large button-balanced" href="#/signup">User</a>
@@ -9,18 +7,17 @@
   <div class="form">
   <p style="color:red;">{{res.fail.data}}</p>
   <p style="color:green;">{{res.success.data}}</p><br>
-    <form>
-      <input type="text" placeholder="username" ng-model="newUser.username"/>
-      <input type="password" placeholder="password" ng-model="newUser.password"/>
-      <input type="password" placeholder="confirm password" ng-model="newUser.confirm"/>
-      <input type="text" placeholder="email address" ng-model="newUser.email"/>
-      <input type="text" placeholder="first name" ng-model="newUser.firstName"/>
-      <input type="text" placeholder="last name" ng-model="newUser.lastName"/>
-      <input type="date" placeholder="date of birth" ng-model="dateOfBirth"/>
-      <button class="icon icon-left ion-clipboard" ng-click="signup()"> Create</button>
+    <form ng-submit="signup(regData)">
+      <input type="text" placeholder="username" ng-model="regData.username"/>
+      <input type="password" placeholder="password" ng-model="regData.password"/>
+      <input type="password" placeholder="confirm password" ng-model="regData.confirm"/>
+      <input type="text" placeholder="email address" ng-model="regData.email"/>
+      <input type="text" placeholder="first name" ng-model="regData.firstName"/>
+      <input type="text" placeholder="last name" ng-model="regData.lastName"/>
+      <input type="date" placeholder="date of birth" ng-model="regData.dateOfBirth"/>
+      <button class="icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
   </div>
-</div>
 </div>
 </ion-scroll>

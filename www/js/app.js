@@ -46,6 +46,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl : 'js/templates/forgotOrg.html',
         controller : 'OrganizationController'
     })
+    .state('main',{
+        url : '/main',
+        templateUrl : 'js/templates/main.html'
+    })
 
     $urlRouterProvider.otherwise('/');
     $httpProvider.defaults.transformRequest = function(data) {

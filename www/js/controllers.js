@@ -1,50 +1,61 @@
 angular.module('Khitwa.controllers', [])
 
 .controller('UserController', function($scope, User, $window, $location) {
-	$scope.user = {};
-	$scope.newUser = {};
+	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false; 
 	$scope.res = {};
-	$scope.signin = function () {
-		console.log('This is the function')
-		User.signin({username : $scope.user.username, password: $scope.user.password})
+	$scope.signin = function (data) {
+		User.signin({username : data.username, password: data.password})
 		.then(function (resp) {
 			if (resp.status !== 200) {
 				$scope.res.fail = resp;
 			} else {
 				$window.localStorage.setItem('com.khitwa',resp.data.token);
-				$window.localStorage.setItem('user',resp.data.user);
-				$location.path('/');
+				$location.path('/main');
+				$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false; 
+				$window.location.reload(true);
 			}
 		})
 	};
+	$scope.goHome = function () {
+		$location.path('/');
+	}
 	$scope.signout = function () {
-		User.signout();
-		$scope.user = {};
+		$window.localStorage.removeItem('com.khitwa');
+		$location.path('/');
+		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	};
-	$scope.signup = function () {
-		if ($scope.newUser.password !== $scope.newUser.confirm) {
+	$scope.signup = function (regData) {
+		if (regData.password !== regData.confirm) {
 			$scope.res.fail = {data : "Password Doesn't match"}
 		} else {
-			User.signup($scope.newUser)
+			User.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
 					$scope.res.fail = resp;
 				} else {
 					$scope.res = {};
 					$scope.res.success = resp;
-					$scope.newUser = {};
 				}
 			})
 		}
 	};
 })
 
-.controller('OrganizationController', function($scope, Organization) {
-	$scope.org = {};
-	$scope.signin = function () {
-		Organization.signin({name : $scope.org.name, password : $scope.org.password})
+.controller('OrganizationController', function($scope, Organization, $window) {
+	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+	$scope.res = {};
+	$scope.signin = function (data) {
+		Organization.signin({username : data.username, password : data.password})
 		.then(function (resp) {
-			console.log(resp)
+			if (resp.status !== 200) {
+				console.log(resp)
+				$scope.res.fail = resp;
+			} else {
+				$window.localStorage.setItem('com.khitwa',resp.data.token);
+				$location.path('/main');
+				$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false; 
+				$window.location.reload(true);
+			}
 		})
 	}
   // With the new view caching in Ionic, Controllers are only called
@@ -54,4 +65,12 @@ angular.module('Khitwa.controllers', [])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+})
+.controller('appCtrl', function($scope, $window, $location ){
+    $scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false; 
+    $scope.logout = function () {
+        $window.localStorage.removeItem('com.khitwa');
+        $location.path('/');
+        $scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+    }
 })

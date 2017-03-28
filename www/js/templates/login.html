@@ -1,6 +1,4 @@
 <ion-scroll zooming="true" direction="xy">
-<div>
-<a class="button button-clear button-large icon icon-left ion-home button-dark" href="#/">Khitwa</a>
 <div class="login-page">
 <div class="button-bar">
 <a class="button button-large button-balanced" href="#/login">User</a>
@@ -8,14 +6,13 @@
 </div>
   <div class="form">
     <p style="color:red;">{{res.fail.data}}</p><br>
-    <form class="login-form">
-      <input type="text" placeholder="username" ng-model="user.username"/>
-      <input type="password" placeholder="password" ng-model="user.password"/>
-      <button class="icon icon-left ion-log-in" ng-click="signin()"> login</button>
+    <form class="login-form" ng-submit="signin(data);">
+      <input type="text" placeholder="username" ng-model="data.username" required autofocus/>
+      <input type="password" placeholder="password" ng-model="data.password" required />
+      <button class="icon icon-left ion-log-in" type="submit"> login</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
     </form>
   </div>
-</div>
 </div>
 </ion-scroll>
