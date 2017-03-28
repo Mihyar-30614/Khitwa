@@ -1,18 +1,30 @@
-<ion-scroll zooming="true" direction="xy">
+<ion-scroll zooming="true">
 <div class="login-page">
 <div class="button-bar">
 <a class="button button-large button-outline button-balanced" href="#/signup">User</a>
 <a class="button button-large button-balanced" href="#/signupOrg">Organization</a>
 </div>
   <div class="form">
-    <form>
-      <input type="text" placeholder="organization name"/>
-      <input type="password" placeholder="password"/>
-      <input type="password" placeholder="confirm password"/>
-      <input type="text" placeholder="email address"/>
-      <button class="icon icon-left ion-clipboard"> Create</button>
+    <form ng-submit="signup(regData)">
+      <input type="text" placeholder="username" ng-model="regData.username" required autofocus />
+      <input type="password" placeholder="password" ng-model="regData.password" required/>
+      <input type="password" placeholder="confirm password" ng-model="regData.confirm" required/>
+      <input type="text" placeholder="email address" ng-model="regData.email" required/>
+      <button class="icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/loginOrg">Sign In</a></p>
     </form>
+    <br>
+    <div class="jumbotron text-center" ng-show="loading">
+      <span class="glyphicon glyphicon-repeat spinner"></span>
+      <p>Loading...</p>
+    </div>
+    <br>
+    <div class="row show-hide-message" ng-show="res.success">
+      <div class="alert alert-success">{{res.success}}</div>
+    </div>
+    <div class="row show-hide-message" ng-show="res.fail">
+      <div class="alert alert-danger">{{res.fail}}</div>
+    </div>
   </div>
 </div>
 </ion-scroll>

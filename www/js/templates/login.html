@@ -13,11 +13,17 @@
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
     </form>
-    <div class="row show-hide-message">
-      <div class="alert alert-success">Success Message!</div>
+    <br>
+    <div class="jumbotron text-center" ng-show="loading">
+      <span class="glyphicon glyphicon-repeat spinner"></span>
+      <p>Loading...</p>
     </div>
-    <div class="row show-hide-message">
-      <div class="alert alert-danger">{{res.fail.data}}</div>
+    <br>
+    <div class="row show-hide-message" ng-show="res.success">
+      <div class="alert alert-success">{{res.success}}</div>
+    </div>
+    <div class="row show-hide-message" ng-show="res.fail">
+      <div class="alert alert-danger">{{res.fail}}</div>
     </div>
   </div>
 </div>

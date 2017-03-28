@@ -5,7 +5,6 @@
 <a class="button button-large button-balanced" href="#/loginOrg">Organization</a>
 </div>
   <div class="form">
-  <p style="color:red;">{{res.fail.data}}</p><br>
     <form class="login-form" ng-submit="signin(data)">
       <input type="text" placeholder="Organization Name" ng-model="data.username" required autofocus/>
       <input type="password" placeholder="password" ng-model="data.password" required />
@@ -13,6 +12,18 @@
       <p class="message">Not registered? <a href="#/signupOrg">Create an account</a></p>
       <p class="message"><a href="#/forgotOrg">Forgot Password?</a></p>
     </form>
+    <br>
+    <div class="jumbotron text-center" ng-show="loading">
+      <span class="glyphicon glyphicon-repeat spinner"></span>
+      <p>Loading...</p>
+    </div>
+    <br>
+    <div class="row show-hide-message" ng-show="res.success">
+      <div class="alert alert-success">{{res.success}}</div>
+    </div>
+    <div class="row show-hide-message" ng-show="res.fail">
+      <div class="alert alert-danger">{{res.fail}}</div>
+    </div>
   </div>
 </div>
 </ion-scroll>

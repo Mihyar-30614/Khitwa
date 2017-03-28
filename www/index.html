@@ -26,7 +26,7 @@
     <ion-tabs ng-controller="UserController" >
         <ion-tab title="Home" icon-on="ion-ios-home" icon-off="ion-ios-home" ng-click="goHome()">
         </ion-tab>
-        <ion-tab ng-if="!loggedIn" title="Login" icon-on="ion-log-in" icon-off="ion-log-in" href="#/login">
+        <ion-tab ng-if="!loggedIn" title="Login" icon-on="ion-log-in" icon-off="ion-log-in" ng-click="goLogin()">
         </ion-tab>
         <ion-tab ng-if="loggedIn" title="Logout" icon-on="ion-log-out" icon-off="ion-log-out" ng-click="signout()">
         </ion-tab>
