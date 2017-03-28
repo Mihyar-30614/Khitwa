@@ -4,6 +4,7 @@ var Organization = require('../organizations/organizationModel.js');
 var Q = require('q');
 var helpers = require('../config/helpers.js');
 var jwt = require('jsonwebtoken');
+var secret = 'what lies beneath the sea';
 
 module.exports = {
 	
@@ -27,7 +28,7 @@ module.exports = {
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		}else{
-			var organization = jwt.decode(token,'secret');
+			var organization = jwt.verify(token,secret);
 			var organizer = organization.username;
 
 			Organization.findOne({username : organizer})
@@ -76,7 +77,7 @@ module.exports = {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 
-			var organization = jwt.decode(token, 'secret');
+			var organization = jwt.verify(token, secret);
 			var id = req.params.id;
 			var password = req.body.password;
 
@@ -132,7 +133,7 @@ module.exports = {
 		} else {
 
 			var password = req.body.password;
-			var org = jwt.decode(token,'secret');
+			var org = jwt.verify(token,secret);
 
 			Organization.findOne({username : org.username})
 			.exec(function (error, organization) {
@@ -186,7 +187,7 @@ module.exports = {
 			Opportunity.findOne({_id : id})
 			.exec(function (error, opportunity) {
 				if (opportunity) {
-					orgna = jwt.decode(token,'secret');
+					orgna = jwt.verify(token,secret);
 					if (opportunity._organizer === orgna.username) {
 						opportunity.title = req.body.title || opportunity.title;
 	  					opportunity.startDate = req.body.startDate || opportunity.startDate;
@@ -283,7 +284,7 @@ module.exports = {
 			helpers.errorHandler('Please Sign In', req, res);
 		} else {
 
-			var org = jwt.decode(token, 'secret');
+			var org = jwt.verify(token, secret);
 			Organization.findOne({username : org.username})
 			.exec(function (error, organization) {
 				if (organization) {
