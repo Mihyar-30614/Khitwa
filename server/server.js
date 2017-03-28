@@ -4,8 +4,6 @@ var mongoose = require('mongoose');
 var dbc = process.env.NODE_ENV === 'test'? 'mongodb://127.0.0.1/Khitwa-test' : 'mongodb://127.0.0.1/Khitwa';
 var mongoURI =  process.env.MONGODB_URI || dbc;
 var port = process.env.PORT || 8000;
-require('./config/middleware.js')(app, express);
-require('./config/routes.js')(app, express);
 
 mongoose.connect(mongoURI);
 app.use(function(req, res, next) {
@@ -14,6 +12,10 @@ app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Headers');
 	next();
 });
+
+require('./config/middleware.js')(app, express);
+require('./config/routes.js')(app, express);
+
 app.listen(port, function () {
 	console.log('Connecting to DataBase: '+dbc.substr(20));
   	console.log('app listening on port ' + port);
