@@ -53,6 +53,7 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     })
 
     $urlRouterProvider.otherwise('/');
+    $httpProvider.interceptors.push('AttachToken');
     $httpProvider.defaults.transformRequest = function(data) {
         if (data === undefined) { return data; }
         return $.param(data);

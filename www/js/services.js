@@ -550,3 +550,15 @@ angular.module('Khitwa.services', [])
         reopen : reopen
     };
 })
+.factory('AttachToken', function ($window) {
+    var attach = function (config) {
+        var jwt = $window.localStorage.getItem('com.khitwa');
+        if(jwt){
+            config.headers['x-access-token'] = jwt;
+        }
+        return config;
+    }
+    return {
+        attach : attach
+    }
+})
