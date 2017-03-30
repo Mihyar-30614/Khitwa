@@ -3,6 +3,7 @@ var User             = require('../users/userModel');
 var session          = require('express-session');
 var crypto           = require('crypto');
 var jwt              = require('jsonwebtoken');
+var API              = require('../config/api');
 var secret           = 'what lies beneath the sea';
 
 module.exports = function (app, passport) {
@@ -23,9 +24,9 @@ module.exports = function (app, passport) {
 	});
 
 	passport.use(new FacebookStrategy({
-	    clientID: '1700192310281254',
-	    clientSecret: 'a73179df1b0a33285c778e1c575966f7',
-	    callbackURL: "http://localhost:8000/auth/facebook/callback",
+	    clientID: API.FACEBOOK.CLIENTID,
+	    clientSecret: API.FACEBOOK.CLIENTSECRET,
+	    callbackURL: API.FACEBOOK.LINK + '/auth/facebook/callback',
 	    enableProof: true,
 	    profileFields: ['id', 'email', 'first_name', 'verified','last_name']
 	},
