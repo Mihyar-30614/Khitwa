@@ -1,9 +1,10 @@
-var express = require('express');
-var app = express();
-var mongoose = require('mongoose');
-var dbc = process.env.NODE_ENV === 'test'? 'mongodb://127.0.0.1/Khitwa-test' : 'mongodb://127.0.0.1/Khitwa';
-var mongoURI =  process.env.MONGODB_URI || dbc;
-var port = process.env.PORT || 8000;
+var express    = require('express');
+var app        = express();
+var mongoose   = require('mongoose');
+var passport   = require('passport');
+var dbc        = process.env.NODE_ENV === 'test'? 'mongodb://127.0.0.1/Khitwa-test' : 'mongodb://127.0.0.1/Khitwa';
+var mongoURI   =  process.env.MONGODB_URI || dbc;
+var port       = process.env.PORT || 8000;
 
 mongoose.connect(mongoURI);
 app.use(function(req, res, next) {
@@ -15,6 +16,7 @@ app.use(function(req, res, next) {
 
 require('./config/middleware.js')(app, express);
 require('./config/routes.js')(app, express);
+require('./passport/passport.js')(app, passport);
 
 app.listen(port, function () {
 	console.log('Connecting to DataBase: '+dbc.substr(20));
