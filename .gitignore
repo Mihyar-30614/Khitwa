@@ -10,4 +10,4 @@ db/
 npm-debug.log
 coverage/
 resources/
-server/config/api
+./server/config/api
