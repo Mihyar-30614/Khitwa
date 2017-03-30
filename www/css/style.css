@@ -141,3 +141,6 @@ header .navbar    {
   from  { -moz-transform:rotate(0deg); }  
   to  { -moz-transform:rotate(360deg); }
 }
+.larger {
+    font-size: 25px;
+}

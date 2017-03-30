@@ -5,11 +5,11 @@
 <a class="button button-large button-outline button-balanced" href="#/loginOrg">Organization</a>
 </div>
   <div class="form">
-    <p style="color:red;">{{res.fail.data}}</p><br>
     <form class="login-form" ng-submit="signin(data);">
       <input type="text" placeholder="username" ng-model="data.username" required autofocus/>
       <input type="password" placeholder="password" ng-model="data.password" required />
-      <button class="icon icon-left ion-log-in" type="submit"> login</button>
+      <button class="icon icon-left ion-log-in" type="submit"> login</button>&nbsp
+      <button type="button" style="background: #337ab7;" ng-click="facebook();">Facebook</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
     </form>

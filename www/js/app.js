@@ -20,36 +20,48 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     .state('login',{
         url : '/login',
         templateUrl : 'js/templates/login.html',
-        controller : 'UserController'
+        controller : 'UserController',
+        controllerAs : 'User'
     })
     .state('organizationLogin',{
         url:'/loginOrg',
         templateUrl : 'js/templates/loginOrg.html',
-        controller : 'OrganizationController'
+        controller : 'OrganizationController',
+        controllerAs : 'Organization'
     })
     .state('userSignup',{
         url : '/signup',
         templateUrl : 'js/templates/signup.html',
-        controller : 'UserController'
+        controller : 'UserController',
+        controllerAs : 'User'
     })
     .state('signupOrganization', {
         url : '/signupOrg',
         templateUrl : 'js/templates/signupOrg.html',
-        controller : 'OrganizationController'
+        controller : 'OrganizationController',
+        controllerAs : 'Organization'
     })
     .state('userPwdForgot', {
         url :'/forgot',
         templateUrl : 'js/templates/forgot.html',
-        controller : 'UserController'
+        controller : 'UserController',
+        controllerAs : 'User'
     })
     .state('orgnizationPwdForgot',{
         url : '/forgotOrg',
         templateUrl : 'js/templates/forgotOrg.html',
-        controller : 'OrganizationController'
+        controller : 'OrganizationController',
+        controllerAs : 'Organization'
     })
     .state('main',{
         url : '/main',
         templateUrl : 'js/templates/main.html'
+    })
+    .state('facebook',{
+        url : '/facebook/:token',
+        templateUrl : 'js/templates/main.html',
+        controller : 'FacebookCtrl',
+        controllerAs : 'Facebook'
     })
 
     $urlRouterProvider.otherwise('/');

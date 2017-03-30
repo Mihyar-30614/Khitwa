@@ -2,13 +2,13 @@ angular.module('Khitwa.controllers', [])
 
 .controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+	$scope.res = {};
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 		// if logged send info to backend and get user info here
 		// add user info to $scope
-	})
-	$scope.res = {};
+	});
 	$scope.signin = function (data) {
 		$scope.res = {};
 		$scope.loading = true;
@@ -28,6 +28,9 @@ angular.module('Khitwa.controllers', [])
 			}
 		})
 	};
+	$scope.facebook = function () {
+		$window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook';
+	}
 	$scope.goHome = function () {
 		$location.path('/');
 	}
@@ -119,4 +122,9 @@ angular.module('Khitwa.controllers', [])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+})
+
+.controller('FacebookCtrl', function ($stateParams, $location, $window) {
+	$window.localStorage.setItem('com.khitwa', $stateParams.token);
+	$location.path('/main')
 })
