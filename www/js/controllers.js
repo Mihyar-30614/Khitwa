@@ -1,4 +1,4 @@
-angular.module('Khitwa.controllers', [])
+angular.module('Khitwa.controllers', ['Khitwa.services'])
 
 .controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
@@ -41,13 +41,27 @@ angular.module('Khitwa.controllers', [])
 		$window.localStorage.removeItem('com.khitwa');
 		$location.path('/');
 	};
-	$scope.signup = function (regData) {
+	$scope.vData = function (regData) {
+		var valid = true;
 		$scope.res = {};
 		$scope.loading = true; 
-		if (regData.password !== regData.confirm) {
+		if (regData.password.length < 8) {
+			$scope.loading = false;
+			$scope.res.fail = "Password Should be at Least 8 Character Long"
+			valid = false;
+		} else if (regData.password !== regData.confirm) {
 			$scope.loading = false;
 			$scope.res.fail = "Password Doesn't match";
-		} else {
+			valid = false;
+		}else if (regData.email.indexOf('@')<0 || regData.email.indexOf('.')<0) {
+			$scope.loading = false;
+			$scope.res.fail = "Please Enter Valid Email Address!";
+			valid = false;
+		}
+		return valid
+	}
+	$scope.signup = function (regData) {
+		if ($scope.vData(regData)) {
 			User.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
@@ -66,7 +80,7 @@ angular.module('Khitwa.controllers', [])
 	};
 })
 
-.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope) {
+.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
@@ -91,14 +105,28 @@ angular.module('Khitwa.controllers', [])
 				}, 2000);
 			}
 		})
-	}
-	$scope.signup = function (regData) {
+	};
+	$scope.vData = function (regData) {
+		var valid = true;
 		$scope.res = {};
 		$scope.loading = true; 
-		if (regData.password !== regData.confirm) {
+		if (regData.password.length < 8) {
+			$scope.loading = false;
+			$scope.res.fail = "Password Should be at Least 8 Character Long"
+			valid = false;
+		} else if (regData.password !== regData.confirm) {
 			$scope.loading = false;
 			$scope.res.fail = "Password Doesn't match";
-		} else {
+			valid = false;
+		}else if (regData.email.indexOf('@')<0 || regData.email.indexOf('.')<0) {
+			$scope.loading = false;
+			$scope.res.fail = "Please Enter Valid Email Address!";
+			valid = false;
+		}
+		return valid
+	};
+	$scope.signup = function (regData) {
+		if ($scope.vData(regData)) {
 			Organization.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
@@ -114,7 +142,7 @@ angular.module('Khitwa.controllers', [])
 				}
 			})
 		}
-	}
+	};
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
