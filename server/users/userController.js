@@ -48,24 +48,29 @@ module.exports = {
 		if (username == '' || password == '' || email == '' || firstName == '' || lastName == '') {
 			helpers.errorHandler('Required Feild Missing', req, res);
 		} else {
-			var user = new User();
-			user.username = username;
-			user.password = password;
-			user.email = email;
-			user.firstName = firstName;
-			user.lastName = lastName;
-			user.dateOfBirth = req.body.dateOfBirth;
-			user.save(function (error, saved) {
-				if (saved) {
-					var encoded = jwt.sign({username : saved.username}, secret);
-					var body = helpers.activateTemplate(saved.firstName, saved.lastName, encoded);
-					helpers.email(saved.email, 'Account Activation', body, function () {
-						res.status(201).send('Please Check Your Email for Activation Link');
-					});
-				} else {
-					helpers.errorHandler('User Already Exsits', req, res);
-				}
-			})
+			var valid = helpers.validate(username, password, email);
+			if (valid.valid) {			
+				var user = new User();
+				user.username = username;
+				user.password = password;
+				user.email = email;
+				user.firstName = firstName;
+				user.lastName = lastName;
+				user.dateOfBirth = req.body.dateOfBirth;
+				user.save(function (error, saved) {
+					if (saved) {
+						var encoded = jwt.sign({username : saved.username}, secret);
+						var body = helpers.activateTemplate(saved.firstName, saved.lastName, encoded);
+						helpers.email(saved.email, 'Account Activation', body, function () {
+							res.status(201).send('Please Check Your Email for Activation Link');
+						});
+					} else {
+						helpers.errorHandler('User Already Exsits', req, res);
+					}
+				})
+			} else {
+				helpers.errorHandler(valid.message, req, res);
+			}
 		}
 	},
 
