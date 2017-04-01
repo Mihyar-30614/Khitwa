@@ -39,29 +39,12 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	}
 	$scope.signout = function () {
 		$window.localStorage.removeItem('com.khitwa');
+		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 		$location.path('/');
 	};
-	$scope.vData = function (regData) {
-		var valid = true;
-		$scope.res = {};
-		$scope.loading = true; 
-		if (regData.password.length < 8) {
-			$scope.loading = false;
-			$scope.res.fail = "Password Should be at Least 8 Character Long"
-			valid = false;
-		} else if (regData.password !== regData.confirm) {
-			$scope.loading = false;
-			$scope.res.fail = "Password Doesn't match";
-			valid = false;
-		}else if (regData.email.indexOf('@')<0 || regData.email.indexOf('.')<0) {
-			$scope.loading = false;
-			$scope.res.fail = "Please Enter Valid Email Address!";
-			valid = false;
-		}
-		return valid
-	}
 	$scope.signup = function (regData) {
-		if ($scope.vData(regData)) {
+		var valid = User.validate(regData.username, regData.password, regData.email);
+		if (valid.valid) {
 			User.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
@@ -76,6 +59,9 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 					},2000);
 				}
 			})
+		}else{
+			$scope.loading = false;
+			$scope.res.fail = valid.message;
 		}
 	};
 })
@@ -106,27 +92,9 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			}
 		})
 	};
-	$scope.vData = function (regData) {
-		var valid = true;
-		$scope.res = {};
-		$scope.loading = true; 
-		if (regData.password.length < 8) {
-			$scope.loading = false;
-			$scope.res.fail = "Password Should be at Least 8 Character Long"
-			valid = false;
-		} else if (regData.password !== regData.confirm) {
-			$scope.loading = false;
-			$scope.res.fail = "Password Doesn't match";
-			valid = false;
-		}else if (regData.email.indexOf('@')<0 || regData.email.indexOf('.')<0) {
-			$scope.loading = false;
-			$scope.res.fail = "Please Enter Valid Email Address!";
-			valid = false;
-		}
-		return valid
-	};
 	$scope.signup = function (regData) {
-		if ($scope.vData(regData)) {
+		var valid = User.validate(regData.username, regData.password, regData.email);
+		if (valid.valid) {
 			Organization.signup(regData)
 			.then(function (resp) {
 				if (resp.status!= 201) {
@@ -141,6 +109,9 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 					},2000);
 				}
 			})
+		}else{
+			$scope.loading = false;
+			$scope.res.fail = valid.message;
 		}
 	};
   // With the new view caching in Ionic, Controllers are only called
