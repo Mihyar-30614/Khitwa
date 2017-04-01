@@ -1,6 +1,6 @@
 angular.module('Khitwa.controllers', ['Khitwa.services'])
 
-.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope) {
+.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$scope.res = {};
 	$rootScope.$on('$stateChangeStart', function () {
@@ -60,13 +60,14 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 				}
 			})
 		}else{
+			$ionicScrollDelegate.scrollBottom();
 			$scope.loading = false;
 			$scope.res.fail = valid.message;
 		}
 	};
 })
 
-.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User) {
+.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
@@ -110,6 +111,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 				}
 			})
 		}else{
+			$ionicScrollDelegate.scrollBottom();
 			$scope.loading = false;
 			$scope.res.fail = valid.message;
 		}
