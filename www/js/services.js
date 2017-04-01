@@ -130,6 +130,35 @@ angular.module('Khitwa.services', [])
             return error;
         })
     };
+    var validate = function (username, password, email) {
+        var message = '';
+        var valid = true;
+        var usr = username.toLowerCase();
+        var pass = password.toLowerCase();
+        var index = pass.indexOf(usr[0]);
+        var same = false;
+        var count = 0 ;
+        if (index > -1) {
+            for (var i = index; i < usr.length; i++) {
+                if (pass[i] === usr[count]){
+                    same = true;
+                    count++;
+                }else{
+                    same = false;
+                }
+            }
+        }
+        if (username.length < 3) return { message: 'Username Should be at Least 3 Characters Long!', valid: false };
+        if(!/[a-z]/.test(username)) return { message: 'Username Should Contain at Least One Character!', valid: false };
+        if(password.length < 8) return { message : 'Password Should be at Least 8 Character Long', valid: false };
+        if(same)return { message : 'Password Can Not Contain Username', valid : false };
+        if (email.indexOf('@')<0 || email.indexOf('.')<0) return { message: 'Please Enter Valid Email Address!', valid: false };
+        if(!/[a-z]/.test(password)) return { message: 'Password Should Contain at Least One Lowercase Character!', valid: false };
+        if(!/[A-Z]/.test(password)) return { message: 'Password Should Contain at Least One Uppercase Character!', valid: false };
+        if(!/[0-9]/.test(password)) return { message: 'Password Should Contain at Least One Number!', valid: false };
+        if(/^\w+_+$/.test(password)) return { message: 'Password Should Contain at Least One Special Character!', valid: false};
+        return { message : '', valid: true};
+    }
     return {
         signin : signin,
         signup : signup,
@@ -141,7 +170,8 @@ angular.module('Khitwa.services', [])
         rate : rate, 
         forgot : forgot,
         checkToken : checkToken, 
-        reset : reset
+        reset : reset,
+        validate : validate
     };
 })
 .factory('Organization', function($http, $window, $location){
