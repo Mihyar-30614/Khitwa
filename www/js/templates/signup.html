@@ -5,15 +5,15 @@
 <a class="button button-large button-outline button-balanced" href="#/signupOrg">Organization</a>
 </div>
   <div class="form">
-    <form ng-submit="signup(regData)">
-      <input type="text" placeholder="username" ng-model="regData.username" required autofocus/>
-      <input type="password" placeholder="password" ng-model="regData.password" required />
-      <input type="password" placeholder="confirm password" ng-model="regData.confirm" required />
-      <input type="text" placeholder="email address" ng-model="regData.email" required />
-      <input type="text" placeholder="first name" ng-model="regData.firstName" required />
-      <input type="text" placeholder="last name" ng-model="regData.lastName" required />
-      <input type="date" placeholder="date of birth" ng-model="regData.dateOfBirth"/>
-      <button class="btn btn-lg btn-success icon icon-left ion-clipboard" type="submit"> Create</button>
+    <form id="signup" ng-submit="signup(regData)">
+      <input class="input" type="text" maxlength="48" placeholder="username" ng-model="regData.username" required autofocus/>
+      <input class="input" type="password" maxlength="24" placeholder="password" ng-model="regData.password" required />
+      <input class="input" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
+      <input class="input" type="text" placeholder="email address" ng-model="regData.email" required />
+      <input class="input" type="text" placeholder="first name" ng-model="regData.firstName" required />
+      <input class="input" type="text" placeholder="last name" ng-model="regData.lastName" required />
+      <input class="input" type="date" placeholder="date of birth" ng-model="regData.dateOfBirth"/>
+      <button id="submit" class="btn btn-lg btn-success icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
     <br>
