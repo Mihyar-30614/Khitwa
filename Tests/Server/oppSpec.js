@@ -7,11 +7,11 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token =  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhZTJlNzMwZmY1YTFjYTBmMTBmNDYiLCJzYWx0IjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGUiLCJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsInBhc3N3b3JkIjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGVPLkpjWTNkdjNCcGxRUEt3STFwT1ZVYTBkenpkLmJ1IiwiZW1haWwiOiJraGl0d2FAa2hpdHdhLm9yZyIsIm1pc3Npb25TdGF0ZW1lbnQiOiJBIHN0ZXAgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbiIsImNvbnRhY3RJbmZvIjoiU29tZSBJbmZvIGFib3V0IHRoZSBvcmdhbml6YXRpb24iLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicGFzdE9wcG9ydHVuaXRpZXMiOltdLCJjdXJyZW50T3Bwb3J0dW5pdGllcyI6W10sInJhdGUiOjAsInJhdGVycyI6W10sImxvY2F0aW9ucyI6WyJDYW5hZGEiXSwiY2F1c2VzX2FyZWEiOltdfQ.OuhPydHXueLxSuXMDIkkeXpOzuXXo5k95ARCyxri38E';
 var Organization = require('../../server/organizations/organizationModel');
 var Opportunity = require('../../server/opportunities/opportunityModel');
 var opportunityController = require('../../server/opportunities/opportunityController');
 var Opening = require('../../server/openings/openingModel');
+var token =  '';
 
 describe('Opportunity Test DataBase', function (done) {
 	
@@ -26,7 +26,8 @@ describe('Opportunity Test DataBase', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'email':'Khitwa@khitwa.org'
+			'email':'Khitwa@khitwa.org',
+			'active' : true
 		})
 		newOrg.save(function (error, orgsaved) {
 			var newOpp = new Opportunity({
@@ -55,6 +56,20 @@ describe('Opportunity Test DataBase', function (done) {
 	});
 
 	describe('All Opportunities', function (done) {
+
+		it('Get login token',function (done) {
+			chai.request(server)
+				.post('/api/organization/signin')
+				.send({
+					'username':'khitwaorg',
+					'password' : '1234'
+				})
+				.end(function (error, res) {
+					expect(res.body.token).to.not.equal(undefined);
+					token = res.body.token;
+					done();
+				});
+		});
 		
 		it('Should have a method called allOpportunities', function (done) {
 			expect(typeof opportunityController.allOpportunities).to.be.equal('function');

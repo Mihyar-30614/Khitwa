@@ -20,7 +20,6 @@ module.exports = {
 			organization.username = username;
 			organization.email = email;
 			organization.password = password;
-			console.log(organization)
 			organization.save(function (error, saved) {
 				if (error) {
 					console.log(error)

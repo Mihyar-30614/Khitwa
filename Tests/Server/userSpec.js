@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 var Organization = require('../../server/organizations/organizationModel');
 var User = require('../../server/users/userModel');
 var userController = require('../../server/users/userController');
-var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1paHlhciIsImVtYWlsIjoibWloeWFyQGtoaXR3YS5vcmciLCJfaWQiOiI1OGQ4ODIwYTNiZjg4NTAzODA5ODhmYjYiLCJpYXQiOjE0OTA1ODQwNzUsImV4cCI6MTQ5MDU5ODQ3NX0.86DlaP-o8CcBGjf7W0XMy49Zj21o_4nTTe3zAl3_3yY';
+var token = '';
 
 describe('User Test Database', function (done) {
 	
@@ -88,6 +88,7 @@ describe('User Test Database', function (done) {
 				.end(function (error, res) {
 					expect(res.body.token).to.not.equal(undefined);
 					expect(res.body).to.have.property('token');
+					token = res.body.token;
 					done();
 				});
 		});
@@ -116,7 +117,7 @@ describe('User Test Database', function (done) {
 		it('Should signup a new user', function (done) {
 			var extraUser = new User({
 				'username':'newUser',
-				'password':'newpassword',
+				'password':'Some@pass1',
 				'firstName':'newbie',
 				'lastName':'user',
 				'email':'newbie@khitwa.org',

@@ -7,7 +7,7 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsImVtYWlsIjoia2hpdHdhQGtoaXR3YS5vcmciLCJfaWQiOiI1OGQ4ODg1YjIzZTE5ODNhNmMxMWFkN2IiLCJpYXQiOjE0OTA1ODU2OTIsImV4cCI6MTQ5MDYwMDA5Mn0.pBKdbzoiyiAd6S6wM9nDHamtiG40dqrUBk-JUcsJkOE';
+var token =  '';
 var Organization = require('../../server/organizations/organizationModel');
 var organizationController = require('../../server/organizations/organizationController');
 var User = require('../../server/users/userModel');
@@ -72,7 +72,7 @@ describe('Organization Test Database', function (done) {
 				.post('/api/organization/signup')
 				.send({
 					'username':'newOrg',
-					'password': 'newPassword',
+					'password': 'newPassword@1',
 					'email':'newOrganization@organization.org'
 				})
 				.end(function (error, res) {
@@ -127,6 +127,7 @@ describe('Organization Test Database', function (done) {
 				})
 				.end(function (error, res) {
 					expect(res.body.token).to.not.equal(undefined);
+					token = res.body.token;
 					done();
 				});
 		});

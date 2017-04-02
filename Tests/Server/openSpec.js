@@ -7,8 +7,8 @@ var chai = require('chai')
       ,chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-var token =  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhZTJlNzMwZmY1YTFjYTBmMTBmNDYiLCJzYWx0IjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGUiLCJ1c2VybmFtZSI6ImtoaXR3YW9yZyIsInBhc3N3b3JkIjoiJDJhJDEwJGxyMkM4VFZNMkkuTFltd0NMa05XWGVPLkpjWTNkdjNCcGxRUEt3STFwT1ZVYTBkenpkLmJ1IiwiZW1haWwiOiJraGl0d2FAa2hpdHdhLm9yZyIsIm1pc3Npb25TdGF0ZW1lbnQiOiJBIHN0ZXAgaW4gdGhlIHJpZ2h0IGRpcmVjdGlvbiIsImNvbnRhY3RJbmZvIjoiU29tZSBJbmZvIGFib3V0IHRoZSBvcmdhbml6YXRpb24iLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicGFzdE9wcG9ydHVuaXRpZXMiOltdLCJjdXJyZW50T3Bwb3J0dW5pdGllcyI6W10sInJhdGUiOjAsInJhdGVycyI6W10sImxvY2F0aW9ucyI6WyJDYW5hZGEiXSwiY2F1c2VzX2FyZWEiOltdfQ.OuhPydHXueLxSuXMDIkkeXpOzuXXo5k95ARCyxri38E';
-var userToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNWYiLCJzYWx0IjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy4iLCJ1c2VybmFtZSI6Im1paHlhciIsInBhc3N3b3JkIjoiJDJhJDEwJC84SGlPeW9YN1VIYmNrMGFUUUExZy5zUURGS3FOVHJnMUoxTE9vSGhHdVkvWE1xLlpqbmRPIiwiZmlyc3ROYW1lIjoiTWloeWFyIiwibGFzdE5hbWUiOiJBbG1hc2FsbWEiLCJlbWFpbCI6Im1paHlhckBraGl0d2Eub3JnIiwiZGF0ZU9mQmlydGgiOiIwOC1tYXItMTk4OSIsImdlbmRlciI6Ik1hbGUiLCJwaG9uZU51bWJlciI6IjIwNDQwNTU3MDciLCJfX3YiOjAsInJlc2V0YWJsZSI6ZmFsc2UsImFjdGl2ZSI6dHJ1ZSwicmF0ZSI6MCwiYXdhcmRzIjpbeyJvcmdhbml6YXRpb24iOiJLaGl0d2EiLCJfaWQiOiI1OGNhOWMzMGM0NTcxZjI5ZDQ0OWViNjAifV0sInNraWxscyI6WyJFbmdsaXNoIiwiQ29kaW5nIl19.xNjjVfsOCh4DmPB7oIIWxxpkh67Xykfukv_3O4V6quw';
+var token =  '';
+var userToken = '';
 var User = require('../../server/users/userModel');
 var Organization = require('../../server/organizations/organizationModel');
 var Opportunity = require('../../server/opportunities/opportunityModel');
@@ -40,7 +40,8 @@ describe('Openings DataBase', function (done) {
 			'cause_area':'volunteering',
 			'locations':'Canada',
 			'missionStatement':'A step in the right direction',
-			'email':'Khitwa@khitwa.org'
+			'email':'Khitwa@khitwa.org',
+			'active':true
 		})
 		newOrg.save(function (error, orgsaved) {
 			var newOpp = new Opportunity({
@@ -83,6 +84,34 @@ describe('Openings DataBase', function (done) {
 	});
 
 	describe('Add Opening', function (done) {
+
+		it('Get login token',function (done) {
+			chai.request(server)
+				.post('/api/organization/signin')
+				.send({
+					'username':'khitwaorg',
+					'password' : '1234'
+				})
+				.end(function (error, res) {
+					expect(res.body.token).to.not.equal(undefined);
+					token = res.body.token;
+					done();
+				});
+		});
+
+		it('Get user token', function (done) {
+			chai.request(server)
+				.post('/api/user/signin')
+				.send({
+					'username':'mihyar@khitwa.org',
+					'password':'1234'
+				})
+				.end(function (error, res) {
+					expect(res.body.token).to.not.equal(undefined);
+					userToken = res.body.token;
+					done();
+				});
+		});
 
 		it('Should have a method called addOpening', function (done) {
 			expect(typeof openingController.addOpening).to.be.equal('function');
