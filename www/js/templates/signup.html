@@ -6,13 +6,20 @@
 </div>
   <div class="form">
     <form id="signup" ng-submit="signup(regData)">
-      <input class="input" type="text" maxlength="48" placeholder="username" ng-model="regData.username" required autofocus/>
-      <input class="input" type="password" maxlength="24" placeholder="password" ng-model="regData.password" required />
+      <h5 class="text-left"><label>Username</label></h5>
+      <input class="input" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus/>
+      <h5 class="text-left"><label>Password</label></h5>
+      <input class="input" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
+      <h5 class="text-left"><label>Confirm Password</label></h5>
       <input class="input" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
-      <input class="input" type="text" placeholder="email address" ng-model="regData.email" required />
-      <input class="input" type="text" placeholder="first name" ng-model="regData.firstName" required />
-      <input class="input" type="text" placeholder="last name" ng-model="regData.lastName" required />
-      <input class="input" type="date" placeholder="date of birth" ng-model="regData.dateOfBirth"/>
+      <h5 class="text-left"><label>Email</label></h5>
+      <input class="input" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
+      <h5 class="text-left"><label>First Name</label></h5>
+      <input class="input" type="text" placeholder="John" ng-model="regData.firstName" required />
+      <h5 class="text-left"><label>Last Name</label></h5>
+      <input class="input" type="text" placeholder="Smith" ng-model="regData.lastName" required />
+      <h5 class="text-left"><label>Date of Birth</label></h5>
+      <input class="input" type="date" ng-model="regData.dateOfBirth"/>
       <button id="submit" class="btn btn-lg btn-success icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
