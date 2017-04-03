@@ -1,8 +1,8 @@
 <ion-scroll zooming="true">
 <div class="login-page">
 <div class="button-bar">
-<a class="button button-large button-outline button-balanced" href="#/signup">User</a>
-<a class="button button-large button-balanced" href="#/signupOrg">Organization</a>
+<a class="button button-large button-outline button-assertive" href="#/signup">User</a>
+<a class="button button-large button-assertive" href="#/signupOrg">Organization</a>
 </div>
   <div class="form">
     <form id="signup1" ng-submit="signup(regData)">
@@ -14,7 +14,7 @@
       <input class="input1" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
       <h5 class="text-left"><label>Email</label></h5>
       <input class="input1" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
-      <button id="submit1" class="btn btn-lg btn-success icon icon-left ion-clipboard" type="submit"> Create</button>
+      <button id="submit1" class="btn btn-lg btn-danger icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/loginOrg">Sign In</a></p>
     </form>
     <br>

@@ -23,7 +23,7 @@
     <body ng-app="Khitwa" class="platform-android">
     <ion-nav-view>
     </ion-nav-view>
-    <div ng-controller="OrganizationController">
+    <div ng-controller="OrganizationController as Orgnaization">
     <div class="tabs" ng-controller="UserController">
       <a class="tab-item icon ion-ios-home larger" ng-click="goHome()">
         Home
@@ -33,6 +33,12 @@
       </a>
       <a class="tab-item icon ion-log-out larger" ng-if="loggedIn" ng-click="signout()">
         Log Out
+      </a>
+      <a class="tab-item icon ion-person larger" ng-if="loggedIn && !isOrg" ng-click="goProfile();">
+          Profile
+      </a>
+        <a class="tab-item icon ion-person larger" ng-if="loggedIn && isOrg" ng-click="goOrgProfile();">
+          Profile
       </a>
     </div>
     </div>

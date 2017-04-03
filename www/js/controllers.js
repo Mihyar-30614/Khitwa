@@ -30,16 +30,22 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	};
 	$scope.facebook = function () {
 		$window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook';
+	};
+	$scope.goProfile = function () {
+		$location.path('/profile');
 	}
 	$scope.goHome = function () {
 		$location.path('/');
-	}
+	};
 	$scope.goLogin = function () {
 		$location.path('/login')
-	}
+	};
 	$scope.signout = function () {
 		$window.localStorage.removeItem('com.khitwa');
+		$window.localStorage.removeItem('Organization');
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+		$scope.loggedIn = $window.localStorage.getItem('Organization')? true : false;
+		$scope.isOrg = false;
 		$location.path('/');
 	};
 	$scope.signup = function (regData) {
@@ -127,11 +133,13 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+	$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
+	$scope.res = {};
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
-	})
-	$scope.res = {};
+		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
+	});
 	$scope.signin = function (data) {
 		$scope.res = {};
 		$scope.loading = true;
@@ -143,6 +151,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			} else {
 				$scope.loading = false;
 				$window.localStorage.setItem('com.khitwa',resp.data.token);
+				$window.localStorage.setItem('Organization',true);
 				$scope.res.success = '....Redirecting!';
 				$timeout(function () {
 					$location.path('/main');
@@ -189,6 +198,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
+		$scope.isOrg = true;
 		Organization.forgot({email: email}).then(function (resp) {
 			if (resp.status !== 200) {
 				$scope.loading = false;
@@ -231,6 +241,9 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$scope.res.fail = 'Password does not match!';
 			$scope.loading = false;
 		}	
+	};
+	$scope.goOrgProfile = function () {
+		$location.path('/orgProfile');
 	}
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.

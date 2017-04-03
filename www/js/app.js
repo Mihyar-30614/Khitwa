@@ -20,38 +20,32 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     .state('login',{
         url : '/login',
         templateUrl : 'js/templates/login.html',
-        controller : 'UserController',
-        controllerAs : 'User'
+        controller : 'UserController as User'
     })
     .state('organizationLogin',{
         url:'/loginOrg',
         templateUrl : 'js/templates/loginOrg.html',
-        controller : 'OrganizationController',
-        controllerAs : 'Organization'
+        controller : 'OrganizationController as Organization'
     })
     .state('userSignup',{
         url : '/signup',
         templateUrl : 'js/templates/signup.html',
-        controller : 'UserController',
-        controllerAs : 'User'
+        controller : 'UserController as User'
     })
     .state('signupOrganization', {
         url : '/signupOrg',
         templateUrl : 'js/templates/signupOrg.html',
-        controller : 'OrganizationController',
-        controllerAs : 'Organization'
+        controller : 'OrganizationController as Organization'
     })
     .state('userPwdForgot', {
         url :'/forgot',
         templateUrl : 'js/templates/forgot.html',
-        controller : 'UserController',
-        controllerAs : 'User'
+        controller : 'UserController as User'
     })
     .state('orgnizationPwdForgot',{
         url : '/forgotOrg',
         templateUrl : 'js/templates/forgotOrg.html',
-        controller : 'OrganizationController',
-        controllerAs : 'Organization'
+        controller : 'OrganizationController as Organization'
     })
     .state('main',{
         url : '/main',
@@ -60,14 +54,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     .state('facebook',{
         url : '/facebook/:token',
         templateUrl : 'js/templates/main.html',
-        controller : 'FacebookCtrl',
-        controllerAs : 'Facebook'
+        controller : 'FacebookCtrl as Facebook'
     })
     .state('pwdreset',{
         url : '/user/reset/:token',
         templateUrl : 'js/templates/reset.html',
-        controller: 'UserController',
-        controllerAs: 'User'
+        controller: 'UserController as User'
     })
     .state('pwdResetFail',{
         url : '/reseterror',
@@ -76,12 +68,20 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     .state('pwdResetOrg',{
         url : '/organization/reset/:token',
         templateUrl : 'js/templates/resetOrg.html',
-        controller: 'OrganizationController',
-        controllerAs : 'Organization'
+        controller: 'OrganizationController as Organization'
     })
     .state('activate', {
         url : '/activate',
         templateUrl : 'js/templates/activate.html'
+    })
+    .state('UserProfile', {
+        url : '/profile',
+        templateUrl : 'js/templates/userProfile.html',
+        controller:'UserController as User'
+    })
+    .state('OrganizationProfile',{
+        url : '/orgProfile',
+        templateUrl : 'js/templates/orgProfile.html'
     })
 
     $urlRouterProvider.otherwise('/');

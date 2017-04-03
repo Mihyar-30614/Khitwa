@@ -1,8 +1,8 @@
-<ion-scroll zooming="true" direction="xy">
+<ion-scroll zooming="true">
 <div class="login-page">
 <div class="button-bar">
-<a class="button button-large button-outline button-balanced" href="#/login">User</a>
-<a class="button button-large button-balanced" href="#/loginOrg">Organization</a>
+<a class="button button-large button-outline button-assertive" href="#/login">User</a>
+<a class="button button-large button-assertive" href="#/loginOrg">Organization</a>
 </div>
   <div class="form">
     <form class="login-form" ng-submit="signin(data)">
@@ -10,7 +10,7 @@
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
       <input type="password" placeholder="enter password" ng-model="data.password" required />
-      <button class="btn btn-lg btn-success icon icon-left ion-log-in" type="submit"> login</button>
+      <button class="btn btn-lg btn-danger icon icon-left ion-log-in" type="submit"> login</button>
       <p class="message">Not registered? <a href="#/signupOrg">Create an account</a></p>
       <p class="message"><a href="#/forgotOrg">Forgot Password?</a></p>
     </form>
