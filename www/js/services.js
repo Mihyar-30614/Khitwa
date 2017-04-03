@@ -107,22 +107,11 @@ angular.module('Khitwa.services', [])
             return error;
         })
     };
-    var checkToken = function (token) {
-        return $http({
-            method : 'GET',
-            url : link + '/api/user/chck/'+token
-        })
-        .then(function (resp) {
-            return resp;
-        }).catch(function (error) {
-            return error;
-        })
-    };
-    var reset = function (token, password) {
+    var reset = function (data) {
         return $http ({
             method : 'POST',
-            url : link + '/api/user/reset/'+token,
-            data : password
+            url : link + '/api/user/reset/'+data.token,
+            data : data
         })
         .then(function (resp) {
             return resp;
@@ -169,7 +158,6 @@ angular.module('Khitwa.services', [])
         remove : remove, 
         rate : rate, 
         forgot : forgot,
-        checkToken : checkToken, 
         reset : reset,
         validate : validate
     };

@@ -1,1 +1,25 @@
-<div>You Have Reached Reset Page!</div>
+<ion-scroll zooming="true">
+	<div class="login-page">
+	<div class="form">
+		<form class= "login-form" ng-submit="reset(data)">
+     	<h5 class="text-left"><label>Password</label></h5>
+      	<input type="password" placeholder="e.g. Sxlo@412" ng-model="data.password" />
+      <h5 class="text-left"><label>Confirm Password</label></h5>
+        <input type="password" placeholder="enater password again" ng-model="data.confirm" />
+      	<button type="submit" class="btn btn-lg btn-success icon icon-left ion-android-mail"> Reset Password</button>
+    </form>
+    <br>
+    <div class="jumbotron text-center" ng-show="loading">
+      <span class="glyphicon glyphicon-repeat spinner"></span>
+      <p>Loading...</p>
+    </div>
+    <br>
+    <div class="row show-hide-message" ng-show="res.success">
+      <div class="alert alert-success">{{res.success}}</div>
+    </div>
+    <div class="row show-hide-message" ng-show="res.fail">
+      <div class="alert alert-danger">{{res.fail}}</div>
+    </div>
+    </div>
+	</div>
+</ion-scroll>

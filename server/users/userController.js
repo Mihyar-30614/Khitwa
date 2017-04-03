@@ -182,18 +182,18 @@ module.exports = {
 				user.resetable = true;
 				user.save(function (error, saved) {
 					if(saved){
-						res.status(200).send('Token Still Alive');
+						res.redirect('/#/user/reset/'+req.params.token);
 					}
 				})
 			} else {
-				helpers.errorHandler('Link Expired', req, res);
+				res.redirect('/#/reseterror');
 			}
 		})
 	},
 
 	pwdReset : function (req, res){
 		var token = req.params.token;
-		var password = req.body.newPassword;
+		var password = req.body.password;
 
 		if (!token) {
 			helpers.errorHandler('Token Not Found', req, res)

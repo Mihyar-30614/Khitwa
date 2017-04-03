@@ -1,6 +1,6 @@
 angular.module('Khitwa.controllers', ['Khitwa.services'])
 
-.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate) {
+.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate, $stateParams) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$scope.res = {};
 	$rootScope.$on('$stateChangeStart', function () {
@@ -75,7 +75,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		    $('#submit').prop('disabled', disable);
 	    })
 	});
-	$scope.reset = function (email) {
+	$scope.resetRequest = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
 		User.forgot({email: email}).then(function (resp) {
@@ -92,6 +92,35 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			}
 		})
 	};
+	$scope.reset = function (data) {
+		var token = $stateParams.token;
+		$scope.res = {};
+		$scope.loading = true;
+		if (data.password === data.confirm) {
+			var valid = User.validate('john', data.password, 'example@someone.ca');
+			if (valid.valid) {
+				User.reset({token: token, password : data.password}).then(function (resp) {
+					if (resp.status !== 201) {
+						$scope.loading = false;
+						$scope.res.fail = resp.data;
+					} else {
+						$scope.loading = false;
+						$scope.res.success = resp.data;
+						$timeout(function () {
+							$location.path('/login');
+							$scope.res = {};
+						},5000);
+					}
+				})
+			} else {
+				$scope.loading = false;
+				$scope.res.fail = valid.message;
+			}
+		} else {
+			$scope.res.fail = 'Password does not match!';
+			$scope.loading = false;
+		}	
+	}
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate) {
@@ -153,7 +182,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		    $('#submit1').prop('disabled', disable);
 	    })
 	});
-	$scope.resetOrg = function (email) {
+	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
 		User.forgot({email: email}).then(function (resp) {
