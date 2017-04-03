@@ -6,10 +6,14 @@
 </div>
   <div class="form">
     <form id="signup1" ng-submit="signup(regData)">
-      <input class="input1" type="text" maxlength="48" placeholder="username" ng-model="regData.username" required autofocus />
-      <input class="input1" type="password" maxlength="24" placeholder="password" ng-model="regData.password" required/>
+      <h5 class="text-left"><label>Username</label></h5>
+      <input class="input1" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus />
+      <h5 class="text-left"><label>Password</label></h5>
+      <input class="input1" type="password" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
+      <h5 class="text-left"><label>Confirm Password</label></h5>      
       <input class="input1" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
-      <input class="input1" type="text" placeholder="email address" ng-model="regData.email" required/>
+      <h5 class="text-left"><label>Email</label></h5>
+      <input class="input1" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
       <button id="submit1" class="btn btn-lg btn-success icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/loginOrg">Sign In</a></p>
     </form>
