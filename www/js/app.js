@@ -73,6 +73,12 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         url : '/reseterror',
         templateUrl : 'js/templates/reseterror.html'
     })
+    .state('pwdResetOrg',{
+        url : '/organization/reset/:token',
+        templateUrl : 'js/templates/resetOrg.html',
+        controller: 'OrganizationController',
+        controllerAs : 'Organization'
+    })
 
     $urlRouterProvider.otherwise('/');
     $httpProvider.interceptors.push('AttachToken');

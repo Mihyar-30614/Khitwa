@@ -230,7 +230,7 @@ module.exports = {
 				organization.active = true;
 				organization.save(function (error, saved) {
 					if (saved) {
-						res.status(201).send('Organization Acitvated');
+						res.redirect('/#/user/activate');
 					}
 				})
 			} else {
@@ -267,11 +267,11 @@ module.exports = {
 				org.resetable = true;
 				org.save(function (error, saved) {
 					if (saved) {
-						res.status(201).send('Token Still Alive');
+						res.redirect('/#/organization/reset/'+req.params.token);
 					}
 				})
 			} else {
-				helpers.errorHandler('Linked Expired', req, res)
+				res.redirect('/#/reseterror');
 			}
 		})
 	},

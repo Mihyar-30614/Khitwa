@@ -43,6 +43,8 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		$location.path('/');
 	};
 	$scope.signup = function (regData) {
+		$scope.res = {};
+		$scope.loading = true;
 		var valid = User.validate(regData.username, regData.password, regData.email);
 		if (valid.valid) {
 			User.signup(regData)
@@ -123,7 +125,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	}
 })
 
-.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate) {
+.controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
@@ -150,6 +152,8 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		})
 	};
 	$scope.signup = function (regData) {
+		$scope.res = {};
+		$scope.loading = true;
 		var valid = User.validate(regData.username, regData.password, regData.email);
 		if (valid.valid) {
 			Organization.signup(regData)
@@ -185,7 +189,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
-		User.forgot({email: email}).then(function (resp) {
+		Organization.forgot({email: email}).then(function (resp) {
 			if (resp.status !== 200) {
 				$scope.loading = false;
 				$scope.res.fail = resp.data;
@@ -199,6 +203,35 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			}
 		})
 	};
+	$scope.resetOrg = function (data) {
+		var token = $stateParams.token;
+		$scope.res = {};
+		$scope.loading = true;
+		if (data.password === data.confirm) {
+			var valid = User.validate('john', data.password, 'example@someone.ca');
+			if (valid.valid) {
+				Organization.reset({token: token, password : data.password}).then(function (resp) {
+					if (resp.status !== 201) {
+						$scope.loading = false;
+						$scope.res.fail = resp.data;
+					} else {
+						$scope.loading = false;
+						$scope.res.success = resp.data;
+						$timeout(function () {
+							$location.path('/loginOrg');
+							$scope.res = {};
+						},5000);
+					}
+				})
+			} else {
+				$scope.loading = false;
+				$scope.res.fail = valid.message;
+			}
+		} else {
+			$scope.res.fail = 'Password does not match!';
+			$scope.loading = false;
+		}	
+	}
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
