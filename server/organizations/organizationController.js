@@ -230,7 +230,7 @@ module.exports = {
 				organization.active = true;
 				organization.save(function (error, saved) {
 					if (saved) {
-						res.redirect('/#/user/activate');
+						res.redirect('/#/activate');
 					}
 				})
 			} else {

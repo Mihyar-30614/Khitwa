@@ -79,6 +79,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         controller: 'OrganizationController',
         controllerAs : 'Organization'
     })
+    .state('activate', {
+        url : '/activate',
+        templateUrl : 'js/templates/activate.html'
+    })
 
     $urlRouterProvider.otherwise('/');
     $httpProvider.interceptors.push('AttachToken');

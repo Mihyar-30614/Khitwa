@@ -302,7 +302,7 @@ module.exports = {
 				user.active = true;
 				user.save(function (error, saved) {
 					if(saved){
-						res.redirect('/#/user/activate');
+						res.redirect('/#/activate');
 					}
 				})
 			} else {
