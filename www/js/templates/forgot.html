@@ -5,11 +5,23 @@
 		<a class="button button-large button-outline button-balanced" href="#/forgotOrg">Organization</a>
 	</div>
 	<div class="form">
-		<form class= "login-form">
+		<form class= "login-form" ng-submit="reset(email)">
      	<h5 class="text-left"><label>Email Address</label></h5>
-      	<input type="text" placeholder="Enter Email Address"/>
-      	<button class="btn btn-lg btn-success icon icon-left ion-android-mail"> Retrieve Password</button>
+      	<input type="text" placeholder="Enter Email Address" ng-model="email" />
+      	<button type="submit" class="btn btn-lg btn-success icon icon-left ion-android-mail"> Retrieve Password</button>
     </form>
+    <br>
+    <div class="jumbotron text-center" ng-show="loading">
+      <span class="glyphicon glyphicon-repeat spinner"></span>
+      <p>Loading...</p>
+    </div>
+    <br>
+    <div class="row show-hide-message" ng-show="res.success">
+      <div class="alert alert-success">{{res.success}}</div>
+    </div>
+    <div class="row show-hide-message" ng-show="res.fail">
+      <div class="alert alert-danger">{{res.fail}}</div>
+    </div>
     </div>
 	</div>
 </ion-scroll>

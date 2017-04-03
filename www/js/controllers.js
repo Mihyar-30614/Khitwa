@@ -75,6 +75,23 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		    $('#submit').prop('disabled', disable);
 	    })
 	});
+	$scope.reset = function (email) {
+		$scope.res = {};
+		$scope.loading = true;
+		User.forgot({email: email}).then(function (resp) {
+			if (resp.status !== 200) {
+				$scope.loading = false;
+				$scope.res.fail = resp.data;
+			} else {
+				$scope.loading = false;
+				$scope.res.success = resp.data;
+				$timeout(function () {
+					$location.path('/login');
+					$scope.res = {};
+				},5000);
+			}
+		})
+	};
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate) {
@@ -136,6 +153,23 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		    $('#submit1').prop('disabled', disable);
 	    })
 	});
+	$scope.resetOrg = function (email) {
+		$scope.res = {};
+		$scope.loading = true;
+		User.forgot({email: email}).then(function (resp) {
+			if (resp.status !== 200) {
+				$scope.loading = false;
+				$scope.res.fail = resp.data;
+			} else {
+				$scope.loading = false;
+				$scope.res.success = resp.data;
+				$timeout(function () {
+					$location.path('/loginOrg');
+					$scope.res = {};
+				},5000);
+			}
+		})
+	};
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
