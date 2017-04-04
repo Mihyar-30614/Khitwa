@@ -10,8 +10,10 @@
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
       <input type="password" placeholder="enter password" ng-model="data.password" required />
-      <button class="btn btn-lg btn-danger icon icon-left ion-log-in" type="submit"> login</button>&nbsp
-      <button type="button" class="btn btn-lg btn-primary" ng-click="facebook();">Facebook</button>
+      <button type="submit" class="btn btn-block btn-social btn-pinterest"> login </button>
+      <button type="submit" class="btn btn-block btn-social btn-facebook" ng-click="facebook();"><i class="fa fa-facebook"></i> Sign in with Facebook </button>
+      <button type="submit" class="btn btn-block btn-social btn-twitter"><i class="fa fa-twitter"></i> Sign in with Twitter</button>
+      <button type="submit" class="btn btn-block btn-social btn-google"><i class="fa fa-google"></i> Sign in with Google</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
     </form>

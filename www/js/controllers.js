@@ -3,11 +3,12 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 .controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate, $stateParams) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 	$scope.res = {};
+	$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
-		// if logged send info to backend and get user info here
-		// add user info to $scope
+		// if logged send info to backend and get user info here and add user info to $scope
+		$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 	});
 	$scope.signin = function (data) {
 		$scope.res = {};
@@ -20,12 +21,18 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			} else {
 				$scope.loading = false;
 				$window.localStorage.setItem('com.khitwa',resp.data.token);
+				$scope.setWindowUser(resp.data);
 				$scope.res.success = '....Redirecting!';
 				$timeout(function () {
 					$location.path('/main');
 					$scope.res = {};
 				},2000)
 			}
+		})
+	};
+	$scope.setWindowUser = function (resp) {
+		User.getUser(resp.username).then(function (res) {
+			$window.localStorage['user'] = angular.toJson(res.data);
 		})
 	};
 	$scope.facebook = function () {
@@ -43,6 +50,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.signout = function () {
 		$window.localStorage.removeItem('com.khitwa');
 		$window.localStorage.removeItem('Organization');
+		$window.localStorage.removeItem('user');
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 		$scope.loggedIn = $window.localStorage.getItem('Organization')? true : false;
 		$scope.isOrg = false;
@@ -128,7 +136,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$scope.res.fail = 'Password does not match!';
 			$scope.loading = false;
 		}	
-	}
+	};
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {

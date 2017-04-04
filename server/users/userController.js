@@ -22,7 +22,7 @@ module.exports = {
 							if (found) {
 								var token = jwt.sign({ username : user.username, email: user.email, _id : user._id}, secret , {expiresIn : '4h'});
 								res.setHeader('x-access-token', token);
-								res.json({token : token});
+								res.json({token : token, username : user.username});
 							}
 						});
 					} else {
@@ -57,6 +57,7 @@ module.exports = {
 				user.firstName = firstName;
 				user.lastName = lastName;
 				user.dateOfBirth = req.body.dateOfBirth;
+				user.picture = 'http://i.imgur.com/FlEXhZo.jpg?1';
 				user.save(function (error, saved) {
 					if (saved) {
 						var encoded = jwt.sign({username : saved.username}, secret);
@@ -94,7 +95,7 @@ module.exports = {
 
 	getUser : function (req, res){
 		var username = req.params.username.toLowerCase();
-		User.findOne({ username: username})
+		User.findOne({ username: username}).select('_id username firstName lastName email dateOfBirth awards rate skills picture bio')
 		.exec(function (error, user) {
 			if (user) {
 				res.status(200).send(user)

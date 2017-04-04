@@ -1,1 +1,34 @@
-<p>Hey This is User Profile</p>
+<ion-scroll zooming="true" >
+<center>
+<div class="container">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <center>
+                    <img src={{user.picture}} name="aboutme" width="140" height="140" border="0" class="img-circle"></a>
+                    <h3 class="media-heading"><span class="badge progress-bar-warning">{{user.rate}} </span> {{user.firstName}} {{user.lastName}} <small><br>{{user.email}}</small>
+                    <small>{{user.phoneNumber}}</small></h3>
+                    <span><strong>Skills: </strong></span>
+                        <h4><span ng-repeat="skill in user.skills"> &nbsp;<span class="label label-success">{{skill}} </span></span></h4>
+                    </center>
+                    <hr>
+                    <center>
+                    <p class="text-left"><strong>Bio: </strong><br>
+                        {{user.bio}}</p>
+                    </center>
+                    <br>
+                    <hr>
+                    <center>
+                    <p class="text-left"><strong>Awards: </strong></p>
+                    <ul ng-repeat="award in user.awards">
+                    	<li>{{award.organization}}</li>
+                    	<li>{{award.opportunity}}</li>
+                    	<li>{{award.opening}}</li>
+                    </ul>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+    </center>
+</ion-scroll>
