@@ -10,7 +10,28 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		// if logged send info to backend and get user info here and add user info to $scope
 		$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 	});
+	$scope.toUser = function () {
+		$('#toUser').attr('class', 'button button-large button-assertive');
+		$('#toOrg').attr('class', 'button button-large button-outline button-assertive');
+		$('#login-form').show();
+		$('#org-login').attr('class','login-form hidden');
+	};
+	$scope.toOrg = function () {
+		$('#toUser').attr('class', 'button button-large button-outline button-assertive');
+		$('#toOrg').attr('class', 'button button-large button-assertive');
+		$('#login-form').hide();
+		$('#org-login').attr('class','login-form');
+	    $('#submit1').attr('disabled', true);
+	    $('#signup1').keyup(function () {
+			var disable = false;
+		    $('.input1').each(function () {
+		    	if($(this).val() == '') { disable = true };
+		    });
+		    $('#submit1').prop('disabled', disable);
+	    })
+	};
 	$scope.signin = function (data) {
+		console.log('user login');
 		$scope.res = {};
 		$scope.loading = true;
 		User.signin({username : data.username, password: data.password})
@@ -83,7 +104,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	};
 	$(document).ready(function(){
 	    $('#submit').attr('disabled', true);
-	    $('#signup').keyup(function () {
+	    $('#login-form').keyup(function () {
 			var disable = false;
 		    $('.input').each(function () {
 		    	if($(this).val() == '') { disable = true };
@@ -148,7 +169,8 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
 	});
-	$scope.signin = function (data) {
+	$scope.login = function (data) {
+		console.log('Organization login');
 		$scope.res = {};
 		$scope.loading = true;
 		Organization.signin({username : data.username, password : data.password})
@@ -193,16 +215,6 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$scope.res.fail = valid.message;
 		}
 	};
-	$(document).ready(function(){
-	    $('#submit1').attr('disabled', true);
-	    $('#signup1').keyup(function () {
-			var disable = false;
-		    $('.input1').each(function () {
-		    	if($(this).val() == '') { disable = true };
-		    });
-		    $('#submit1').prop('disabled', disable);
-	    })
-	});
 	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
