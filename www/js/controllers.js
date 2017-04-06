@@ -154,7 +154,12 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.resetRequest = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
-		User.forgot({email: email}).then(function (resp) {
+		if ($scope.toggle) {
+			var x = Organization.forgot({email: email});
+		} else {
+			var x = User.forgot({email: email});
+		}
+		x.then(function (resp) {
 			if (resp.status !== 200) {
 				$scope.loading = false;
 				$scope.res.fail = resp.data;
@@ -200,24 +205,6 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
-	$scope.resetRequestOrg = function (email) {
-		$scope.res = {};
-		$scope.loading = true;
-		$scope.isOrg = true;
-		Organization.forgot({email: email}).then(function (resp) {
-			if (resp.status !== 200) {
-				$scope.loading = false;
-				$scope.res.fail = resp.data;
-			} else {
-				$scope.loading = false;
-				$scope.res.success = resp.data;
-				$timeout(function () {
-					$location.path('/login');
-					$scope.res = {};
-				},5000);
-			}
-		})
-	};
 	$scope.resetOrg = function (data) {
 		var token = $stateParams.token;
 		$scope.res = {};
