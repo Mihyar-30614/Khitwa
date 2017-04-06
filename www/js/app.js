@@ -32,11 +32,6 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl : 'js/templates/forgot.html',
         controller : 'UserController as User'
     })
-    .state('orgnizationPwdForgot',{
-        url : '/forgotOrg',
-        templateUrl : 'js/templates/forgotOrg.html',
-        controller : 'OrganizationController as Organization'
-    })
     .state('main',{
         url : '/main',
         templateUrl : 'js/templates/main.html'

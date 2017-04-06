@@ -1,26 +1,50 @@
 angular.module('Khitwa.controllers', ['Khitwa.services'])
 
-.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate, $stateParams) {
+.controller('UserController', function($scope, User, $window, $location, $timeout, $rootScope, $ionicScrollDelegate, $stateParams, Organization) {
 	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+	$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
 	$scope.res = {};
+	$scope.toggle = false;
 	$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 	$rootScope.$on('$stateChangeStart', function () {
 		// using stateChangeStart not $routeChangeStart because I use ui-router
+		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
 		// if logged send info to backend and get user info here and add user info to $scope
 		$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
+		$scope.organization = $window.localStorage.getItem('organization')? JSON.parse($window.localStorage.organization) : {};
 	});
 	$scope.toUser = function () {
+		$scope.res = {};
+		$scope.toggle = false;
 		$('#toUser').attr('class', 'button button-large button-assertive');
 		$('#toOrg').attr('class', 'button button-large button-outline button-assertive');
+		$('#toUserSignup').attr('class', 'button button-large button-assertive');
+		$('#toOrgSignup').attr('class', 'button button-large button-outline button-assertive');
+		$('#toUserForgot').attr('class', 'button button-large button-assertive');
+		$('#toOrgForgot').attr('class', 'button button-large button-outline button-assertive');
 		$('#login-form').show();
 		$('#org-login').attr('class','login-form hidden');
+		$('#login-form1').show();
+		$('#org-login1').attr('class','login-form hidden');
+		$('#login-form2').show();
+		$('#org-login2').attr('class','login-form hidden');
 	};
 	$scope.toOrg = function () {
+		$scope.res = {};
+		$scope.toggle = true;
 		$('#toUser').attr('class', 'button button-large button-outline button-assertive');
 		$('#toOrg').attr('class', 'button button-large button-assertive');
+		$('#toUserSignup').attr('class', 'button button-large button-outline button-assertive');
+		$('#toOrgSignup').attr('class', 'button button-large button-assertive');
+		$('#toUserForgot').attr('class', 'button button-large button-outline button-assertive');
+		$('#toOrgForgot').attr('class', 'button button-large button-assertive');
 		$('#login-form').hide();
 		$('#org-login').attr('class','login-form');
+		$('#login-form1').hide();
+		$('#org-login1').attr('class','login-form');
+		$('#login-form2').hide();
+		$('#org-login2').attr('class','login-form');
 	    $('#submit1').attr('disabled', true);
 	    $('#signup1').keyup(function () {
 			var disable = false;
@@ -31,11 +55,14 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	    })
 	};
 	$scope.signin = function (data) {
-		console.log('user login');
 		$scope.res = {};
 		$scope.loading = true;
-		User.signin({username : data.username, password: data.password})
-		.then(function (resp) {
+		if($scope.toggle){
+			 var x = Organization.signin({username : data.username, password : data.password})
+		} else {
+			var x = User.signin({username : data.username, password: data.password})
+		}
+		x.then(function (resp) {
 			if (resp.status !== 200) {
 				$scope.loading = false;
 				$scope.res.fail = resp.data;
@@ -43,6 +70,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 				$scope.loading = false;
 				$window.localStorage.setItem('com.khitwa',resp.data.token);
 				$scope.setWindowUser(resp.data);
+				if($scope.toggle){$window.localStorage.setItem('Organization',true);}
 				$scope.res.success = '....Redirecting!';
 				$timeout(function () {
 					$location.path('/main');
@@ -52,9 +80,15 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		})
 	};
 	$scope.setWindowUser = function (resp) {
-		User.getUser(resp.username).then(function (res) {
-			$window.localStorage['user'] = angular.toJson(res.data);
-		})
+		if ($scope.toggle) {
+			Organization.getByName(resp.username).then(function (res) {
+				$window.localStorage['organization'] = angular.toJson(res.data);
+			})
+		} else {		
+			User.getUser(resp.username).then(function (res) {
+				$window.localStorage['user'] = angular.toJson(res.data);
+			})
+		}
 	};
 	$scope.facebook = function () {
 		$window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook';
@@ -82,8 +116,12 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		$scope.loading = true;
 		var valid = User.validate(regData.username, regData.password, regData.email);
 		if (valid.valid) {
-			User.signup(regData)
-			.then(function (resp) {
+			if ($scope.toggle) {
+				var x = Organization.signup(regData)
+			} else {
+				var x = User.signup(regData)
+			}
+			x.then(function (resp) {
 				if (resp.status!= 201) {
 					$scope.loading = false;
 					$scope.res.fail = resp.data;
@@ -161,60 +199,31 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
-	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
-	$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
-	$scope.res = {};
-	$rootScope.$on('$stateChangeStart', function () {
-		// using stateChangeStart not $routeChangeStart because I use ui-router
-		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
-		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
-	});
-	$scope.login = function (data) {
-		console.log('Organization login');
-		$scope.res = {};
-		$scope.loading = true;
-		Organization.signin({username : data.username, password : data.password})
-		.then(function (resp) {
-			if (resp.status !== 200) {
-				$scope.loading = false;
-				$scope.res.fail = resp.data;
-			} else {
-				$scope.loading = false;
-				$window.localStorage.setItem('com.khitwa',resp.data.token);
-				$window.localStorage.setItem('Organization',true);
-				$scope.res.success = '....Redirecting!';
-				$timeout(function () {
-					$location.path('/main');
-					$scope.res = {};
-				}, 2000);
-			}
-		})
-	};
-	$scope.signup = function (regData) {
-		$scope.res = {};
-		$scope.loading = true;
-		var valid = User.validate(regData.username, regData.password, regData.email);
-		if (valid.valid) {
-			Organization.signup(regData)
-			.then(function (resp) {
-				if (resp.status!= 201) {
-					$scope.loading = false;
-					$scope.res.fail = resp.data;
-				} else {
-					$scope.loading = false;
-					$scope.res.success = resp.data + '....Redirecting!';
-					$timeout(function () {
-						$location.path('/main');
-						$scope.res = {};
-					},2000);
-				}
-			})
-		}else{
-			$ionicScrollDelegate.scrollBottom();
-			$scope.loading = false;
-			$scope.res.fail = valid.message;
-		}
-	};
+	// $scope.signup = function (regData) {
+	// 	$scope.res = {};
+	// 	$scope.loading = true;
+	// 	var valid = User.validate(regData.username, regData.password, regData.email);
+	// 	if (valid.valid) {
+	// 		Organization.signup(regData)
+	// 		.then(function (resp) {
+	// 			if (resp.status!= 201) {
+	// 				$scope.loading = false;
+	// 				$scope.res.fail = resp.data;
+	// 			} else {
+	// 				$scope.loading = false;
+	// 				$scope.res.success = resp.data + '....Redirecting!';
+	// 				$timeout(function () {
+	// 					$location.path('/main');
+	// 					$scope.res = {};
+	// 				},2000);
+	// 			}
+	// 		})
+	// 	}else{
+	// 		$ionicScrollDelegate.scrollBottom();
+	// 		$scope.loading = false;
+	// 		$scope.res.fail = valid.message;
+	// 	}
+	// };
 	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
@@ -227,7 +236,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 				$scope.loading = false;
 				$scope.res.success = resp.data;
 				$timeout(function () {
-					$location.path('/loginOrg');
+					$location.path('/login');
 					$scope.res = {};
 				},5000);
 			}
@@ -248,7 +257,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 						$scope.loading = false;
 						$scope.res.success = resp.data;
 						$timeout(function () {
-							$location.path('/loginOrg');
+							$location.path('/login');
 							$scope.res = {};
 						},5000);
 					}

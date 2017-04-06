@@ -16,14 +16,14 @@
       <button type="submit" class="btn btn-block btn-social btn-google"><i class="fa fa-google"></i> Sign in with Google</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
-    </form><div id="org-login" class="hidden" ng-controller="OrganizationController">
-    <form class="login-form" ng-submit="login(data)">
+    </form><div id="org-login" class="hidden">
+    <form class="login-form" ng-submit="signin(data)">
       <h5 class="text-left"><label>Username</label></h5>
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
       <input type="password" placeholder="enter password" ng-model="data.password" required />
       <button class="btn btn-block btn-social btn-pinterest" type="submit"> login</button>
-      <p class="message">Not registered? <a href="#/signupOrg">Create an account</a></p>
+      <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgotOrg">Forgot Password?</a></p>
     </form></div>
     <br>
