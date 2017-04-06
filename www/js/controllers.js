@@ -10,7 +10,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		// using stateChangeStart not $routeChangeStart because I use ui-router
 		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
 		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
-		// if logged send info to backend and get user info here and add user info to $scope
+		// if logged send info to backend and get user/organization info here and add user/organization info to $scope
 		$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 		$scope.organization = $window.localStorage.getItem('organization')? JSON.parse($window.localStorage.organization) : {};
 	});
@@ -66,6 +66,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			if (resp.status !== 200) {
 				$scope.loading = false;
 				$scope.res.fail = resp.data;
+				$ionicScrollDelegate.scrollBottom();
 			} else {
 				$scope.loading = false;
 				$window.localStorage.setItem('com.khitwa',resp.data.token);
