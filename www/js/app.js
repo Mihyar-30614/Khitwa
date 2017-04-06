@@ -22,20 +22,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl : 'js/templates/login.html',
         controller : 'UserController as User'
     })
-    .state('organizationLogin',{
-        url:'/loginOrg',
-        templateUrl : 'js/templates/loginOrg.html',
-        controller : 'OrganizationController as Organization'
-    })
     .state('userSignup',{
         url : '/signup',
         templateUrl : 'js/templates/signup.html',
         controller : 'UserController as User'
-    })
-    .state('signupOrganization', {
-        url : '/signupOrg',
-        templateUrl : 'js/templates/signupOrg.html',
-        controller : 'OrganizationController as Organization'
     })
     .state('userPwdForgot', {
         url :'/forgot',
