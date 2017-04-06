@@ -205,6 +205,16 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
+	$scope.organization = $window.localStorage.getItem('organization')? JSON.parse($window.localStorage.organization) : {};
+	$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
+	$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+	$rootScope.$on('$stateChangeStart', function () {
+		// using stateChangeStart not $routeChangeStart because I use ui-router
+		$scope.isOrg = $window.localStorage.getItem('Organization')? true : false;
+		$scope.loggedIn = $window.localStorage.getItem('com.khitwa')? true : false;
+		// if logged send info to backend and get user/organization info here and add user/organization info to $scope
+		$scope.organization = $window.localStorage.getItem('organization')? JSON.parse($window.localStorage.organization) : {};
+	});
 	$scope.resetOrg = function (data) {
 		var token = $stateParams.token;
 		$scope.res = {};

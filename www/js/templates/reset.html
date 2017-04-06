@@ -3,9 +3,9 @@
 	<div class="form">
 		<form class= "login-form" ng-submit="reset(data)">
      	<h5 class="text-left"><label>Password</label></h5>
-      	<input type="password" placeholder="e.g. Sxlo@412" ng-model="data.password" />
+      	<input type="password" placeholder="e.g. Sxlo@412" ng-model="data.password" required />
       <h5 class="text-left"><label>Confirm Password</label></h5>
-        <input type="password" placeholder="enter password again" ng-model="data.confirm" />
+        <input type="password" placeholder="enter password again" ng-model="data.confirm" required />
       	<button type="submit" class="btn btn-block btn-social btn-pinterest icon icon-left ion-android-mail"> Reset Password</button>
     </form>
     <br>
