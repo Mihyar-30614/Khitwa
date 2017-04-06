@@ -200,31 +200,6 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
-	// $scope.signup = function (regData) {
-	// 	$scope.res = {};
-	// 	$scope.loading = true;
-	// 	var valid = User.validate(regData.username, regData.password, regData.email);
-	// 	if (valid.valid) {
-	// 		Organization.signup(regData)
-	// 		.then(function (resp) {
-	// 			if (resp.status!= 201) {
-	// 				$scope.loading = false;
-	// 				$scope.res.fail = resp.data;
-	// 			} else {
-	// 				$scope.loading = false;
-	// 				$scope.res.success = resp.data + '....Redirecting!';
-	// 				$timeout(function () {
-	// 					$location.path('/main');
-	// 					$scope.res = {};
-	// 				},2000);
-	// 			}
-	// 		})
-	// 	}else{
-	// 		$ionicScrollDelegate.scrollBottom();
-	// 		$scope.loading = false;
-	// 		$scope.res.fail = valid.message;
-	// 	}
-	// };
 	$scope.resetRequestOrg = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
