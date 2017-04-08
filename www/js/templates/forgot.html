@@ -1,15 +1,15 @@
 <ion-scroll zooming="true">
 	<div class="login-page">
   <div class="button-bar">
-  <a class="button button-large button-assertive" id="toUserForgot" ng-click="toUser()">User</a>
-  <a class="button button-large button-outline button-assertive" id="toOrgForgot" ng-click="toOrg()">Organization</a>
+  <a class="button button-large button-assertive toUser" ng-click="toUser()">User</a>
+  <a class="button button-large button-outline button-assertive toOrg" ng-click="toOrg()">Organization</a>
   </div>
 	<div class="form">
-		<form id="login-form2" class= "login-form" ng-submit="resetRequest(email)">
+		<form class= "login-form user" ng-submit="resetRequest(email)">
      	<h5 class="text-left"><label>Email Address</label></h5>
       	<input type="text" placeholder="Enter Email Address" ng-model="email" />
       	<button type="submit" class="btn btn-block btn-social btn-pinterest icon icon-left ion-android-mail"> Retrieve Password</button>
-    </form><div id="org-login2" class="hidden">
+    </form><div class="hidden login-form org">
     <form class= "login-form" ng-submit="resetRequest(email)">
       <h5 class="text-left"><label>Email Address</label></h5>
         <input type="text" placeholder="Enter Email Address" ng-model="email" />

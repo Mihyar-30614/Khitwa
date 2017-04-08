@@ -1,11 +1,11 @@
 <ion-scroll zooming="true">
 <div class="login-page">
 <div class="button-bar">
-<a class="button button-large button-assertive" id="toUser" ng-click="toUser()">User</a>
-<a class="button button-large button-outline button-assertive" id="toOrg" ng-click="toOrg()">Organization</a>
+<a class="button button-large button-assertive toUser" ng-click="toUser()">User</a>
+<a class="button button-large button-outline button-assertive toOrg" ng-click="toOrg()">Organization</a>
 </div>
   <div class="form">
-    <form id="login-form" class="login-form" ng-submit="signin(data);">
+    <form id="login-form" class="login-form user" ng-submit="signin(data);">
       <h5 class="text-left"><label>Username</label></h5>
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
@@ -16,7 +16,7 @@
       <button type="submit" class="btn btn-block btn-social btn-google"><i class="fa fa-google"></i> Sign in with Google</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
-    </form><div id="org-login" class="hidden">
+    </form><div id="org-login" class="hidden org">
     <form class="login-form" ng-submit="signin(data)">
       <h5 class="text-left"><label>Username</label></h5>
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>

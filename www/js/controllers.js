@@ -17,34 +17,18 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.toUser = function () {
 		$scope.res = {};
 		$scope.toggle = false;
-		$('#toUser').attr('class', 'button button-large button-assertive');
-		$('#toOrg').attr('class', 'button button-large button-outline button-assertive');
-		$('#toUserSignup').attr('class', 'button button-large button-assertive');
-		$('#toOrgSignup').attr('class', 'button button-large button-outline button-assertive');
-		$('#toUserForgot').attr('class', 'button button-large button-assertive');
-		$('#toOrgForgot').attr('class', 'button button-large button-outline button-assertive');
-		$('#login-form').show();
-		$('#org-login').attr('class','login-form hidden');
-		$('#login-form1').show();
-		$('#org-login1').attr('class','login-form hidden');
-		$('#login-form2').show();
-		$('#org-login2').attr('class','login-form hidden');
+		$('.toUser').attr('class', 'button button-large button-assertive toUser');
+		$('.toOrg').attr('class', 'button button-large button-outline button-assertive toOrg');
+		$('.user').attr('class', 'login-form user');
+		$('.org').attr('class','login-form hidden org');
 	};
 	$scope.toOrg = function () {
 		$scope.res = {};
 		$scope.toggle = true;
-		$('#toUser').attr('class', 'button button-large button-outline button-assertive');
-		$('#toOrg').attr('class', 'button button-large button-assertive');
-		$('#toUserSignup').attr('class', 'button button-large button-outline button-assertive');
-		$('#toOrgSignup').attr('class', 'button button-large button-assertive');
-		$('#toUserForgot').attr('class', 'button button-large button-outline button-assertive');
-		$('#toOrgForgot').attr('class', 'button button-large button-assertive');
-		$('#login-form').hide();
-		$('#org-login').attr('class','login-form');
-		$('#login-form1').hide();
-		$('#org-login1').attr('class','login-form');
-		$('#login-form2').hide();
-		$('#org-login2').attr('class','login-form');
+		$('.toUser').attr('class', 'button button-large button-outline button-assertive toUser');
+		$('.toOrg').attr('class', 'button button-large button-assertive toOrg');
+		$('.user').attr('class','login-form hidden user');
+		$('.org').attr('class','login-form org');
 	    $('#submit1').attr('disabled', true);
 	    $('#signup1').keyup(function () {
 			var disable = false;

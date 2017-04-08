@@ -1,11 +1,11 @@
 <ion-scroll zooming="true">
 <div class="login-page">
 <div class="button-bar">
-<a class="button button-large button-assertive" id="toUserSignup" ng-click="toUser()">User</a>
-<a class="button button-large button-outline button-assertive" id="toOrgSignup" ng-click="toOrg()">Organization</a>
+<a class="button button-large button-assertive toUser" ng-click="toUser()">User</a>
+<a class="button button-large button-outline button-assertive toOrg" ng-click="toOrg()">Organization</a>
 </div>
   <div class="form">
-    <form id="login-form1" ng-submit="signup(regData)">
+    <form id="login-form1" class="login-form user" ng-submit="signup(regData)">
       <h5 class="text-left"><label>Username</label></h5>
       <input class="input" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
@@ -23,7 +23,7 @@
       <button id="submit" class="btn btn-block btn-social btn-pinterest icon icon-left ion-clipboard" type="submit"> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
-  <div id="org-login1" class="hidden">
+  <div class="login-form hidden org">
     <form id="signup1" ng-submit="signup(regData)">
       <h5 class="text-left"><label>Username</label></h5>
       <input class="input1" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus />
