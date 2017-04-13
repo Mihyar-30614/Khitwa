@@ -1,5 +1,6 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy  = require('passport-twitter').Strategy;
+var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy;
 var User             = require('../users/userModel');
 var session          = require('express-session');
 var crypto           = require('crypto');
@@ -54,16 +55,15 @@ module.exports = function (app, passport) {
 	    		});
 	    	}
 	    })
-	  }
-	));
+	}));
 
 	passport.use(new TwitterStrategy({
 	    consumerKey: API.TWITTER.CONSUMER_KEY,
 	    consumerSecret: API.TWITTER.CONSUMER_SECRET,
 	    callbackURL: API.TWITTER.LINK + '/auth/twitter/callback',
 	    userProfileURL : 'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true'
-	  },
-	  function(token, tokenSecret, profile, done) {
+	},
+	function(token, tokenSecret, profile, done) {
 	    User.findOne({email: profile.emails[0].value.toLowerCase()}).exec(function (error, user) {
 	    	if (user && user != null) {
 	    		//login
@@ -87,16 +87,54 @@ module.exports = function (app, passport) {
 	    		});
 	    	}
 	    })
-	  }
-	));
+	}));
+
+	passport.use(new GoogleStrategy({
+	    clientID: API.GOOGLE.CLIENTID,
+	    clientSecret: API.GOOGLE.CLIENTSECRET,
+	    callbackURL: API.GOOGLE.LINK + '/auth/google/callback'
+	},
+	function(accessToken, refreshToken, profile, done) {
+		console.log(profile);
+	    User.findOne({email: profile.emails[0].value.toLowerCase()}).exec(function (error, user) {
+	    	if (user && user != null) {
+	    		//login
+	    		return done(null, user);
+	    	}else{
+	    		// create new user
+	    		var password = crypto.randomBytes(5).toString('hex');
+	    		var name = profile.displayName.split(" ");
+	    		var picture = profile.photos[0].value;
+	    		var user = new User({
+	    			"username" : profile.id,
+	    			"password" : password,
+	    			"email"    : profile.emails[0].value,
+	    			"firstName": name[0],
+	    			"lastName" : name[1],
+	    			"active"   : true,
+	    			"picture"  : picture.substr(0, picture.length-2) + '480'
+	    		});
+	    		// save new user
+	    		user.save(function (error, saved) {
+	    			return done(null, saved);
+	    		});
+	    	}
+	    })
+	}));
+
 	// Facebook routes
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
-	app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/#/login' }), function (req, res) {
+	app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/#/socialerror' }), function (req, res) {
 		res.redirect('/#/facebook/'+ token)
 	});
 	// Twitter Routes
 	app.get('/auth/twitter', passport.authenticate('twitter'));
-	app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/#/login' }), function (req, res) {
+	app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/#/socialerror' }), function (req, res) {
 		res.redirect('/#/twitter/' + token)
+	});
+	// Google Plus Route
+	app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login', 'profile', 'email'] }));
+	app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/#/socialerror' }), function(req, res) {
+	    res.redirect('/#/google/' + token);
 	});
 }

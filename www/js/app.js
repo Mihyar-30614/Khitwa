@@ -46,6 +46,16 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
         templateUrl : 'js/templates/main.html',
         controller : 'SocialCtrl'
     })
+    .state('google', {
+        url : '/google/:token',
+        templateUrl : 'js/templates/main.html',
+        controller : 'SocialCtrl'
+    })
+    .state('SocialError', {
+        url : '/socialerror',
+        templateUrl : '/js/templates/login.html',
+        controller : 'SocialCtrl'
+    })
     .state('pwdreset',{
         url : '/user/reset/:token',
         templateUrl : 'js/templates/reset.html',
