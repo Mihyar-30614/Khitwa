@@ -29,7 +29,7 @@ module.exports = function (app, passport) {
 	    clientSecret: API.FACEBOOK.CLIENTSECRET,
 	    callbackURL: API.FACEBOOK.LINK + '/auth/facebook/callback',
 	    enableProof: true,
-	    profileFields: ['id', 'email', 'first_name', 'verified','last_name', 'picture.type(large)']
+	    profileFields: ['id', 'email', 'first_name', 'verified','last_name']
 	},
 	function(accessToken, refreshToken, profile, done) {
 	    User.findOne({email: profile._json.email}).exec(function (error, user) {
@@ -46,7 +46,7 @@ module.exports = function (app, passport) {
 	    			"firstName": profile._json.first_name,
 	    			"lastName" : profile._json.last_name,
 	    			"active"   : profile._json.verified,
-	    			"picture"  : profile._json.picture.data.url
+	    			"picture"  : 'http://graph.facebook.com/' + profile._json.id + '/picture?type=large&w‌​idth=480&height=480'
 	    		});
 	    		// save new user
 	    		user.save(function (error, saved) {
@@ -65,10 +65,6 @@ module.exports = function (app, passport) {
 	  },
 	  function(token, tokenSecret, profile, done) {
 	    User.findOne({email: profile.emails[0].value.toLowerCase()}).exec(function (error, user) {
-	    	console.log('////////////////////////////////////');
-	    	console.log(error);
-	    	console.log(user);
-	    	console.log('////////////////////////////////////');
 	    	if (user && user != null) {
 	    		//login
 	    		return done(null, user);
@@ -83,7 +79,7 @@ module.exports = function (app, passport) {
 	    			"firstName": name[0],
 	    			"lastName" : name[1],
 	    			"active"   : true,
-	    			"picture"  : profile.photos[0].value
+	    			"picture"  : 'http://www.twitter.com/'+ profile.username + '/profile_image?size=original'
 	    		});
 	    		// save new user
 	    		user.save(function (error, saved) {
