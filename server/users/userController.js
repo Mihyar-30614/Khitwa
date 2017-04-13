@@ -77,15 +77,16 @@ module.exports = {
 
 	checkAuth : function (req, res) {
 
-	    var token = req.headers['x-access-token'];
+	    var token = req.body.token;
+
 		if (!token) {
 			helpers.errorHandler('Please Sign In', req, res);
 		}else{
 			var user = jwt.verify(token, secret);
-			User.findOne({username : user.username})
+			User.findOne({username : user.username}).select('_id username firstName lastName email dateOfBirth awards rate skills picture bio active')
 			.exec(function (error, usr) {
 				if(usr && usr.active){
-					res.status(200).send('Authorized');
+					res.status(200).send(usr);
 				}else{
 					helpers.errorHandler('User Not Found', req, res);
 				}

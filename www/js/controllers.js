@@ -78,6 +78,9 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.facebook = function () {
 		$window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook';
 	};
+	$scope.twitter = function () {
+		$window.location = $window.location.protocol + '//' + $window.location.host + '/auth/twitter';
+	};
 	$scope.goProfile = function () {
 		$location.path('/profile');
 	}
@@ -240,7 +243,10 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
   //});
 })
 
-.controller('FacebookCtrl', function ($stateParams, $location, $window) {
+.controller('SocialCtrl', function ($stateParams, $location, $window, User) {
 	$window.localStorage.setItem('com.khitwa', $stateParams.token);
-	$location.path('/main')
+	User.checkAuth({token : $stateParams.token}).then(function (resp) {
+		$window.localStorage['user'] = angular.toJson(resp.data);
+	});
+	$location.path('/main');
 })

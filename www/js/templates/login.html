@@ -5,18 +5,18 @@
 <a class="button button-large button-outline button-assertive toOrg" ng-click="toOrg()">Organization</a>
 </div>
   <div class="form">
-    <form id="login-form" class="login-form user" ng-submit="signin(data);">
+    <form class="login-form user" ng-submit="signin(data);">
       <h5 class="text-left"><label>Username</label></h5>
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
       <h5 class="text-left"><label>Password</label></h5>
       <input type="password" placeholder="enter password" ng-model="data.password" required />
-      <button type="submit" class="btn btn-block btn-social btn-pinterest"> login </button>
+      <button type="submit" class="btn btn-block btn-social btn-pinterest"><i class="icon ion-log-in"></i> login </button>
       <button type="submit" class="btn btn-block btn-social btn-facebook" ng-click="facebook();"><i class="fa fa-facebook"></i> Sign in with Facebook </button>
-      <button type="submit" class="btn btn-block btn-social btn-twitter"><i class="fa fa-twitter"></i> Sign in with Twitter</button>
+      <button type="submit" class="btn btn-block btn-social btn-twitter" ng-click="twitter();"><i class="fa fa-twitter"></i> Sign in with Twitter</button>
       <button type="submit" class="btn btn-block btn-social btn-google"><i class="fa fa-google"></i> Sign in with Google</button>
       <p class="message">Not registered? <a href="#/signup">Create an account</a></p>
       <p class="message"><a href="#/forgot">Forgot Password?</a></p>
-    </form><div id="org-login" class="hidden org">
+    </form><div class="hidden org">
     <form class="login-form" ng-submit="signin(data)">
       <h5 class="text-left"><label>Username</label></h5>
       <input type="text" placeholder="enter username" ng-model="data.username" required autofocus/>
