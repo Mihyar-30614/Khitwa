@@ -11,7 +11,7 @@ module.exports = function(app, express){
 	app.post('/api/user/signup', userController.signup);
 	app.get('/api/user/getall', userController.getAll);
 	app.get('/api/user/getUser/:username', userController.getUser);
-	app.get('/api/user/signedin', userController.checkAuth);
+	app.post('/api/user/signedin', userController.checkAuth);
 	app.post('/api/user/edit', userController.editUser);
 	app.post('/api/user/delete', userController.deleteUser);
 	app.post('/api/user/rate/:id',userController.rateOrganization);
