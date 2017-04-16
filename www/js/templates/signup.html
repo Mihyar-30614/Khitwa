@@ -10,7 +10,7 @@
       <h5 class="text-left"><label>Username</label></h5>
       <input class="input form-control help-block" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" ng-keyup="checkUsername(regData)" required autofocus/>
       <ul ng-repeat="error in res.username">
-        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+        <li id="usernameSpan" class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
       </div>
       <div id="password" ">
@@ -90,5 +90,4 @@
     </div>
   </div>
 </div>
-{{userRegForm.username.$pristine}}
 </ion-scroll>

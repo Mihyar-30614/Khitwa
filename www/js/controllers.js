@@ -250,13 +250,10 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$('#username').attr('class', 'has-success');
 			User.checkusername({username : data.username}).then(function (resp) {
 				if (resp.data.valid) {
-					// This is available
 					$scope.res.username.Msg = resp.data.message;
-					$('#usernameSpan').attr('class', 'label label-success');
 				} else {
-					// This is unavailable 
 					$scope.res.username.Msg = resp.data.message;
-					$('#usernameSpan').attr('class', 'label label-danger');
+					$('#username').attr('class', 'has-error');
 				}
 			})
 		}else{
