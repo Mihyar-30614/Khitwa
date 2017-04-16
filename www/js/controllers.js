@@ -186,31 +186,44 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		var token = $stateParams.token;
 		$scope.res = {};
 		$scope.loading = true;
-		if (data.password === data.confirm) {
-			var valid = User.validate('john', data.password, 'example@someone.ca');
-			if (valid.valid) {
-				User.reset({token: token, password : data.password}).then(function (resp) {
-					if (resp.status !== 201) {
-						$scope.loading = false;
-						$scope.res.fail = resp.data;
-					} else {
-						$scope.loading = false;
-						$scope.res.success = resp.data;
-						$timeout(function () {
-							$location.path('/login');
-							$scope.res = {};
-						},5000);
-					}
-				})
-			} else {
-				$scope.loading = false;
-				$scope.res.fail = valid.message;
-			}
+		var valid = User.validate('john', data.password, 'example@someone.ca', data.confirm);
+		if (valid.length === 0) {
+			User.reset({token: token, password : data.password}).then(function (resp) {
+				if (resp.status !== 201) {
+					$scope.loading = false;
+					$scope.res.fail = resp.data;
+				} else {
+					$scope.loading = false;
+					$scope.res.success = resp.data;
+					$timeout(function () {
+						$location.path('/login');
+						$scope.res = {};
+					},5000);
+				}
+			})
 		} else {
-			$scope.res.fail = 'Password does not match!';
 			$scope.loading = false;
+			$scope.res.password = {};
+			$scope.res.confirm  = {};
+			for (var i = 0; i < valid.length; i++) {
+				if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message }
+				if (valid[i].type === 'confirm')  { $scope.res.confirm[i]   = valid[i].message }  
+			}
 		}	
 	};
+	$scope.checkPassword = function (data) {
+		$scope.res.password = {};
+		var valid = User.validate('john', data.password,'example@someone.ca', 'password');
+		for (var i = 0; i < valid.length; i++) {
+			if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message }
+		}
+		if(Object.keys($scope.res.password).length === 0){
+			$scope.res.password = {};
+			$('#password').attr('class','has-success');
+		}else{
+			$('#password').attr('class','has-error');
+		}
+	}
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {
@@ -228,30 +241,30 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		var token = $stateParams.token;
 		$scope.res = {};
 		$scope.loading = true;
-		if (data.password === data.confirm) {
-			var valid = User.validate('john', data.password, 'example@someone.ca');
-			if (valid.valid) {
-				Organization.reset({token: token, password : data.password}).then(function (resp) {
-					if (resp.status !== 201) {
-						$scope.loading = false;
-						$scope.res.fail = resp.data;
-					} else {
-						$scope.loading = false;
-						$scope.res.success = resp.data;
-						$timeout(function () {
-							$location.path('/login');
-							$scope.res = {};
-						},5000);
-					}
-				})
-			} else {
-				$scope.loading = false;
-				$scope.res.fail = valid.message;
-			}
+		var valid = User.validate('john', data.password, 'example@someone.ca', data.confirm);
+		if (valid.length === 0) {
+			Organization.reset({token: token, password : data.password}).then(function (resp) {
+				if (resp.status !== 201) {
+					$scope.loading = false;
+					$scope.res.fail = resp.data;
+				} else {
+					$scope.loading = false;
+					$scope.res.success = resp.data;
+					$timeout(function () {
+						$location.path('/login');
+						$scope.res = {};
+					},5000);
+				}
+			})
 		} else {
-			$scope.res.fail = 'Password does not match!';
 			$scope.loading = false;
-		}	
+			$scope.res.password = {};
+			$scope.res.confirm  = {};
+			for (var i = 0; i < valid.length; i++) {
+				if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message }
+				if (valid[i].type === 'confirm')  { $scope.res.confirm[i]   = valid[i].message }  
+			}
+		}
 	};
 	$scope.goOrgProfile = function () {
 		$location.path('/orgProfile');
