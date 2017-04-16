@@ -44,11 +44,12 @@ module.exports = {
 		var password = req.body.password === undefined? '' : req.body.password.trim();
 		var firstName = req.body.firstName === undefined? '' : req.body.firstName.trim();
 		var lastName = req.body.lastName === undefined? '' : req.body.lastName.trim();
+		var confirm = req.body.confirm === undefined? '' : req.body.confirm.trim();
 
 		if (username == '' || password == '' || email == '' || firstName == '' || lastName == '') {
-			helpers.errorHandler('Required Feild Missing', req, res);
+			helpers.errorHandler('Required Field Missing', req, res);
 		} else {
-			var valid = helpers.validate(username, password, email);
+			var valid = helpers.validate(username, password, email, confirm);
 			if (valid.valid) {			
 				var user = new User();
 				user.username = username;
