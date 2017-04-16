@@ -14,17 +14,37 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		$scope.user = $window.localStorage.getItem('user')? JSON.parse($window.localStorage.user) : {};
 		$scope.organization = $window.localStorage.getItem('organization')? JSON.parse($window.localStorage.organization) : {};
 	});
+	$(document).ready(function(){
+	    $('#submit').attr('disabled', true);
+	    $('#login-form1').keyup(function () {
+			var disable = false;
+		    $('.input').each(function () {
+		    	if($(this).val() == '') { disable = true };
+		    });
+		    $('#submit').prop('disabled', disable);
+	    })
+	});
 	$scope.toUser = function () {
 		$scope.res = {};
 		$scope.toggle = false;
+		$('#login-form1').trigger('reset');
 		$('.toUser').attr('class', 'button button-large button-assertive toUser');
 		$('.toOrg').attr('class', 'button button-large button-outline button-assertive toOrg');
 		$('.user').attr('class', 'login-form user');
 		$('.org').attr('class','login-form hidden org');
+		$('#submit').attr('disabled', true);
+	    $('#login-form1').keyup(function () {
+			var disable = false;
+		    $('.input').each(function () {
+		    	if($(this).val() == '') { disable = true };
+		    });
+		    $('#submit').prop('disabled', disable);
+	    })
 	};
 	$scope.toOrg = function () {
 		$scope.res = {};
 		$scope.toggle = true;
+		$('#signup1').trigger('reset');
 		$('.toUser').attr('class', 'button button-large button-outline button-assertive toUser');
 		$('.toOrg').attr('class', 'button button-large button-assertive toOrg');
 		$('.user').attr('class','login-form hidden user');
@@ -131,16 +151,6 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$scope.res.fail = valid.message;
 		}
 	};
-	$(document).ready(function(){
-	    $('#submit').attr('disabled', true);
-	    $('#login-form').keyup(function () {
-			var disable = false;
-		    $('.input').each(function () {
-		    	if($(this).val() == '') { disable = true };
-		    });
-		    $('#submit').prop('disabled', disable);
-	    })
-	});
 	$scope.resetRequest = function (email) {
 		$scope.res = {};
 		$scope.loading = true;
