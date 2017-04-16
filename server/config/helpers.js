@@ -65,12 +65,7 @@ var helpers = {
         var count = 0 ;
         if (index > -1) {
             for (var i = index; i < usr.length; i++) {
-                if (pass[i] === usr[count]){
-                    same = true;
-                    count++;
-                }else{
-                    same = false;
-                }
+                if (pass[i] === usr[count]){ same = true; count++; }else{ same = false; }
             }
         }
         if(username.length < 3) return { message: 'Username Should be at Least 3 Characters Long!', valid: false };

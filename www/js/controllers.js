@@ -125,8 +125,8 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	$scope.signup = function (regData) {
 		$scope.res = {};
 		$scope.loading = true;
-		var valid = User.validate(regData.username, regData.password, regData.email);
-		if (valid.valid) {
+		var valid = User.validate(regData.username, regData.password, regData.email, regData.confirm);
+		if (valid.length === 0) {
 			if ($scope.toggle) {
 				var x = Organization.signup(regData)
 			} else {
@@ -146,9 +146,18 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 				}
 			})
 		}else{
-			$ionicScrollDelegate.scrollBottom();
+			// $ionicScrollDelegate.scrollBottom();
 			$scope.loading = false;
-			$scope.res.fail = valid.message;
+			$scope.res.username = {};
+			$scope.res.password = {};
+			$scope.res.email    = {};
+			$scope.res.confirm  = {};
+			for (var i = 0; i < valid.length; i++) {
+				if (valid[i].type === 'username') { $scope.res.username[i]  = valid[i].message }
+				if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message } 
+				if (valid[i].type === 'email')    { $scope.res.email[i]     = valid[i].message }
+				if (valid[i].type === 'confirm')  { $scope.res.confirm[i]   = valid[i].message } 
+			}
 		}
 	};
 	$scope.resetRequest = function (email) {
