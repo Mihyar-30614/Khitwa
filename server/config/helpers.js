@@ -78,7 +78,7 @@ var helpers = {
         if(!/[a-z]/.test(password)) return { message: 'Password Should Contain at Least One Lowercase Character!', valid: false };
         if(!/[A-Z]/.test(password)) return { message: 'Password Should Contain at Least One Uppercase Character!', valid: false };
         if(!/[0-9]/.test(password)) return { message: 'Password Should Contain at Least One Number!', valid: false };
-        if(/^\w+_+$/.test(password)) return { message: 'Password Should Contain at Least One Special Character!', valid: false};
+        if(!/^[!-@./#&+\w\s]*$/.test(password)) return { message: 'Password Should Contain at Least One Special Character!', valid: false};
         return { message : '', valid: true};
     }
 };

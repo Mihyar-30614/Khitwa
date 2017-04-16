@@ -122,6 +122,7 @@ angular.module('Khitwa.services', [])
     var validate = function (username, password, email, confirm) {
         var result = [];
         var username = username === undefined? '' : username;
+        var password = password === undefined? '' : password;
         var usr = username.toLowerCase();
         var pass = password.toLowerCase();
         var index = pass.indexOf(usr[0]);
@@ -137,14 +138,26 @@ angular.module('Khitwa.services', [])
         if(!/[a-z]/.test(username)) result.push( { message: 'At Least One Letter!', type: 'username' } );
         if(password.length < 6 || password.length > 48) result.push( { message : 'Must be 6 - 24 characters long.', type: 'password' } );
         if (password !== confirm) result.push( { message : 'Password Does Not Match!', type : 'confirm' } );
-        if(same)result.push( { message : 'Can Not Contain Username', type : 'password' } );
+        if(same) result.push( { message : 'Can Not Contain Username', type : 'password' } );
         if (email.indexOf('@')<0 || email.indexOf('.')<0) result.push( { message: 'Email Address Invalid', type: 'email' } );
         if(!/[a-z]/.test(password)) result.push( { message: 'At Least One Lowercase Character!', type: 'password' } );
         if(!/[A-Z]/.test(password)) result.push( { message: 'At Least One Uppercase Character!', type: 'password' } );
         if(!/[0-9]/.test(password)) result.push( { message: 'At Least One Number!', type: 'password' } );
         if(!/^[!-@./#&+\w\s]*$/.test(password)) result.push( { message: 'At Least One Special Character!', type: 'password'} );
         return result
-    }
+    };
+    var checkusername = function (data) {
+        return $http({
+            method : 'POST',
+            url : link + '/api/user/checkusername',
+            data : data
+        })
+        .then(function (resp) {
+            return resp;
+        }).catch(function (error) {
+            return error;
+        })
+    };
     return {
         signin : signin,
         signup : signup,
@@ -156,7 +169,8 @@ angular.module('Khitwa.services', [])
         rate : rate, 
         forgot : forgot,
         reset : reset,
-        validate : validate
+        validate : validate,
+        checkusername : checkusername
     };
 })
 .factory('Organization', function($http, $window, $location){

@@ -8,7 +8,7 @@
     <form name="userRegForm" id="login-form1" class="login-form user" ng-submit="signup(regData)">
       <div id="username">
       <h5 class="text-left"><label>Username</label></h5>
-      <input class="input form-control help-block" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" ng-keyup="validate(regData)" required autofocus/>
+      <input class="input form-control help-block" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" ng-keyup="checkUsername(regData)" required autofocus/>
       <ul ng-repeat="error in res.username">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
@@ -20,9 +20,9 @@
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
       </div>
-      <div ng-class="{ 'has-success': (Object.keys(res.confirm).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.confirm).length !== 0 && userRegForm.$submitted}">
+      <div id="confirm">
       <h5 class="text-left control-label"><label>Confirm Password</label></h5>
-      <input class="input form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
+      <input class="input form-control" ng-keyup="checkConfirm(regData)" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
       <ul ng-repeat="error in res.confirm">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>

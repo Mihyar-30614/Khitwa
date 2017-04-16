@@ -213,7 +213,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 	};
 	$scope.checkPassword = function (data) {
 		$scope.res.password = {};
-		var valid = User.validate('john', data.password,'example@someone.ca', 'password');
+		var valid = User.validate(data.username, data.password,'example@someone.ca', 'password');
 		for (var i = 0; i < valid.length; i++) {
 			if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message }
 		}
@@ -223,7 +223,46 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		}else{
 			$('#password').attr('class','has-error');
 		}
+	};
+	$scope.checkConfirm = function (data) {
+		$scope.res.confirm = {};
+		var valid = User.validate('john', data.password, 'someone@example.ca', data.confirm);
+		for (var i = 0; i < valid.length; i++) {
+			if (valid[i].type === 'confirm'){
+				$scope.res.confirm[i] = valid[i].message;
+			}
+		}
+		if (Object.keys($scope.res.confirm).length === 0) {
+			$scope.res.confirm = {};
+			$('#confirm').attr('class','has-success');
+		} else {
+			$('#confirm').attr('class','has-error');
+		}
 	}
+	$scope.checkUsername = function (data) {
+		$scope.res.username = {};
+		var valid = User.validate(data.username, 'password', 'email@email.ca', 'password')
+		for (var i = 0; i < valid.length; i++) {
+			if (valid[i].type === 'username') { $scope.res.username[i] = valid[i].message} 
+		}
+		if (Object.keys($scope.res.username).length === 0) {
+			$scope.res.username = {};
+			$('#username').attr('class', 'has-success');
+			User.checkusername({username : data.username}).then(function (resp) {
+				if (resp.data.valid) {
+					// This is available
+					$scope.res.username.Msg = resp.data.message;
+					$('#usernameSpan').attr('class', 'label label-success');
+				} else {
+					// This is unavailable 
+					$scope.res.username.Msg = resp.data.message;
+					$('#usernameSpan').attr('class', 'label label-danger');
+				}
+			})
+		}else{
+			$('#username').attr('class', 'has-error');
+		}
+	};
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {

@@ -19,6 +19,7 @@ module.exports = function(app, express){
 	app.post('/api/user/forgot', userController.forgotPwd);
 	app.get('/api/user/chck/:token', userController.chckToken);
 	app.post('/api/user/reset/:token', userController.pwdReset);
+	app.post('/api/user/checkusername', userController.checkUsername);
 
 	// Organization routes goes here
 	app.post('/api/organization/signup', organizationController.signup);

@@ -220,6 +220,17 @@ module.exports = {
 		}
 	},
 
+	checkUsername : function (req, res) {
+		var username = req.body.username === undefined? '' : req.body.username.trim();
+		User.findOne({username : username}).select('username').exec(function (error, user) {
+			if (user) {
+				res.json({valid : false, message : 'Username Already Exsits!'});
+			}else{ 
+				res.json({valid : true, message : 'Username Available!'});
+			}
+		})
+	},
+
 	deleteUser : function (req, res) {
 		
 		var token = req.headers['x-access-token'];
