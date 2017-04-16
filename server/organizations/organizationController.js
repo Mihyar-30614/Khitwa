@@ -28,7 +28,7 @@ module.exports = {
 					var org = jwt.sign({username : saved.username}, secret);
 					var body = helpers.activateTemplate(saved.username, '', org, 'organization');
 					helpers.email(saved.email, 'Account Activation', body, function () {
-						res.status(201).send('Organization Created');
+						res.status(201).send('Please Check Your Email for Activation Link');
 					})
 				}
 			})
