@@ -5,15 +5,35 @@
 <a class="button button-large button-outline button-assertive toOrg" ng-click="toOrg()">Organization</a>
 </div>
   <div class="form">
-    <form id="login-form1" class="login-form user" ng-submit="signup(regData)">
+    <form name="userRegForm" id="login-form1" class="login-form user" ng-submit="signup(regData)">
+      <div ng-class="{ 'has-success': (Object.keys(res.username).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.username).length !== 0 && userRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Username</label></h5>
-      <input class="input form-control" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus/>
+      <input class="input form-control" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" required autofocus/>
+      <ul ng-repeat="error in res.username">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.password).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.password).length !== 0 && userRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Password</label></h5>
       <input class="input form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
+      <ul ng-repeat="error in res.password">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.confirm).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.confirm).length !== 0 && userRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Confirm Password</label></h5>
       <input class="input form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
+      <ul ng-repeat="error in res.confirm">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.email).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.email).length !== 0 && userRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Email</label></h5>
       <input class="input form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
+      <ul ng-repeat="error in res.email">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
       <h5 class="text-left control-label"><label>First Name</label></h5>
       <input class="input form-control" type="text" placeholder="John" ng-model="regData.firstName" required />
       <h5 class="text-left control-label"><label>Last Name</label></h5>
@@ -24,15 +44,35 @@
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
   <div class="login-form hidden org">
-    <form id="signup1" ng-submit="signup(regData)">
+    <form id="signup1" ng-submit="signup(regData)" name="orgRegForm">
+    <div ng-class="{ 'has-success': (Object.keys(res.username).length === 0 && orgRegForm.$submitted) , 'has-error': Object.keys(res.username).length !== 0 && orgRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Username</label></h5>
-      <input class="input1 form-control" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus />
+      <input class="input1 form-control" type="text" maxlength="25" placeholder="min. 3 Characters" ng-model="regData.username" required autofocus />
+      <ul ng-repeat="error in res.username">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.password).length === 0 && orgRegForm.$submitted) , 'has-error': Object.keys(res.password).length !== 0 && orgRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Password</label></h5>
       <input class="input1 form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
+      <ul ng-repeat="error in res.password">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.confirm).length === 0 && orgRegForm.$submitted) , 'has-error': Object.keys(res.confirm).length !== 0 && orgRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Confirm Password</label></h5>      
       <input class="input1 form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
+      <ul ng-repeat="error in res.confirm">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
+      <div ng-class="{ 'has-success': (Object.keys(res.email).length === 0 && orgRegForm.$submitted) , 'has-error': Object.keys(res.email).length !== 0 && orgRegForm.$submitted}">
       <h5 class="text-left control-label"><label>Email</label></h5>
       <input class="input1 form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
+      <ul ng-repeat="error in res.email">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+      </div>
       <button id="submit1" class="btn btn-block btn-social btn-pinterest" type="submit"><i class="fa fa-user-plus"></i> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form></div>
