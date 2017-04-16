@@ -6,33 +6,33 @@
 </div>
   <div class="form">
     <form id="login-form1" class="login-form user" ng-submit="signup(regData)">
-      <h5 class="text-left"><label>Username</label></h5>
-      <input class="input" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus/>
-      <h5 class="text-left"><label>Password</label></h5>
-      <input class="input" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
-      <h5 class="text-left"><label>Confirm Password</label></h5>
-      <input class="input" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
-      <h5 class="text-left"><label>Email</label></h5>
-      <input class="input" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
-      <h5 class="text-left"><label>First Name</label></h5>
-      <input class="input" type="text" placeholder="John" ng-model="regData.firstName" required />
-      <h5 class="text-left"><label>Last Name</label></h5>
-      <input class="input" type="text" placeholder="Smith" ng-model="regData.lastName" required />
-      <h5 class="text-left"><label>Date of Birth</label></h5>
-      <input class="input" type="date" ng-model="regData.dateOfBirth"/>
+      <h5 class="text-left control-label"><label>Username</label></h5>
+      <input class="input form-control" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus/>
+      <h5 class="text-left control-label"><label>Password</label></h5>
+      <input class="input form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
+      <h5 class="text-left control-label"><label>Confirm Password</label></h5>
+      <input class="input form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required />
+      <h5 class="text-left control-label"><label>Email</label></h5>
+      <input class="input form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
+      <h5 class="text-left control-label"><label>First Name</label></h5>
+      <input class="input form-control" type="text" placeholder="John" ng-model="regData.firstName" required />
+      <h5 class="text-left control-label"><label>Last Name</label></h5>
+      <input class="input form-control" type="text" placeholder="Smith" ng-model="regData.lastName" required />
+      <h5 class="text-left control-label"><label>Date of Birth</label></h5>
+      <input class="input form-control" type="date" ng-model="regData.dateOfBirth"/>
       <button id="submit" class="btn btn-block btn-social btn-pinterest" type="submit"><i class="fa fa-user-plus"></i> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
   <div class="login-form hidden org">
     <form id="signup1" ng-submit="signup(regData)">
-      <h5 class="text-left"><label>Username</label></h5>
-      <input class="input1" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus />
-      <h5 class="text-left"><label>Password</label></h5>
-      <input class="input1" type="password" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
-      <h5 class="text-left"><label>Confirm Password</label></h5>      
-      <input class="input1" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
-      <h5 class="text-left"><label>Email</label></h5>
-      <input class="input1" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
+      <h5 class="text-left control-label"><label>Username</label></h5>
+      <input class="input1 form-control" type="text" maxlength="48" placeholder="at least 3 characters" ng-model="regData.username" required autofocus />
+      <h5 class="text-left control-label"><label>Password</label></h5>
+      <input class="input1 form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
+      <h5 class="text-left control-label"><label>Confirm Password</label></h5>      
+      <input class="input1 form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
+      <h5 class="text-left control-label"><label>Email</label></h5>
+      <input class="input1 form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
       <button id="submit1" class="btn btn-block btn-social btn-pinterest" type="submit"><i class="fa fa-user-plus"></i> Create</button>
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form></div>
