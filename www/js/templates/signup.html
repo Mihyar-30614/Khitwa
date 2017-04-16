@@ -6,16 +6,16 @@
 </div>
   <div class="form">
     <form name="userRegForm" id="login-form1" class="login-form user" ng-submit="signup(regData)">
-      <div ng-class="{ 'has-success': (Object.keys(res.username).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.username).length !== 0 && userRegForm.$submitted}">
-      <h5 class="text-left control-label"><label>Username</label></h5>
-      <input class="input form-control" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" required autofocus/>
+      <div id="username">
+      <h5 class="text-left"><label>Username</label></h5>
+      <input class="input form-control help-block" name="username" type="text" maxlength="25" placeholder="min. 3 characters" ng-model="regData.username" ng-keyup="validate(regData)" required autofocus/>
       <ul ng-repeat="error in res.username">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
       </div>
-      <div ng-class="{ 'has-success': (Object.keys(res.password).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.password).length !== 0 && userRegForm.$submitted}">
+      <div id="password" ">
       <h5 class="text-left control-label"><label>Password</label></h5>
-      <input class="input form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
+      <input class="input form-control" ng-keyup="checkPassword(regData)" type="password" maxlength="24" placeholder="6-24 characters 'example@123' " ng-model="regData.password" required />
       <ul ng-repeat="error in res.password">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
@@ -90,4 +90,5 @@
     </div>
   </div>
 </div>
+{{userRegForm.username.$pristine}}
 </ion-scroll>

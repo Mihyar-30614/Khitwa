@@ -1,11 +1,21 @@
 <ion-scroll zooming="true">
 	<div class="login-page">
 	<div class="form">
-		<form class= "login-form" ng-submit="resetOrg(data)">
+		<form name="orgReset" class= "login-form" ng-submit="resetOrg(data)">
+    <div ng-class="{ 'has-success': (Object.keys(res.password).length === 0 && orgReset.$submitted) , 'has-error': Object.keys(res.password).length !== 0 && orgReset.$submitted}">
      	<h5 class="text-left"><label>Password</label></h5>
       	<input type="password" placeholder="e.g. Sxlo@412" ng-model="data.password" required />
+        <ul ng-repeat="error in res.password">
+         <li class="help-block list-group-item-text text-left">* {{error}}</li>
+        </ul>
+        </div>
+    <div ng-class="{ 'has-success': (Object.keys(res.confirm).length === 0 && orgReset.$submitted) , 'has-error': Object.keys(res.confirm).length !== 0 && orgReset.$submitted}">
       <h5 class="text-left"><label>Confirm Password</label></h5>
         <input type="password" placeholder="enter password again" ng-model="data.confirm" required />
+      <ul ng-repeat="error in res.confirm">
+        <li class="help-block list-group-item-text text-left">* {{error}}</li>
+      </ul>
+    </div>
       	<button type="submit" class="btn btn-block btn-social btn-pinterest icon icon-left ion-android-mail"> Reset Password</button>
     </form>
     <br>

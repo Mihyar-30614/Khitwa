@@ -121,6 +121,7 @@ angular.module('Khitwa.services', [])
     };
     var validate = function (username, password, email, confirm) {
         var result = [];
+        var username = username === undefined? '' : username;
         var usr = username.toLowerCase();
         var pass = password.toLowerCase();
         var index = pass.indexOf(usr[0]);
@@ -141,7 +142,7 @@ angular.module('Khitwa.services', [])
         if(!/[a-z]/.test(password)) result.push( { message: 'At Least One Lowercase Character!', type: 'password' } );
         if(!/[A-Z]/.test(password)) result.push( { message: 'At Least One Uppercase Character!', type: 'password' } );
         if(!/[0-9]/.test(password)) result.push( { message: 'At Least One Number!', type: 'password' } );
-        if(/^\w+_+$/.test(password)) result.push( { message: 'At Least One Special Character!', type: 'password'} );
+        if(!/^[!-@./#&+\w\s]*$/.test(password)) result.push( { message: 'At Least One Special Character!', type: 'password'} );
         return result
     }
     return {
