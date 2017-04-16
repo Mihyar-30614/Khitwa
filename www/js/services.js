@@ -137,7 +137,8 @@ angular.module('Khitwa.services', [])
                 }
             }
         }
-        if (username.length < 3) return { message: 'Username Should be at Least 3 Characters Long!', valid: false };
+        if(username.length < 3) return { message: 'Username Should be at Least 3 Characters Long!', valid: false };
+        if(username.indexOf(' ')>-1) return { message: 'Username Should not Contain Spaces!', valid: false};
         if(!/[a-z]/.test(username)) return { message: 'Username Should Contain at Least One Character!', valid: false };
         if(password.length < 6 || password.length > 48) return { message : 'Password must be 6 - 24 characters long.', valid: false };
         if(same)return { message : 'Password Can Not Contain Username', valid : false };
