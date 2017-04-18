@@ -317,6 +317,18 @@ angular.module('Khitwa.services', [])
             return error;
         })
     };
+    var checkOrgEmail = function (data) {
+        return $http({
+            method : 'POST',
+            url : link + '/api/organization/checkemail',
+            data : data
+        })
+        .then(function (resp) {
+            return resp;
+        }).catch(function (error) {
+            return error;
+        })
+    };
     return {
         signin : signin,
         signup : signup,
@@ -328,7 +340,8 @@ angular.module('Khitwa.services', [])
         award : award,
         forgot: forgot,
         reset : reset, 
-        checkOrgUsername : checkOrgUsername
+        checkOrgUsername : checkOrgUsername,
+        checkOrgEmail : checkOrgEmail
     }
 })
 .factory('Opportunity', function($http, $window, $location){

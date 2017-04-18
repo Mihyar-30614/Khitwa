@@ -75,6 +75,17 @@ module.exports = {
 		})
 	},
 
+	checkemail : function (req, res) {
+		var email = req.body.email === undefined? '' : req.body.email.trim();
+		Organization.findOne({ email : email }).select('email').exec(function (error, org) {
+			if (org) {
+				res.json({ valid : false, message : 'Email In Use!' });
+			} else {
+				res.json({ valid : true, message : 'Email is not In Use!'});
+			}
+		})
+	},
+
 	// This need to be Modified like in Users
 	checkAuth : function (req, res) {
 

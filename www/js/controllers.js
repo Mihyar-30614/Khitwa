@@ -347,6 +347,27 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$('#orgUsername').attr('class', 'has-error');
 		}
 	};
+	$scope.checkOrgEmail = function (data) {
+		$scope.res.email = {};
+		var valid = User.validate('John', 'password', data.email, 'password')
+		for (var i = 0; i < valid.length; i++) {
+			if(valid[i].type === 'email'){ $scope.res.email[i] = valid[i].message }
+		}
+		if (Object.keys($scope.res.email).length === 0) {
+			$scope.res.email = {};
+			$('#orgEmail').attr('class', 'has-success');
+			Organization.checkOrgEmail({ email : data.email }).then(function (resp) {
+				if (resp.data.valid) {
+					$scope.res.email.Msg = resp.data.message;
+				} else {
+					$scope.res.email.Msg = resp.data.message;
+					$('#orgEmail').attr('class', 'has-error');
+				}
+			})
+		} else {
+			$('#orgEmail').attr('class', 'has-error');
+		}
+	};
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),

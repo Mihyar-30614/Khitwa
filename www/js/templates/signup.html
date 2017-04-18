@@ -44,7 +44,7 @@
       <p class="message">Already registered? <a href="#/login">Sign In</a></p>
     </form>
   <div class="login-form hidden org" ng-controller="OrganizationController">
-    <form id="signup1" ng-submit="signup(regData)" name="orgRegForm">
+    <form id="signup1" ng-submit="signup(regData)" name="orgRegForm" novalidate>
     <div id="orgUsername">
       <h5 class="text-left control-label"><label>Username</label></h5>
       <input class="input1 form-control" ng-keyup="checkOrgUsername(regData)" type="text" maxlength="25" placeholder="min. 3 Characters" ng-model="regData.username" required autofocus />
@@ -68,7 +68,7 @@
       </div>
       <div id="orgEmail">
       <h5 class="text-left control-label"><label>Email</label></h5>
-      <input class="input1 form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
+      <input class="input1 form-control" ng-blur="checkOrgEmail(regData)" type="text" placeholder="example@someone.com" ng-model="regData.email" required/>
       <ul ng-repeat="error in res.email">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
