@@ -35,6 +35,7 @@ module.exports = function(app, express){
 	app.post('/api/organization/forgot', organizationController.forgotPwd);
 	app.get('/api/organization/chck/:token', organizationController.chckToken);
 	app.post('/api/organization/reset/:token', organizationController.pwdReset);
+	app.post('/api/organization/checkusername', organizationController.checkusername);
 
 	// Opportunities routes goes here
 	app.post('/api/opportunity/add', opportunityController.addOpportunity);

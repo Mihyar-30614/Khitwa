@@ -64,6 +64,18 @@ module.exports = {
 		})
 	},
 
+	checkusername : function (req, res) {
+		var username = req.body.username === undefined? '' : req.body.username.trim();
+		Organization.findOne({username : username}).select('username').exec(function (error, org) {
+			if (org) {
+				res.json({valid : false, message : 'Username Already Exsits!'});
+			}else{ 
+				res.json({valid : true, message : 'Username Available!'});
+			}
+		})
+	},
+
+	// This need to be Modified like in Users
 	checkAuth : function (req, res) {
 
 		var token = req.headers['x-access-token'];
