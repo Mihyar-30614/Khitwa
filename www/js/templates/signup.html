@@ -54,14 +54,14 @@
       </div>
       <div id="orgPassword">
       <h5 class="text-left control-label"><label>Password</label></h5>
-      <input class="input1 form-control" type="password" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
+      <input class="input1 form-control" type="password" ng-keyup="checkPassword(regData)" maxlength="24" placeholder="6-24 characters 'example@123'" ng-model="regData.password" required/>
       <ul ng-repeat="error in res.password">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
       </div>
       <div id="orgConfirm">
       <h5 class="text-left control-label"><label>Confirm Password</label></h5>      
-      <input class="input1 form-control" type="password" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
+      <input class="input1 form-control" type="password" ng-keyup="checkConfirm(regData)" maxlength="24" placeholder="confirm password" ng-model="regData.confirm" required/>
       <ul ng-repeat="error in res.confirm">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>

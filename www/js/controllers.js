@@ -238,7 +238,7 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 		} else {
 			$('#confirm').attr('class','has-error');
 		}
-	}
+	};
 	$scope.checkUsername = function (data) {
 		$scope.res.username = {};
 		var valid = User.validate(data.username, 'password', 'email@email.ca', 'password')
@@ -366,6 +366,34 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			})
 		} else {
 			$('#orgEmail').attr('class', 'has-error');
+		}
+	};
+	$scope.checkPassword = function (data) {
+		$scope.res.password = {};
+		var valid = User.validate(data.username, data.password,'example@someone.ca', 'password');
+		for (var i = 0; i < valid.length; i++) {
+			if (valid[i].type === 'password') { $scope.res.password[i]  = valid[i].message }
+		}
+		if(Object.keys($scope.res.password).length === 0){
+			$scope.res.password = {};
+			$('#orgPassword').attr('class','has-success');
+		}else{
+			$('#orgPassword').attr('class','has-error');
+		}
+	};
+	$scope.checkConfirm = function (data) {
+		$scope.res.confirm = {};
+		var valid = User.validate('john', data.password, 'someone@example.ca', data.confirm);
+		for (var i = 0; i < valid.length; i++) {
+			if (valid[i].type === 'confirm'){
+				$scope.res.confirm[i] = valid[i].message;
+			}
+		}
+		if (Object.keys($scope.res.confirm).length === 0) {
+			$scope.res.confirm = {};
+			$('#orgConfirm').attr('class','has-success');
+		} else {
+			$('#orgConfirm').attr('class','has-error');
 		}
 	};
   // With the new view caching in Ionic, Controllers are only called
