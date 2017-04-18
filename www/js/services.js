@@ -123,6 +123,7 @@ angular.module('Khitwa.services', [])
         var result = [];
         var username = username === undefined? '' : username;
         var password = password === undefined? '' : password;
+        var email    = email    === undefined? '' : email;
         var usr = username.toLowerCase();
         var pass = password.toLowerCase();
         var index = pass.indexOf(usr[0]);
@@ -143,7 +144,7 @@ angular.module('Khitwa.services', [])
         if(!/[a-z]/.test(password)) result.push( { message: 'At Least One Lowercase Character!', type: 'password' } );
         if(!/[A-Z]/.test(password)) result.push( { message: 'At Least One Uppercase Character!', type: 'password' } );
         if(!/[0-9]/.test(password)) result.push( { message: 'At Least One Number!', type: 'password' } );
-        if(!/^[!-@./#&+\w\s]*$/.test(password)) result.push( { message: 'At Least One Special Character!', type: 'password'} );
+        if(!/[!#@$%^&*()_+]/.test(password)) result.push( { message: 'At Least One Special Character!', type: 'password'} );
         return result
     };
     var checkusername = function (data) {
@@ -158,6 +159,18 @@ angular.module('Khitwa.services', [])
             return error;
         })
     };
+    var checkemail = function (data) {
+        return $http({
+            method : 'POST',
+            url : link + '/api/user/checkemail',
+            data : data
+        })
+        .then(function (resp) {
+            return resp;
+        }).catch(function (error) {
+            return error;
+        })
+    }
     return {
         signin : signin,
         signup : signup,
@@ -170,7 +183,8 @@ angular.module('Khitwa.services', [])
         forgot : forgot,
         reset : reset,
         validate : validate,
-        checkusername : checkusername
+        checkusername : checkusername, 
+        checkemail : checkemail
     };
 })
 .factory('Organization', function($http, $window, $location){

@@ -260,6 +260,27 @@ angular.module('Khitwa.controllers', ['Khitwa.services'])
 			$('#username').attr('class', 'has-error');
 		}
 	};
+	$scope.checkEmail = function (data) {
+		$scope.res.email = {};
+		var valid = User.validate('John', 'password', data.email, 'password')
+		for (var i = 0; i < valid.length; i++) {
+			if(valid[i].type === 'email'){ $scope.res.email[i] = valid[i].message }
+		}
+		if (Object.keys($scope.res.email).length === 0) {
+			$scope.res.email = {};
+			$('#email').attr('class', 'has-success');
+			User.checkemail({ email : data.email }).then(function (resp) {
+				if (resp.data.valid) {
+					$scope.res.email.Msg = resp.data.message;
+				} else {
+					$scope.res.email.Msg = resp.data.message;
+					$('#email').attr('class', 'has-error');
+				}
+			})
+		} else {
+			$('#email').attr('class', 'has-error');
+		}
+	};
 })
 
 .controller('OrganizationController', function($scope, Organization, $window, $location, $timeout, $rootScope, User, $ionicScrollDelegate, $stateParams) {

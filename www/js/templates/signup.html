@@ -27,9 +27,9 @@
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>
       </div>
-      <div ng-class="{ 'has-success': (Object.keys(res.email).length === 0 && userRegForm.$submitted) , 'has-error': Object.keys(res.email).length !== 0 && userRegForm.$submitted}">
+      <div id="email">
       <h5 class="text-left control-label"><label>Email</label></h5>
-      <input class="input form-control" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
+      <input class="input form-control" ng-blur="checkEmail(regData)" type="text" placeholder="example@someone.com" ng-model="regData.email" required />
       <ul ng-repeat="error in res.email">
         <li class="help-block list-group-item-text text-left">* {{error}}</li>
       </ul>

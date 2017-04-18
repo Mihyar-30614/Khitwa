@@ -231,6 +231,17 @@ module.exports = {
 		})
 	},
 
+	checkEmail : function (req, res) {
+		var email = req.body.email === undefined? '' : req.body.email.trim();
+		User.findOne({ email : email }).select('email').exec(function (error, user) {
+			if (user) {
+				res.json({ valid : false, message : 'Email In Use!' });
+			} else {
+				res.json({ valid : true, message : 'Email is not In Use!'});
+			}
+		})
+	},
+
 	deleteUser : function (req, res) {
 		
 		var token = req.headers['x-access-token'];
