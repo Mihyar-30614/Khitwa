@@ -6,7 +6,7 @@ var app = angular.module('Khitwa', [
     'Khitwa.services',
     'ui.router'
     ]);
-app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
     
     $httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.put = {};
@@ -85,6 +85,10 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     })
 
     $urlRouterProvider.otherwise('/');
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: true
+    });
     $httpProvider.interceptors.push('AttachToken');
     $httpProvider.defaults.transformRequest = function(data) {
         if (data === undefined) { return data; }
